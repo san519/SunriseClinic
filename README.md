@@ -31,7 +31,7 @@ The system provides secure role-based dashboards for:
 ![Nurse Dashboard](wwwroot/screenshots/06-nurse-dashboard.png)
 
 ### Patient Dashboard
-![Patient Dashboard](wwwroot/screenshots/08-patient-dashboard.png)
+![Patient Dashboard](SunriseClinic/wwwroot/screenshots/08-patient-dashboard.png)
 
 ---
 
