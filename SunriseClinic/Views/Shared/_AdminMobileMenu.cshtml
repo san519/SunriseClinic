@@ -1,0 +1,32 @@
+﻿<ul class="list-unstyled mb-0">
+    <li class="mb-2">
+        <a href="/Admin/Dashboard" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link @(Context.Request.Path.Value.Contains("/Admin/Dashboard") ? "active" : "")">
+            <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+        </a>
+    </li>
+    <li class="mb-2">
+        <a href="/Admin/Patients" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link @(Context.Request.Path.Value.Contains("/Admin/Patients") ? "active" : "")">
+            <i class="fas fa-user-injured me-3"></i>Patients
+        </a>
+    </li>
+    <li class="mb-2">
+        <a href="/Admin/Doctors" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link @(Context.Request.Path.Value.Contains("/Admin/Doctors") ? "active" : "")">
+            <i class="fas fa-user-md me-3"></i>Doctors
+        </a>
+    </li>
+    <li class="mb-2">
+        <a href="/Admin/Appointments" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link @(Context.Request.Path.Value.Contains("/Admin/Appointments") ? "active" : "")">
+            <i class="fas fa-calendar-check me-3"></i>Appointments
+        </a>
+    </li>
+    <li class="mb-2">
+        <a href="/Admin/Settings" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link @(Context.Request.Path.Value.Contains("/Admin/Settings") ? "active" : "")">
+            <i class="fas fa-cog me-3"></i>Settings
+        </a>
+    </li>
+    <li>
+        <a href="/Account/Logout" class="d-flex align-items-center p-3 rounded text-decoration-none mobile-sidebar-link">
+            <i class="fas fa-sign-out-alt me-3"></i>Logout
+        </a>
+    </li>
+</ul>

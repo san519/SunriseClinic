@@ -1,0 +1,321 @@
+﻿@{
+    ViewData["Title"] = "Patient Dashboard";
+    var patient = ViewBag.Patient as dynamic;
+    var appointments = ViewBag.Appointments as List<dynamic>;
+    var reports = ViewBag.Reports as List<dynamic>;
+    var registrationSuccess = ViewBag.RegistrationSuccess as bool?;
+    var patientId = ViewBag.PatientId as string;
+ 
+    var userId = Context.Session.GetString("UserId");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userName = Context.Session.GetString("UserName");
+    var displayId = Context.Session.GetString("DisplayId");
+}
+<div id="patientDashboard">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+
+<div class="container-fluid p-0 pt-2">
+    <!-- Registration Success Message -->
+    @if (registrationSuccess == true && !string.IsNullOrEmpty(patientId))
+    {
+        <div id="registrationAlert" class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="border-left: 4px solid #28a745;">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle fa-2x me-3" style="color: #28a745;"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h5 class="alert-heading mb-1">🎉 Registration Successful!</h5>
+                    <p class="mb-0">
+                        Welcome to <strong>Sunrise Clinic & Diagnostic Center</strong>!
+                        Your account has been created successfully.
+                    </p>
+                    <hr class="my-2">
+                    <p class="mb-0">
+                        <strong>Your Patient ID:</strong> <span class="badge bg-primary fs-6">@patientId</span>
+                        <small class="text-muted ms-2">(Please keep this ID for future reference)</small>
+                    </p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+                <div class="col-lg-3">
+                    <!-- Sidebar -->
+                    @await Html.PartialAsync("_PatientSidebar")
+                </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Welcome Card -->
+            <div class="card border-0 shadow-sm mb-4 bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="mb-2">Welcome back, @patient?.FullName!</h3>
+                            <p class="mb-0 opacity-75">
+                                <i class="fas fa-quote-left me-2"></i>
+                                Your health is our priority. Stay connected with your healthcare journey.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-heartbeat fa-4x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-calendar-plus fa-3x text-success mb-3"></i>
+                            <h6 class="card-title">Book Appointment</h6>
+                            <p class="small text-muted">Schedule with a doctor</p>
+                            <a href="/Appointment/Create" class="btn btn-sm btn-outline-success w-100">
+                                Book Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-file-medical-alt fa-3x text-info mb-3"></i>
+                            <h6 class="card-title">View Reports</h6>
+                            <p class="small text-muted">Check test results</p>
+                            <a href="/Patient/TestReports" class="btn btn-sm btn-outline-info w-100">
+                                View All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-prescription-bottle-alt fa-3x text-warning mb-3"></i>
+                                    <h6 class="card-title">Medications</h6>
+                                    <p class="small text-muted">View prescriptions</p>
+                                    <a href="/Prescription/MyPrescriptions" class="btn btn-sm btn-outline-warning w-100">
+                                        <i class="fas fa-eye me-1"></i>View Now
+                                    </a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-comment-medical fa-3x text-danger mb-3"></i>
+                            <h6 class="card-title">Emergency</h6>
+                            <p class="small text-muted">24/7 Support</p>
+                            <a href="tel:+8801703452323" class="btn btn-sm btn-outline-danger w-100">
+                                <i class="fas fa-phone me-1"></i>Call Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Upcoming Appointments -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-check me-2 text-primary"></i>Upcoming Appointments
+                            </h5>
+                            <a href="/Appointment/MyAppointments" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-list me-1"></i>View All
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (appointments != null && appointments.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date & Time</th>
+                                            <th>Doctor</th>
+                                            <th>Specialization</th>
+                                            <th>Reason</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var appointment in appointments)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-semibold">@appointment.AppointmentDate</div>
+                                                    <small class="text-muted">@appointment.AppointmentTime</small>
+                                                </td>
+                                                <td>@appointment.DoctorName</td>
+                                                <td>@appointment.Specialization</td>
+                                                <td>
+                                                    <span class="d-inline-block text-truncate" style="max-width: 150px;"
+                                                          title="@appointment.Reason">
+                                                        @appointment.Reason
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge @(appointment.Status == "Approved" ? "bg-success" :
+                                                                                                                  appointment.Status == "Pending" ? "bg-warning" :
+                                                                                                                  "bg-danger")">
+                                                @appointment.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- Details বাটনে লিঙ্ক যোগ করুন -->
+                                            <a href="/Appointment/Details/@appointment.AppointmentId"
+                                               class="btn btn-sm btn-outline-primary"
+                                               title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">No upcoming appointments</h6>
+                                <p class="small text-muted">Book your first appointment now!</p>
+                                <a href="/Appointment/Create" class="btn btn-primary">
+                                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            <!-- Recent Test Reports -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-medical me-2 text-success"></i>Recent Test Reports
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (reports != null && reports.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Report Name</th>
+                                        <th>Date</th>
+                                        <th>Notes</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var report in reports)
+                                    {
+                                        <tr>
+                                            <td>@report.ReportName</td>
+                                            <td>@report.ReportDate</td>
+                                            <td>
+                                                <span class="d-inline-block text-truncate" style="max-width: 200px;">
+                                                    @report.Notes
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-success">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-white text-center py-3">
+                            <a href="/Patient/TestReports" class="text-decoration-none">
+                                View All Reports <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No test reports available</h6>
+                            <p class="small text-muted">Your test reports will appear here</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        function uploadProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                var formData = new FormData();
+                formData.append('profilePicture', input.files[0]);
+
+                fetch('/Patient/UpdateProfilePicture', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload page to show new picture
+                        location.reload();
+                    } else {
+                        alert('Failed to upload picture: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading');
+                });
+            }
+        }
+
+        // Auto-hide registration success message after 10 seconds
+        @if (registrationSuccess == true)
+        {
+                <text>
+                setTimeout(function() {
+                    var alertElement = document.getElementById('registrationAlert');
+                    if (alertElement) {
+                        // Fade out effect
+                        alertElement.style.transition = 'opacity 0.5s ease';
+                        alertElement.style.opacity = '0';
+
+                        // Remove from DOM after fade out
+                        setTimeout(function() {
+                            if (alertElement.parentNode) {
+                                alertElement.parentNode.removeChild(alertElement);
+                            }
+                        }, 500);
+                    }
+                }, 10000); // 10 seconds
+                </text>
+        }
+                // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('patientDashboard');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

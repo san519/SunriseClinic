@@ -1,0 +1,55 @@
+# Sunrise Clinic & Diagnostic Center - Robots.txt
+# Generated on: @DateTime.Now.ToString("yyyy-MM-dd")
+
+User-agent: *
+Allow: /
+Disallow: /Admin/
+Disallow: /Account/Logout
+Disallow: /Account/Profile
+Disallow: /Patient/Dashboard
+Disallow: /Doctor/Dashboard
+Disallow: /Nurse/Dashboard
+Disallow: /Admin/Dashboard
+Disallow: /*.axd
+Disallow: /*.aspx
+Disallow: /*.ashx
+Disallow: /*.asmx
+Disallow: /*.config
+Disallow: /*.php
+Disallow: /*.txt
+Disallow: /search
+Disallow: /private/
+Disallow: /temp/
+
+# Sitemap Location
+Sitemap: https://www.sunriseclinicbd.com/sitemap.xml
+
+# Crawl Delay (optional)
+Crawl-delay: 2
+
+# Specific Bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# Allow Media Bots
+User-agent: Googlebot-Image
+Allow: /img/
+Allow: /images/
+Allow: /media/
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 3
+
+# Host
+Host: www.sunriseclinicbd.com
+
+# Contact for robots.txt issues
+# Website: https://www.sunriseclinicbd.com
+# Email: info@sunriseclinicbd.com

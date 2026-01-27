@@ -1,0 +1,759 @@
+﻿@{
+    ViewData["Title"] = "My Profile";
+    var nurse = ViewBag.Nurse as dynamic;
+    var profilePicture = ViewBag.ProfilePicture as string ?? "default.jpg";
+    var userName = ViewBag.UserName ?? Context.Session.GetString("UserName");
+    var displayId = ViewBag.DisplayId ?? Context.Session.GetString("DisplayId");
+    var nurseSidebarStats = ViewBag.NurseSidebarStats as dynamic;
+
+    // Format gender
+    var gender = nurse?.Gender == "M" ? "Male" :
+                 nurse?.Gender == "F" ? "Female" :
+                 nurse?.Gender == "O" ? "Other" : "";
+
+    var dateOfBirth = nurse?.DateOfBirth?.ToString("yyyy-MM-dd") ?? "";
+    var isActive = nurse?.IsActive == true ? "Active" : "Inactive";
+}
+
+@await Html.PartialAsync("_MobileDashboardMenu")
+
+<div class="container-fluid p-0 pt-2" id="nurseProfile">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            @await Html.PartialAsync("_NurseSidebar")
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9">
+            <div class="dashboard-content">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">
+                            <i class="fas fa-user-nurse me-2 text-primary"></i>My Profile
+                        </h3>
+                        <p class="text-muted mb-0">Manage your professional profile</p>
+                    </div>
+                </div>
+
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4">
+                        <i class="fas fa-check-circle me-2"></i>
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show mb-4">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <!-- Profile Picture Section -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="position-relative d-inline-block">
+                                    <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}")"
+                                         class="rounded-circle profile-pic"
+                                         width="150" height="150"
+                                         alt="Profile Picture"
+                                         id="profileImage"
+                                         style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;">
+
+                                    <input type="file" id="profilePictureInput" style="display:none;"
+                                           accept="image/*" onchange="uploadProfilePicture(this)">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <h4 class="mb-1">@userName</h4>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-id-card me-1"></i>
+                                    Nurse ID: @displayId
+                                </p>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    @nurse?.Email
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-briefcase-medical me-1"></i>
+                                    @nurse?.Department
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Form -->
+                <form id="profileForm" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="UserId" value="@nurse?.UserId">
+
+                    <!-- Personal Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                                </h5>
+                                <button type="button" class="btn btn-primary py-1 px-3 fs-6 edit-profile-btn" onclick="toggleEditMode()" id="editBtn">
+                                    <i class="fas fa-edit me-1"></i>Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Full Name</label>
+                                    <input type="text" class="form-control" value="@userName" disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Email Address</label>
+                                    <input type="email" class="form-control" value="@nurse?.Email" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Date of Birth</label>
+                                    <input type="date" class="form-control"
+                                           id="dateOfBirthInput"
+                                           name="DateOfBirth"
+                                           value="@dateOfBirth"
+                                           disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Gender *</label>
+                                    <select class="form-control" id="genderSelect" name="Gender" required disabled>
+                                        <option value="">Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-briefcase me-2 text-primary"></i>Professional Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Department *</label>
+                                    <select class="form-control"
+                                            id="departmentSelect"
+                                            name="Department"
+                                            required
+                                            disabled>
+                                        <option value="">Select Department</option>
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="ICU">ICU</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Gynecology">Gynecology</option>
+                                        <option value="General Ward">General Ward</option>
+                                        <option value="OPD">OPD</option>
+                                        <option value="Pharmacy">Pharmacy</option>
+                                    </select>
+                                </div>
+                                <!-- দ্বিতীয় ফর্মের shift time select (Nurse Profile) -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Shift Time *</label>
+                                    <select class="form-control"
+                                            id="shiftTimeSelect"
+                                            name="ShiftTime"
+                                            required
+                                            disabled>
+                                        <option value="">Select Shift</option>
+                                        <option value="Day Shift (8 AM - 4 PM)">Day Shift (8 AM - 4 PM)</option>
+                                        <option value="Evening Shift (4 PM - 12 AM)">Evening Shift (4 PM - 12 AM)</option>
+                                        <option value="Night Shift (12 AM - 8 AM)">Night Shift (12 AM - 8 AM)</option>
+                                        <option value="Morning Shift (6 AM - 2 PM)">Morning Shift (6 AM - 2 PM)</option>
+                                        <option value="Full Time">Full Time</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Nurse License</label>
+                                    <input type="text" class="form-control"
+                                           value="@nurse?.NurseLicense"
+                                           disabled>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Experience (Years) *</label>
+                                    <input type="number" class="form-control"
+                                           id="experienceInput"
+                                           name="ExperienceYears"
+                                           value="@nurse?.ExperienceYears"
+                                           min="0" max="50" required
+                                           disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-address-book me-2 text-primary"></i>Contact Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Phone Number *</label>
+                                    <input type="text" class="form-control"
+                                           id="phoneNumberInput"
+                                           name="PhoneNumber"
+                                           value="@nurse?.PhoneNumber"
+                                           required
+                                           disabled
+                                           pattern="^(\+8801|01)[3-9]\d{8}$"
+                                           maxlength="14"
+                                           title="Enter a valid Bangladeshi phone number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Join Date</label>
+                                    <input type="text" class="form-control"
+                                           value="@nurse?.CreatedAt.ToString("dd-MMM-yyyy")"
+                                           disabled>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Address *</label>
+                                <textarea class="form-control"
+                                          id="addressTextarea"
+                                          name="Address"
+                                          rows="3"
+                                          required
+                                          disabled>@nurse?.Address</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="card border-0 shadow-sm mb-4" id="actionButtons" style="display: none;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary py-1 px-3 fs-6" onclick="cancelEdit()">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary py-1 px-3 fs-6" id="saveBtn">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Picture Options Modal -->
+<div class="modal fade" id="picOptionsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title mb-0">Profile Picture</h6>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="list-group list-group-flush">
+                    <button type="button" class="list-group-item list-group-item-action border-0 py-3"
+                            onclick="viewPicture()" data-bs-dismiss="modal">
+                        <i class="fas fa-eye me-2 text-primary"></i>View Full Size
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action border-0 py-3"
+                            onclick="changePicture()" data-bs-dismiss="modal">
+                        <i class="fas fa-upload me-2 text-primary"></i>Change Picture
+                    </button>
+                    @if (!profilePicture.Contains("default"))
+                    {
+                        <button type="button" class="list-group-item list-group-item-action border-0 py-3 text-danger"
+                                onclick="removePicture()" data-bs-dismiss="modal">
+                            <i class="fas fa-trash-alt me-2"></i>Remove Picture
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .edit-profile-btn {
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(13, 110, 253, 0.2);
+        }
+
+        .edit-profile-btn:active {
+            transform: translateY(0);
+        }
+
+    .profile-pic:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-content {
+        padding: 0 15px;
+    }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0,0,0,.125);
+        background-color: #f8f9fa !important;
+    }
+
+    @@media (max-width: 992px) {
+        .col-lg-3 {
+            display: none;
+        }
+
+        .col-lg-9 {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .edit-profile-btn {
+            padding: 0.2rem 0.6rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        .dashboard-content {
+            padding: 0 10px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        let isEditMode = false;
+        let originalValues = {};
+
+        function toggleEditMode() {
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+            const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+
+            if (!isEditMode) {
+                // Enter edit mode
+                isEditMode = true;
+                editBtn.innerHTML = '<i class="fas fa-times me-2"></i>Cancel Edit';
+                editBtn.classList.remove('btn-primary');
+                editBtn.classList.add('btn-secondary');
+
+                actionButtons.style.display = 'block';
+
+                // Store original values
+                inputs.forEach(input => {
+                    if (input.name && !input.readOnly) {
+                        originalValues[input.name] = input.value;
+                    }
+                });
+
+                // Enable editable fields
+                enableField('phoneNumberInput');
+                enableField('addressTextarea');
+                enableField('dateOfBirthInput');
+                enableField('genderSelect');
+                enableField('departmentSelect');
+                enableField('shiftTimeSelect');
+                enableField('experienceInput');
+
+                // Set selected values for dropdowns
+                const gender = "@gender";
+                if (gender && gender !== "") {
+                    const genderSelect = document.getElementById('genderSelect');
+                    const genderValue = gender === "Male" ? "M" :
+                                       gender === "Female" ? "F" :
+                                       gender === "Other" ? "O" : "";
+                    genderSelect.value = genderValue;
+                }
+
+                const department = "@nurse?.Department";
+                if (department && department !== "") {
+                    document.getElementById('departmentSelect').value = department;
+                }
+
+                const shiftTime = "@nurse?.ShiftTime";
+                if (shiftTime && shiftTime !== "") {
+                    document.getElementById('shiftTimeSelect').value = shiftTime;
+                }
+
+                // Scroll to editable fields
+                document.getElementById('phoneNumberInput').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+            } else {
+                // Cancel edit mode
+                cancelEdit();
+            }
+        }
+
+        function enableField(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.disabled = false;
+                field.classList.add('border-primary');
+                field.focus();
+            }
+        }
+
+        function cancelEdit() {
+            isEditMode = false;
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+
+            editBtn.innerHTML = '<i class="fas fa-edit me-1"></i>Edit Profile';
+            editBtn.classList.remove('btn-secondary');
+            editBtn.classList.add('btn-primary');
+
+            actionButtons.style.display = 'none';
+
+            // Restore original values
+            Object.keys(originalValues).forEach(key => {
+                const field = document.querySelector(`[name="${key}"]`);
+                if (field) {
+                    field.value = originalValues[key];
+                }
+            });
+
+            // Disable fields
+            const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+            inputs.forEach(input => {
+                if (!input.readOnly) {
+                    input.disabled = true;
+                    input.classList.remove('border-primary');
+                }
+            });
+
+            originalValues = {};
+        }
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            console.log('Form submission started');
+
+            // Collect form data manually
+            const formData = new FormData();
+
+            // Get all form values
+            const phoneNumber = document.getElementById('phoneNumberInput').value;
+            const address = document.getElementById('addressTextarea').value;
+            const gender = document.getElementById('genderSelect').value;
+            const dateOfBirth = document.getElementById('dateOfBirthInput').value;
+            const department = document.getElementById('departmentSelect').value;
+            const shiftTime = document.getElementById('shiftTimeSelect').value;
+            const experience = document.getElementById('experienceInput').value;
+
+            // Basic validation
+            if (!phoneNumber || !/^01[3-9]\d{8}$/.test(phoneNumber)) {
+                alert('Please enter a valid Bangladeshi phone number (01XXXXXXXXX)');
+                return;
+            }
+
+            if (!address || address.trim().length === 0) {
+                alert('Please enter your address');
+                return;
+            }
+
+            if (!gender) {
+                alert('Please select gender');
+                return;
+            }
+
+            if (!department) {
+                alert('Please select department');
+                return;
+            }
+
+            if (!shiftTime) {
+                alert('Please select shift time');
+                return;
+            }
+
+            // Add data to FormData
+            formData.append('PhoneNumber', phoneNumber);
+            formData.append('Address', address);
+            formData.append('Gender', gender);
+            formData.append('Department', department);
+            formData.append('ShiftTime', shiftTime);
+            formData.append('ExperienceYears', parseInt(experience));
+
+            // Add optional field
+            if (dateOfBirth) {
+                formData.append('DateOfBirth', dateOfBirth);
+            } else {
+                formData.append('DateOfBirth', '');
+            }
+
+            // Add anti-forgery token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            formData.append('__RequestVerificationToken', token);
+
+            console.log('FormData prepared:', {
+                PhoneNumber: phoneNumber,
+                Address: address,
+                Gender: gender,
+                Department: department,
+                ShiftTime: shiftTime,
+                ExperienceYears: experience,
+                DateOfBirth: dateOfBirth
+            });
+
+            // Disable save button
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+            saveBtn.disabled = true;
+
+            // Send form data
+            fetch('@Url.Action("UpdateProfile", "Nurse")', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                    'RequestVerificationToken': token
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    return response.text().then(text => {
+                        console.error('Non-JSON response:', text.substring(0, 200));
+                        return {
+                            success: false,
+                            message: 'Server returned non-JSON response. Please check console.'
+                        };
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+
+                if (data.success) {
+                    // Show success message
+                    showAlert('success', data.message || 'Profile updated successfully!');
+
+                    // Exit edit mode
+                    cancelEdit();
+
+                    // Reload after 2 seconds
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Update failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', `Failed to update profile: ${error.message}`);
+            })
+            .finally(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        });
+
+        // Helper function to show alerts
+        function showAlert(type, message) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll('.alert-dismissible');
+            existingAlerts.forEach(alert => alert.remove());
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show mb-4`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            // Insert after page header
+            const container = document.querySelector('.dashboard-content');
+            const header = container.querySelector('.d-flex.justify-content-between');
+            header.parentNode.insertBefore(alertDiv, header.nextSibling);
+        }
+
+        // Profile picture functions
+        document.getElementById('profileImage').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('picOptionsModal'));
+            modal.show();
+        });
+
+        function viewPicture() {
+            const imgSrc = document.getElementById('profileImage').src;
+            window.open(imgSrc, '_blank');
+        }
+
+        function changePicture() {
+            document.getElementById('profilePictureInput').click();
+        }
+
+        function removePicture() {
+            if (confirm('Are you sure you want to remove your profile picture?')) {
+                fetch('@Url.Action("RemoveProfilePicture", "Nurse")', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const img = document.getElementById('profileImage');
+                        img.src = '@Url.Content("~/uploads/profile-pictures/default.jpg")' + '?t=' + new Date().getTime();
+                        showAlert('success', 'Profile picture removed');
+                    }
+                });
+            }
+        }
+
+        function uploadProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const formData = new FormData();
+                formData.append('profilePicture', input.files[0]);
+
+                // Show loading
+                const profileImage = document.getElementById('profileImage');
+                const originalSrc = profileImage.src;
+
+                // Create loading image
+                const loadingImg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2Y4ZjhmOCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjY2NjIj5Mb2FkaW5nLjwvdGV4dD48L3N2Zz4=';
+
+                profileImage.src = loadingImg;
+
+                fetch('@Url.Action("UpdateProfilePicture", "Nurse")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update image with timestamp to prevent caching
+                        const newSrc = '@Url.Content("~/uploads/profile-pictures/")' + data.fileName + '?t=' + new Date().getTime();
+                        profileImage.src = newSrc;
+                        showAlert('success', 'Profile picture updated successfully!');
+                    } else {
+                        throw new Error(data.message || 'Upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    profileImage.src = originalSrc;
+                    showAlert('danger', 'Failed to upload picture: ' + error.message);
+                });
+            }
+        }
+
+        // Initialize dropdowns on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Initializing dropdowns...");
+
+            const gender = "@gender";
+            console.log("Gender from model:", gender);
+
+            if (gender && gender !== "") {
+                const genderSelect = document.getElementById('genderSelect');
+                const genderValue = gender === "Male" ? "M" :
+                                   gender === "Female" ? "F" :
+                                   gender === "Other" ? "O" : "";
+                genderSelect.value = genderValue;
+                console.log("Set gender to:", genderValue);
+            }
+
+            const department = "@nurse?.Department";
+            console.log("Department from model:", department);
+
+            if (department && department !== "") {
+                const deptSelect = document.getElementById('departmentSelect');
+                deptSelect.value = department;
+                console.log("Set department to:", department);
+            }
+
+            const shiftTime = "@nurse?.ShiftTime";
+            console.log("ShiftTime from model:", shiftTime);
+
+            if (shiftTime && shiftTime !== "") {
+                const shiftSelect = document.getElementById('shiftTimeSelect');
+
+                // Log all available options
+                console.log("Available shift options:");
+                for(let i = 0; i < shiftSelect.options.length; i++) {
+                    console.log(`Option ${i}: value="${shiftSelect.options[i].value}", text="${shiftSelect.options[i].text}"`);
+                }
+
+                // Try exact match
+                let found = false;
+                for(let i = 0; i < shiftSelect.options.length; i++) {
+                    if(shiftSelect.options[i].value === shiftTime) {
+                        shiftSelect.selectedIndex = i;
+                        found = true;
+                        console.log("✓ Exact match found for shift time");
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    console.warn("✗ No exact match found for shift time:", shiftTime);
+                }
+            } else {
+                console.warn("ShiftTime is empty or null");
+            }
+        });
+                // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('nurseProfile');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

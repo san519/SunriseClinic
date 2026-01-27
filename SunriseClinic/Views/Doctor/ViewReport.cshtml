@@ -1,0 +1,117 @@
+﻿@model SunriseClinic.Models.TestReport
+
+@{
+    ViewData["Title"] = "View Test Report";
+}
+
+<div id="viewReport">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-3">
+                @await Html.PartialAsync("_DoctorSidebar")
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">
+                            <i class="fas fa-file-medical me-2 text-danger"></i>Test Report
+                        </h3>
+                        <p class="text-muted mb-0">View test report details</p>
+                    </div>
+                    <a href="/Doctor/PatientDetails/@Model.PatientId" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Patient
+                    </a>
+                </div>
+
+                <!-- Report Details -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Report Name</label>
+                                <p class="form-control-plaintext">@Model.ReportName</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Report Date</label>
+                                <p class="form-control-plaintext">@Model.ReportDate.ToString("dd-MMM-yyyy")</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Patient Name</label>
+                                <p class="form-control-plaintext">@Model.PatientName</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">File Status</label>
+                                <p class="form-control-plaintext">
+                                    @if (!string.IsNullOrEmpty(Model.ReportFile))
+                                    {
+                                        <span class="badge bg-success">Available</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Not Available</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Notes</label>
+                                <div class="bg-light p-3 rounded">
+                                    @Model.Notes
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- File Preview -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-file-pdf me-2 text-danger"></i>Report File
+                        </h5>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        @if (!string.IsNullOrEmpty(Model.ReportFile))
+                        {
+                            <div class="mb-4">
+                                <i class="fas fa-file-pdf fa-5x text-danger mb-3"></i>
+                                <h5 class="text-muted mb-3">PDF Report Available</h5>
+                                <a href="/Patient/DownloadReport/@Model.ReportId" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-download me-2"></i>Download Report
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-file-excel fa-5x text-muted mb-4"></i>
+                                <h5 class="text-muted mb-3">Report File Not Available</h5>
+                                <p class="text-muted">The report file has not been uploaded yet.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('viewReport');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

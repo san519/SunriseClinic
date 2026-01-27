@@ -1,0 +1,460 @@
+﻿@model SunriseClinic.Models.AppointmentViewModel
+
+@{
+    ViewData["Title"] = "Book Appointment | Online Doctor Appointment at Sunrise Clinic Pabna";
+    ViewData["Description"] = "Book doctor appointment online at Sunrise Clinic Pabna. Schedule consultation with specialist doctors, emergency appointment booking, diagnostic test appointments.";
+    ViewData["Keywords"] = "book appointment, doctor appointment, online booking, medical consultation, sunrise clinic appointment, pabna doctor appointment, emergency appointment";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Appointment/Create";
+    ViewData["Breadcrumb"] = @"
+    {
+        ""@@type"": ""ListItem"",
+        ""position"": 2,
+        ""name"": ""Book Appointment"",
+        ""item"": ""https://www.sunriseclinicbd.com/Appointment/Create""
+    }";
+}
+
+<!-- FAQ Schema for Appointment Booking -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@@type": "Question",
+          "name": "How to book appointment at Sunrise Clinic Pabna?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Book appointment online at https://www.sunriseclinicbd.com/Appointment/Create or call +8801703-452323. Select doctor, date, time, and reason for visit at Sunrise Clinic Pabna."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "What is the consultation fee at Sunrise Clinic?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Consultation fees vary by doctor specialization at Sunrise Clinic Pabna. General consultation starts from ৳500. Specialist consultation fees displayed during appointment booking."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "Can I book emergency appointment at Sunrise Clinic?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Yes, emergency appointments available 24/7 at Sunrise Clinic Pabna. Call +8801703-452323 for immediate emergency care or select emergency option during online booking."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "How far in advance can I book appointment?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Appointments can be booked up to 30 days in advance at Sunrise Clinic Pabna. Same-day appointments available if slots are open."
+          }
+        }
+      ]
+    }
+</script>
+
+<!-- Medical Appointment Schema -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalBusiness",
+      "name": "Sunrise Clinic & Diagnostic Center",
+      "description": "Medical clinic and diagnostic center in Pabna, Bangladesh",
+      "url": "https://www.sunriseclinicbd.com",
+      "telephone": "+8801703452323",
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "TB Clinic Gate, Shalgaria",
+        "addressLocality": "Pabna Sadar",
+        "addressRegion": "Pabna",
+        "addressCountry": "Bangladesh"
+      },
+      "makesOffer": {
+        "@@type": "Offer",
+        "name": "Doctor Appointment Booking",
+        "description": "Online appointment booking service",
+        "url": "https://www.sunriseclinicbd.com/Appointment/Create"
+      },
+      "openingHours": "Mo-Su 08:00-22:00",
+      "openingHoursSpecification": [
+        {
+          "@@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "08:00",
+          "closes": "22:00"
+        }
+      ]
+    }
+</script>
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.sunriseclinicbd.com/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Book Appointment",
+          "item": "https://www.sunriseclinicbd.com/Appointment/Create"
+        }
+      ]
+    }
+</script>
+
+<div id="createAppointment" itemscope itemtype="https://schema.org/MedicalClinic">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-3">
+                @await Html.PartialAsync("_PatientSidebar")
+            </div>
+            <div class="col-lg-9">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-light py-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-calendar-plus fa-2x me-3" aria-hidden="true"></i>
+                            <div>
+                                <h1 class="h4 mb-0" itemprop="name">Book Doctor Appointment at Sunrise Clinic Pabna</h1>
+                                <p class="mb-0 opacity-75">Schedule your visit with expert doctors at our diagnostic center in Pabna</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-5">
+                        <!-- Hidden SEO Content for Search Engines -->
+                        <div class="visually-hidden" aria-hidden="true">
+                            <h2>Online Appointment Booking - Sunrise Clinic Pabna</h2>
+                            <p>Book doctor appointments online at Sunrise Clinic & Diagnostic Center in Pabna, Bangladesh.</p>
+                            <h3>Appointment Booking Process:</h3>
+                            <ol>
+                                <li>Select doctor specialization</li>
+                                <li>Choose appointment date (up to 30 days ahead)</li>
+                                <li>Select time slot</li>
+                                <li>Describe symptoms/reason for visit</li>
+                                <li>Submit appointment request</li>
+                            </ol>
+                            <h3>Contact Information:</h3>
+                            <p><strong>Clinic:</strong> Sunrise Clinic & Diagnostic Center</p>
+                            <p><strong>Address:</strong> TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna</p>
+                            <p><strong>Phone:</strong> +880 1703 452323 (24/7 Emergency)</p>
+                            <p><strong>Services:</strong> Doctor Consultation, Diagnostic Tests, Emergency Care, Health Checkup</p>
+                        </div>
+
+                        <!-- Display any existing TempData messages -->
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" aria-label="Success Message">
+                                <i class="fas fa-check-circle me-2" aria-hidden="true"></i>
+                                <span itemprop="successMessage">@TempData["SuccessMessage"]</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" aria-label="Error Message">
+                                <i class="fas fa-exclamation-circle me-2" aria-hidden="true"></i>
+                                <span itemprop="errorMessage">@TempData["ErrorMessage"]</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Create" method="post" id="appointmentForm" itemprop="potentialAction" itemscope itemtype="https://schema.org/BookAction">
+                            @Html.AntiForgeryToken()
+
+                            <!-- Display validation summary -->
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" aria-label="Validation Errors"></div>
+
+                            <!-- Doctor Selection -->
+                            <div class="mb-4">
+                                <h2 class="text-primary mb-3 border-bottom pb-2">
+                                    <i class="fas fa-user-md me-2" aria-hidden="true"></i>Select Doctor at Sunrise Clinic
+                                </h2>
+
+                                <div class="mb-3">
+                                    <label asp-for="SelectedDoctorId" class="form-label fw-semibold">Choose a Doctor at Sunrise Clinic Pabna *</label>
+                                    <select asp-for="SelectedDoctorId" class="form-select form-select-lg"
+                                            aria-label="Select Doctor for Appointment"
+                                            aria-required="true"
+                                            itemprop="agent">
+                                        <option value="">-- Select Doctor at Sunrise Clinic --</option>
+                                        @if (Model.AvailableDoctors != null && Model.AvailableDoctors.Count > 0)
+                                        {
+                                            foreach (var doctor in Model.AvailableDoctors)
+                                            {
+                                                <option value="@doctor.DoctorId" itemprop="name">
+                                                    Dr. @doctor.FullName - @doctor.Specialization
+                                                    (Fee: ৳@doctor.ConsultationFee.ToString("0"))
+                                                </option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="" disabled>No doctors available at Sunrise Clinic</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="SelectedDoctorId" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Date and Time -->
+                            <div class="mb-4">
+                                <h2 class="text-primary mb-3 border-bottom pb-2">
+                                    <i class="fas fa-clock me-2" aria-hidden="true"></i>Select Date & Time for Appointment
+                                </h2>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SelectedDate" class="form-label fw-semibold">Appointment Date at Sunrise Clinic *</label>
+                                        <input asp-for="SelectedDate" type="date"
+                                               min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                               max="@DateTime.Today.AddDays(30).ToString("yyyy-MM-dd")"
+                                               class="form-control form-control-lg"
+                                               aria-label="Appointment Date"
+                                               aria-required="true"
+                                               itemprop="startTime">
+                                        <span asp-validation-for="SelectedDate" class="text-danger small"></span>
+                                        <small class="text-muted">Appointments available up to 30 days in advance</small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="SelectedTimeSlot" class="form-label fw-semibold">Preferred Time Slot *</label>
+                                        <select asp-for="SelectedTimeSlot" class="form-select form-select-lg"
+                                                aria-label="Appointment Time"
+                                                aria-required="true"
+                                                itemprop="startTime">
+                                            <option value="">-- Select Time at Sunrise Clinic --</option>
+                                            @if (Model.TimeSlots != null && Model.TimeSlots.Count > 0)
+                                            {
+                                                foreach (var timeSlot in Model.TimeSlots)
+                                                {
+                                                    <option value="@timeSlot" itemprop="name">@timeSlot</option>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <option value="" disabled>No time slots available</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="SelectedTimeSlot" class="text-danger small"></span>
+                                        <small class="text-muted">Clinic hours: 8:00 AM - 10:00 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Appointment Details -->
+                            <div class="mb-4">
+                                <h2 class="text-primary mb-3 border-bottom pb-2">
+                                    <i class="fas fa-stethoscope me-2" aria-hidden="true"></i>Appointment Details
+                                </h2>
+
+                                <div class="mb-3">
+                                    <label asp-for="Reason" class="form-label fw-semibold">Reason for Appointment at Sunrise Clinic *</label>
+                                    <textarea asp-for="Reason" class="form-control form-control-lg"
+                                              rows="3"
+                                              placeholder="Please describe your symptoms or reason for visit to Sunrise Clinic"
+                                              aria-label="Reason for Appointment"
+                                              aria-required="true"
+                                              itemprop="description"></textarea>
+                                    <span asp-validation-for="Reason" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Symptoms" class="form-label fw-semibold">Specific Symptoms (Optional)</label>
+                                    <textarea asp-for="Symptoms" class="form-control form-control-lg"
+                                              rows="2"
+                                              placeholder="e.g., Fever, Headache, Pain location, etc. - For better diagnosis at Sunrise Clinic"
+                                              aria-label="Specific Symptoms"
+                                              itemprop="additionalProperty"></textarea>
+                                </div>
+
+                                <!-- Emergency Appointment Checkbox -->
+                                <div class="form-check mb-3">
+                                    <input asp-for="IsEmergency" class="form-check-input" type="checkbox" id="IsEmergency">
+                                    <label asp-for="IsEmergency" class="form-check-label" for="IsEmergency">
+                                        <i class="fas fa-exclamation-triangle text-danger me-1" aria-hidden="true"></i>
+                                        <span itemprop="additionalProperty">This is an emergency appointment at Sunrise Clinic</span>
+                                    </label>
+                                    <small class="text-muted d-block mt-1">For emergencies, call +880 1703 452323 (24/7)</small>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg py-3"
+                                        aria-label="Book Appointment at Sunrise Clinic Pabna"
+                                        itemprop="actionOption">
+                                    <i class="fas fa-calendar-check me-2" aria-hidden="true"></i>Book Appointment at Sunrise Clinic
+                                </button>
+                                <a asp-action="MyAppointments" class="btn btn-outline-primary btn-lg py-3"
+                                   aria-label="View My Appointments at Sunrise Clinic">
+                                    <i class="fas fa-list me-2" aria-hidden="true"></i>View My Appointments
+                                </a>
+                            </div>
+
+                            <!-- Quick Contact Info -->
+                            <div class="mt-4 pt-4 border-top text-center">
+                                <p class="small text-muted mb-2">Need help with appointment? Contact Sunrise Clinic Pabna:</p>
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <a href="tel:+8801703452323" class="btn btn-sm btn-success" aria-label="Call Sunrise Clinic">
+                                        <i class="fas fa-phone me-1" aria-hidden="true"></i> Call: +8801703-452323
+                                    </a>
+                                    <a href="/Home/Contact" class="btn btn-sm btn-outline-primary" aria-label="Contact Sunrise Clinic">
+                                        <i class="fas fa-envelope me-1" aria-hidden="true"></i> Contact Us
+                                    </a>
+                                    <a href="/Home/Diagnostic" class="btn btn-sm btn-outline-primary" aria-label="View Diagnostic Services">
+                                        <i class="fas fa-vial me-1" aria-hidden="true"></i> Diagnostic Tests
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            console.log("Appointment booking page loaded - Sunrise Clinic Pabna");
+
+            // Simple form validation
+            $('#appointmentForm').on('submit', function(e) {
+                var isValid = true;
+                var errorMessage = '';
+
+                // Check doctor selection
+                if ($('#SelectedDoctorId').val() === '') {
+                    errorMessage = 'Please select a doctor at Sunrise Clinic';
+                    isValid = false;
+                }
+
+                // Check date
+                var selectedDate = new Date($('#SelectedDate').val());
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if ($('#SelectedDate').val() === '') {
+                    errorMessage = 'Please select an appointment date';
+                    isValid = false;
+                } else if (selectedDate < today) {
+                    errorMessage = 'Appointment date cannot be in the past';
+                    isValid = false;
+                }
+
+                // Check time - if today's date, validate time
+                if ($('#SelectedDate').val() === today.toISOString().split('T')[0]) {
+                    var selectedTime = $('#SelectedTimeSlot').val();
+                    if (selectedTime) {
+                        var now = new Date();
+                        var selectedDateTime = new Date($('#SelectedDate').val() + 'T' + selectedTime + ':00');
+
+                        // অন্তত 30 মিনিট পরের সময় check
+                        var minTime = new Date(now.getTime() + 30 * 60000);
+
+                        if (selectedDateTime <= minTime) {
+                            errorMessage = 'For today\'s appointment at Sunrise Clinic, please select a time at least 30 minutes from now';
+                            isValid = false;
+                        }
+                    }
+                }
+
+                // Check time
+                if ($('#SelectedTimeSlot').val() === '') {
+                    errorMessage = 'Please select a time slot at Sunrise Clinic';
+                    isValid = false;
+                }
+
+                // Check reason
+                if ($('#Reason').val().trim() === '') {
+                    errorMessage = 'Please provide a reason for appointment at Sunrise Clinic';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+
+                    // SEO Event Tracking for failed validation
+                    console.log('SEO: Appointment booking validation failed -', errorMessage);
+
+                    alert(errorMessage);
+                } else {
+                    console.log("SEO: Appointment booking form validated successfully - Sunrise Clinic Pabna");
+
+                    // Google Analytics event tracking
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'appointment_submit', {
+                            'event_category': 'Appointment',
+                            'event_label': 'Appointment Booking'
+                        });
+                    }
+                }
+            });
+
+            // Real-time time slot validation for today's date
+            $('#SelectedDate, #SelectedTimeSlot').change(function() {
+                var selectedDate = new Date($('#SelectedDate').val());
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate.getTime() === today.getTime()) {
+                    var selectedTime = $('#SelectedTimeSlot').val();
+                    if (selectedTime) {
+                        var now = new Date();
+                        var selectedDateTime = new Date($('#SelectedDate').val() + 'T' + selectedTime + ':00');
+                        var minTime = new Date(now.getTime() + 30 * 60000);
+
+                        if (selectedDateTime <= minTime) {
+                            $('#SelectedTimeSlot').addClass('is-invalid');
+                            $('span[data-valmsg-for="SelectedTimeSlot"]').text('Please select a time at least 30 minutes from now for today\'s appointment at Sunrise Clinic');
+                        } else {
+                            $('#SelectedTimeSlot').removeClass('is-invalid');
+                            $('span[data-valmsg-for="SelectedTimeSlot"]').text('');
+                        }
+                    }
+                }
+
+                // SEO: Track form interactions
+                console.log('SEO: Appointment form field changed -', this.name || this.id);
+            });
+        });
+
+        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('createAppointment');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO: Track appointment page views
+            console.log('SEO: Appointment Booking Page Loaded - Sunrise Clinic Pabna');
+
+            // Track emergency checkbox
+            document.getElementById('IsEmergency').addEventListener('change', function() {
+                console.log('SEO: Emergency appointment checked:', this.checked);
+            });
+
+            // Track phone call clicks
+            document.querySelectorAll('a[href^="tel:"]').forEach(phoneLink => {
+                phoneLink.addEventListener('click', function() {
+                    console.log('SEO: Phone call initiated from appointment page');
+                });
+            });
+        });
+    </script>
+}

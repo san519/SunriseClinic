@@ -1,0 +1,71 @@
+﻿@{
+    var userName = Context.Session.GetString("UserName");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var displayId = Context.Session.GetString("DisplayId");
+    var userType = Context.Session.GetString("UserType");
+
+    // ✅ FIXED: Use the same logic as PatientSidebar
+    var profilePicture = ViewBag.Patient?.ProfilePicture as string ??
+                        ViewBag.PatientProfilePicture as string ??
+                        "default.jpg";
+}
+
+<!-- Mobile Menu Button - Fixed at Dashboard Top -->
+<div class="mobile-dashboard-toggle ps-1 pt-2" id="mobileDashboardToggle">
+    <button style="font-size: 1rem;">
+        <i class="fas fa-bars py-2"></i> <label class="ps-1">User Menu</label>
+    </button>
+</div>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="mobile-dashboard-overlay" id="mobileDashboardOverlay"></div>
+
+<!-- Mobile Sidebar -->
+<div class="mobile-dashboard-sidebar" id="mobileDashboardSidebar">
+    <div class="mobile-sidebar-header">
+        <button class="mobile-sidebar-close" id="mobileSidebarClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-profile-info text-center">
+            <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}")"
+                 class="rounded-circle mb-3" width="80" height="80"
+                 style="object-fit: cover;" alt="Profile">
+            <h5 class="mb-1">@userName</h5>
+            <p class="mb-0 opacity-90">
+                <i class="fas fa-id-card me-1"></i>ID: @displayId
+            </p>
+            @if (!string.IsNullOrEmpty(userEmail))
+            {
+                <p class="mb-0 opacity-90">
+                    <i class="fas fa-envelope me-1"></i>@userEmail
+                </p>
+            }
+            <div class="mt-2">
+                <span class="badge bg-white text-success">
+                    <i class="fas fa-user-circle me-1"></i>
+                    @userType
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-sidebar-content">
+        @if (userType == "Patient")
+        {
+            @await Html.PartialAsync("_PatientMobileMenu")
+        }
+        else if (userType == "Admin")
+        {
+            @await Html.PartialAsync("_AdminMobileMenu")
+        }
+        else if (userType == "Doctor")
+        {
+            @await Html.PartialAsync("_DoctorMobileMenu")
+        }
+        else if (userType == "Nurse")
+        {
+            @await Html.PartialAsync("_NurseMobileMenu")
+        }
+
+    </div>
+</div>

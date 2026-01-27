@@ -1,0 +1,1161 @@
+﻿@{
+    ViewData["Title"] = "Patient Details";
+    var patient = ViewBag.Patient as dynamic;
+    var appointments = ViewBag.Appointments as List<dynamic>;
+    var prescriptions = ViewBag.Prescriptions as List<dynamic>;
+    var testReports = ViewBag.TestReports as List<dynamic>;
+    var diseases = ViewBag.Diseases as List<dynamic>;
+}
+
+<div id="patientDetails">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-2 py-md-3">
+        <div class="row g-0">
+            <!-- Sidebar (Hidden on Mobile) -->
+            <div class="col-lg-3 d-none d-lg-block">
+                @await Html.PartialAsync("_NurseSidebar")
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                <!-- Alerts -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-3 mb-md-4">
+                        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show mb-3 mb-md-4">
+                        <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (patient == null)
+                {
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Patient not found!
+                    </div>
+                    <a href="/Nurse/Patients" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Patients List
+                    </a>
+                }
+                else
+                {
+                    <!-- Patient Header -->
+                    <div class="card border-0 shadow-sm mb-3 mb-md-4">
+                        <div class="card-body p-3 p-md-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                                <div class="flex-grow-1">
+                                    <h3 class="mb-2">@patient?.FullName</h3>
+                                    <div class="d-flex flex-wrap gap-1 gap-md-2 mb-3">
+                                        <span class="badge bg-primary">Patient ID: @patient?.DisplayId</span>
+                                        <span class="badge bg-info">@patient?.Gender</span>
+                                        @if (!string.IsNullOrEmpty(patient?.BloodGroup as string) && (patient?.BloodGroup as string) != "Not set")
+                                        {
+                                            <span class="badge bg-danger">Blood Group: @patient?.BloodGroup</span>
+                                        }
+                                    </div>
+                                    <div class="row g-2 g-md-3">
+                                        <div class="col-12 col-md-6">
+                                            <p class="mb-1 text-truncate"><i class="fas fa-envelope me-2"></i>@patient?.Email</p>
+                                            <p class="mb-1"><i class="fas fa-phone me-2"></i>@patient?.PhoneNumber</p>
+                                            @if (!string.IsNullOrEmpty(patient?.Address as string))
+                                            {
+                                                <p class="mb-1 text-break"><i class="fas fa-map-marker-alt me-2"></i>@patient?.Address</p>
+                                            }
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <p class="mb-1"><i class="fas fa-calendar me-2"></i>Registered: @patient?.CreatedAt.ToString("dd-MMM-yyyy")</p>
+                                            <p class="mb-1"><i class="fas fa-phone-alt me-2"></i>Emergency: @patient?.EmergencyContact</p>
+                                            @if (patient?.DateOfBirth != null)
+                                            {
+                                                <p class="mb-1"><i class="fas fa-birthday-cake me-2"></i>DOB: @(((DateTime)patient.DateOfBirth).ToString("dd-MMM-yyyy"))</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-100 w-md-auto">
+                                    <div class="d-flex flex-column flex-sm-row gap-2">
+                                        <a href="/Nurse/UploadPrescription?patientId=@patient?.UserId"
+                                           class="btn btn-success btn-sm btn-md">
+                                            <i class="fas fa-prescription me-1 me-md-2"></i>
+                                            <span class="d-none d-sm-inline">Upload</span> Prescription
+                                        </a>
+                                        <a href="/Nurse/UploadTestReport?patientId=@patient?.UserId"
+                                           class="btn btn-warning btn-sm btn-md">
+                                            <i class="fas fa-file-medical me-1 me-md-2"></i>
+                                            <span class="d-none d-sm-inline">Upload</span> Test Report
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Back Button -->
+                    <div class="d-block d-lg-none mb-3">
+                        <a href="/Nurse/Patients" class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Patients List
+                        </a>
+                    </div>
+
+                    <!-- Tabs Navigation -->
+                    <div class="position-relative mb-3 mb-md-4">
+                        <div class="nav-scrollable">
+                            <ul class="nav nav-tabs flex-nowrap" id="patientTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="appointments-tab" data-bs-toggle="tab"
+                                            data-bs-target="#appointments" type="button">
+                                        <i class="fas fa-calendar me-1 me-md-2"></i>
+                                        <span class="d-none d-sm-inline">Appointments</span>
+                                        <span class="d-inline d-sm-none">Apps</span>
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="prescriptions-tab" data-bs-toggle="tab"
+                                            data-bs-target="#prescriptions" type="button">
+                                        <i class="fas fa-prescription me-1 me-md-2"></i>
+                                        <span class="d-none d-sm-inline">Prescriptions</span>
+                                        <span class="d-inline d-sm-none">Rx</span>
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="reports-tab" data-bs-toggle="tab"
+                                            data-bs-target="#reports" type="button">
+                                        <i class="fas fa-file-medical me-1 me-md-2"></i>
+                                        <span class="d-none d-sm-inline">Test Reports</span>
+                                        <span class="d-inline d-sm-none">Reports</span>
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="diseases-tab" data-bs-toggle="tab"
+                                            data-bs-target="#diseases" type="button">
+                                        <i class="fas fa-disease me-1 me-md-2"></i>
+                                        <span class="d-none d-sm-inline">Disease History</span>
+                                        <span class="d-inline d-sm-none">Diseases</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-scroll-shadow"></div>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="patientTabsContent">
+                        <!-- Appointments Tab -->
+                        <div class="tab-pane fade show active" id="appointments" role="tabpanel">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-0">
+                                    @if (appointments != null && appointments.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th class="ps-3">Date & Time</th>
+                                                        <th>Doctor</th>
+                                                        <th class="d-none d-md-table-cell">Specialization</th>
+                                                        <th>Reason</th>
+                                                        <th>Status</th>
+                                                        <th class="pe-3 d-none d-sm-table-cell">Emergency</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var app in appointments)
+                                                    {
+                                                        <tr>
+                                                            <td class="ps-3">
+                                                                <div>@app.AppointmentDate</div>
+                                                                <small class="text-muted">@app.AppointmentTime</small>
+                                                            </td>
+                                                            <td>@app.DoctorName</td>
+                                                            <td class="d-none d-md-table-cell">@app.Specialization</td>
+                                                            <td>
+                                                                <span class="d-inline d-sm-none" title="@app.Reason">
+                                                                    @{
+                                                                        var shortReason = (app.Reason as string)?.Length > 15 ?
+                                                                        (app.Reason as string)?.Substring(0, 15) + "..." : app.Reason;
+                                                                    }
+                                                                    @shortReason
+                                                                </span>
+                                                                <span class="d-none d-sm-inline">@app.Reason</span>
+                                                            </td>
+                                                            <td>
+                                                                @{
+                                                                    var status = app.Status as string;
+                                                                    var badgeClass = status == "Approved" ? "bg-success" :
+                                                                    status == "Pending" ? "bg-warning" :
+                                                                    status == "Completed" ? "bg-info" : "bg-danger";
+                                                                }
+                                                                <span class="badge @badgeClass">@status</span>
+                                                            </td>
+                                                            <td class="pe-3 d-none d-sm-table-cell">
+                                                                @if (app.IsEmergency)
+                                                                {
+                                                                    <span class="badge bg-danger">Yes</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-secondary">No</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                            <h6 class="text-muted">No appointments found</h6>
+                                            <p class="small text-muted mb-0">This patient has no appointment history</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prescriptions Tab - Gallery Style -->
+                        <div class="tab-pane fade" id="prescriptions" role="tabpanel">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-2 p-md-3">
+                                    @if (prescriptions != null && prescriptions.Any())
+                                    {
+                                        <div class="row g-2 g-md-3" id="prescriptionGallery">
+                                            @foreach (var pres in prescriptions)
+                                            {
+                                                var fileName = pres.PrescriptionFile as string;
+                                                var fileExtension = !string.IsNullOrEmpty(fileName) ?
+                                                System.IO.Path.GetExtension(fileName).ToLower() : "";
+
+                                                // Helper method to check if extension is in array
+                                                bool IsExtensionInArray(string ext, string[] extensions)
+                                                {
+                                                    foreach (var e in extensions)
+                                                    {
+                                                        if (e == ext) return true;
+                                                    }
+                                                    return false;
+                                                }
+
+                                                var isImage = IsExtensionInArray(fileExtension, new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" });
+                                                var isPdf = fileExtension == ".pdf";
+                                                var isDoc = IsExtensionInArray(fileExtension, new[] { ".doc", ".docx", ".txt" });
+                                                var previewIcon = isImage ? "fas fa-image" : (isPdf ? "fas fa-file-pdf" : "fas fa-file-word");
+                                                var previewClass = isImage ? "image-preview" : (isPdf ? "pdf-preview" : "doc-preview");
+
+                                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                                    <div class="card file-card border-0 shadow-sm h-100">
+                                                        <div class="card-body p-2 p-sm-3 text-center d-flex flex-column">
+                                                            <!-- File Preview -->
+                                                            <div class="file-preview mb-2 flex-grow-1 @previewClass"
+                                                                 data-file="@pres.PrescriptionFile"
+                                                                 data-type="@(isImage ? "image" : (isPdf ? "pdf" : "doc"))"
+                                                                 data-id="@pres.PrescriptionId">
+                                                                @if (isImage)
+                                                                {
+                                                                    <img src="~/uploads/prescriptions/@pres.PrescriptionFile"
+                                                                         class="img-fluid rounded"
+                                                                         alt="Prescription"
+                                                                         style="max-height: 120px; object-fit: cover; cursor: pointer; width: 100%;">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="file-icon d-flex align-items-center justify-content-center h-100" style="cursor: pointer;">
+                                                                        <i class="@previewIcon fa-3x @(isPdf ? "text-danger" : "text-primary")"></i>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                            <!-- File Info -->
+                                                            <div class="file-info mb-2">
+                                                                <h6 class="mb-1 text-truncate small" title="@fileName">@fileName</h6>
+                                                                <p class="text-muted small mb-1">
+                                                                    <i class="fas fa-calendar me-1"></i>@pres.PrescriptionDate
+                                                                </p>
+                                                                <p class="small mb-1">
+                                                                    <i class="fas fa-user-md me-1"></i>
+                                                                    <span class="d-none d-sm-inline">@pres.PrescribedByName</span>
+                                                                    @if (pres.IsUploadedByNurse)
+                                                                    {
+                                                                        <span class="badge bg-success ms-1">N</span>
+                                                                    }
+                                                                </p>
+                                                                @if (!string.IsNullOrEmpty(pres.Notes as string))
+                                                                {
+                                                                    var notes = pres.Notes as string;
+                                                                    <p class="small text-muted mb-1 d-none d-sm-block" title="@notes">
+                                                                        <i class="fas fa-sticky-note me-1"></i>
+                                                                        @(notes.Length > 30 ? notes.Substring(0, 30) + "..." : notes)
+                                                                    </p>
+                                                                }
+                                                            </div>
+
+                                                            <!-- Actions -->
+                                                            <div class="d-flex justify-content-center gap-1 mt-auto">
+                                                                <a href="/Nurse/DownloadPrescription/@pres.PrescriptionId"
+                                                                   class="btn btn-sm btn-outline-success px-2" title="Download">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                                <button class="btn btn-sm btn-outline-info px-2 view-btn"
+                                                                        data-file="@pres.PrescriptionFile"
+                                                                        data-type="@(isImage ? "image" : (isPdf ? "pdf" : "doc"))"
+                                                                        title="Preview">
+                                                                    <i class="fas fa-expand"></i>
+                                                                </button>
+                                                                <form method="post" action="/Nurse/DeletePrescription/@pres.PrescriptionId"
+                                                                      class="d-inline" onsubmit="return confirm('Delete this prescription?');">
+                                                                    <input type="hidden" name="patientId" value="@patient?.UserId" />
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Delete">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-4 py-md-5">
+                                            <i class="fas fa-prescription-bottle fa-3x text-muted mb-3"></i>
+                                            <h6 class="text-muted">No prescriptions found</h6>
+                                            <p class="small text-muted mb-0">Upload prescriptions using the button above</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Test Reports Tab - Gallery Style -->
+                        <div class="tab-pane fade" id="reports" role="tabpanel">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-2 p-md-3">
+                                    @if (testReports != null && testReports.Any())
+                                    {
+                                        <div class="row g-2 g-md-3" id="reportsGallery">
+                                            @foreach (var report in testReports)
+                                            {
+                                                var fileName = report.ReportFile as string;
+                                                var fileExtension = !string.IsNullOrEmpty(fileName) ?
+                                                System.IO.Path.GetExtension(fileName).ToLower() : "";
+
+                                                // Helper method to check if extension is in array
+                                                bool IsExtensionInArray(string ext, string[] extensions)
+                                                {
+                                                    foreach (var e in extensions)
+                                                    {
+                                                        if (e == ext) return true;
+                                                    }
+                                                    return false;
+                                                }
+
+                                                var isImage = IsExtensionInArray(fileExtension, new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" });
+                                                var isPdf = fileExtension == ".pdf";
+                                                var isDoc = IsExtensionInArray(fileExtension, new[] { ".doc", ".docx", ".txt" });
+                                                var previewIcon = isImage ? "fas fa-image" : (isPdf ? "fas fa-file-pdf" : "fas fa-file-word");
+                                                var previewClass = isImage ? "image-preview" : (isPdf ? "pdf-preview" : "doc-preview");
+
+                                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                                    <div class="card file-card border-0 shadow-sm h-100">
+                                                        <div class="card-body p-2 p-sm-3 text-center d-flex flex-column">
+                                                            <!-- File Preview -->
+                                                            <div class="file-preview mb-2 flex-grow-1 @previewClass"
+                                                                 data-file="@report.ReportFile"
+                                                                 data-type="@(isImage ? "image" : (isPdf ? "pdf" : "doc"))"
+                                                                 data-id="@report.ReportId">
+                                                                @if (isImage)
+                                                                {
+                                                                    <img src="~/uploads/reports/@report.ReportFile"
+                                                                         class="img-fluid rounded"
+                                                                         alt="Test Report"
+                                                                         style="max-height: 120px; object-fit: cover; cursor: pointer; width: 100%;">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="file-icon d-flex align-items-center justify-content-center h-100" style="cursor: pointer;">
+                                                                        <i class="@previewIcon fa-3x @(isPdf ? "text-danger" : "text-primary")"></i>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                            <!-- File Info -->
+                                                            <div class="file-info mb-2">
+                                                                <h6 class="mb-1 text-truncate small" title="@report.ReportName">@report.ReportName</h6>
+                                                                <p class="text-muted small mb-1">
+                                                                    <i class="fas fa-calendar me-1"></i>@report.ReportDate
+                                                                </p>
+                                                                <p class="small mb-1">
+                                                                    <i class="fas fa-user me-1"></i>
+                                                                    <span class="d-none d-sm-inline">@report.UploadedByName</span>
+                                                                    @if (report.IsUploadedByNurse)
+                                                                    {
+                                                                        <span class="badge bg-success ms-1">N</span>
+                                                                    }
+                                                                </p>
+                                                                @if (!string.IsNullOrEmpty(report.Notes as string))
+                                                                {
+                                                                    var notes = report.Notes as string;
+                                                                    <p class="small text-muted mb-1 d-none d-sm-block" title="@notes">
+                                                                        <i class="fas fa-sticky-note me-1"></i>
+                                                                        @(notes.Length > 30 ? notes.Substring(0, 30) + "..." : notes)
+                                                                    </p>
+                                                                }
+                                                            </div>
+
+                                                            <!-- Actions -->
+                                                            <div class="d-flex justify-content-center gap-1 mt-auto">
+                                                                <a href="/Nurse/DownloadTestReport/@report.ReportId"
+                                                                   class="btn btn-sm btn-outline-success px-2" title="Download">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                                <button class="btn btn-sm btn-outline-info px-2 view-btn"
+                                                                        data-file="@report.ReportFile"
+                                                                        data-type="@(isImage ? "image" : (isPdf ? "pdf" : "doc"))"
+                                                                        title="Preview">
+                                                                    <i class="fas fa-expand"></i>
+                                                                </button>
+                                                                <form method="post" action="/Nurse/DeleteTestReport/@report.ReportId"
+                                                                      class="d-inline" onsubmit="return confirm('Delete this test report?');">
+                                                                    <input type="hidden" name="patientId" value="@patient?.UserId" />
+                                                                    <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Delete">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-4 py-md-5">
+                                            <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
+                                            <h6 class="text-muted">No test reports found</h6>
+                                            <p class="small text-muted mb-0">Upload test reports using the button above</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disease History Tab -->
+                        <div class="tab-pane fade" id="diseases" role="tabpanel">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-0">
+                                    @if (diseases != null && diseases.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th class="ps-3">Disease</th>
+                                                        <th class="d-none d-md-table-cell">Category</th>
+                                                        <th>Diagnosed Date</th>
+                                                        <th>Status</th>
+                                                        <th class="pe-3">Diagnosed By</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var disease in diseases)
+                                                    {
+                                                        var status = disease.Status as string;
+                                                        var badgeClass = status == "Active" ? "bg-danger" :
+                                                        status == "Recovered" ? "bg-success" : "bg-warning";
+                                                        <tr>
+                                                            <td class="ps-3">
+                                                                <div class="fw-semibold">@disease.DiseaseName</div>
+                                                                <small class="text-muted d-block d-sm-none">@disease.Category</small>
+                                                                <small class="text-muted">@disease.Notes</small>
+                                                            </td>
+                                                            <td class="d-none d-md-table-cell">@disease.Category</td>
+                                                            <td>@disease.DiagnosedDate</td>
+                                                            <td>
+                                                                <span class="badge @badgeClass">@status</span>
+                                                            </td>
+                                                            <td class="pe-3">@disease.DoctorName</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-4 py-md-5">
+                                            <i class="fas fa-heartbeat fa-3x text-muted mb-3"></i>
+                                            <h6 class="text-muted">No disease history found</h6>
+                                            <p class="small text-muted mb-0">No diseases have been diagnosed for this patient</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Back Button -->
+                    <div class="mt-3 mt-md-4 d-none d-lg-block">
+                        <a href="/Nurse/Patients" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Patients List
+                        </a>
+                    </div>
+
+                    <!-- Full Screen Viewer Modal -->
+                    <div class="modal fade" id="fileViewerModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+                            <div class="modal-content">
+                                <div class="modal-header py-2 py-md-3">
+                                    <h5 class="modal-title fs-6 fs-md-5" id="fileViewerTitle">File Viewer</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <div id="fileViewerContent" class="text-center p-2 p-md-4 d-flex align-items-center justify-content-center" style="min-height: 60vh;">
+                                        <!-- Content will be loaded dynamically -->
+                                    </div>
+                                </div>
+                                <div class="modal-footer py-2 py-md-3">
+                                    <button type="button" class="btn btn-secondary btn-sm btn-md" data-bs-dismiss="modal">Close</button>
+                                    <a href="#" id="downloadFileBtn" class="btn btn-success btn-sm btn-md">
+                                        <i class="fas fa-download me-1 me-md-2"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* File Cards */
+        .file-card {
+            transition: transform 0.2s;
+            min-height: 280px;
+        }
+
+            .file-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+        .file-preview img {
+            transition: transform 0.3s;
+        }
+
+            .file-preview img:hover {
+                transform: scale(1.05);
+            }
+
+        .file-icon {
+            transition: transform 0.3s;
+            min-height: 120px;
+        }
+
+            .file-icon:hover {
+                transform: scale(1.1);
+            }
+
+        .image-preview {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .pdf-preview .file-icon {
+            color: #dc3545 !important;
+        }
+
+        .doc-preview .file-icon {
+            color: #0d6efd !important;
+        }
+
+        /* Full screen viewer */
+        #fileViewerContent img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+        }
+
+        #fileViewerContent .pdf-viewer {
+            width: 100%;
+            height: 70vh;
+            border: none;
+        }
+
+        .doc-viewer {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+            .doc-viewer i {
+                font-size: 8rem;
+                margin-bottom: 20px;
+            }
+
+        /* Scrollable tabs */
+        .nav-scrollable {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            white-space: nowrap;
+        }
+
+            .nav-scrollable::-webkit-scrollbar {
+                display: none;
+            }
+
+        .tab-scroll-shadow {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9));
+            pointer-events: none;
+        }
+
+        /* Mobile Responsive Fixes */
+        @@media (max-width: 767.98px) {
+            /* Layout */
+            .container-fluid.py-2 {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            /* Patient Header */
+            .card-body.p-3 {
+                padding: 1rem !important;
+            }
+
+            h3.mb-2 {
+                font-size: 1.5rem;
+            }
+            /* Badges */
+            .d-flex.flex-wrap.gap-1 {
+                gap: 0.25rem !important;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+            /* Patient Info */
+            .row.g-2 .col-12 {
+                padding: 0.25rem 0;
+            }
+
+            p.mb-1 {
+                font-size: 0.875rem;
+                margin-bottom: 0.5rem !important;
+            }
+            /* Buttons */
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            /* Tabs */
+            .nav-link {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            /* Table */
+            .table-responsive {
+                border: 0;
+                margin: 0 -0.5rem;
+            }
+
+            .table {
+                font-size: 0.75rem;
+                margin-bottom: 0;
+            }
+
+                .table th,
+                .table td {
+                    padding: 0.5rem;
+                }
+            /* File Cards */
+            .col-6 {
+                padding: 0.25rem;
+            }
+
+            .card-body.p-2 {
+                padding: 0.75rem !important;
+            }
+
+            .file-card {
+                min-height: 240px;
+            }
+
+            .file-preview {
+                margin-bottom: 0.5rem;
+            }
+
+            h6.small {
+                font-size: 0.75rem;
+            }
+
+            .text-muted.small {
+                font-size: 0.7rem;
+            }
+            /* Modal */
+            .modal-dialog.modal-fullscreen-md-down {
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .modal-content {
+                min-height: 100vh;
+                border-radius: 0;
+            }
+
+            .modal-header,
+            .modal-footer {
+                padding: 0.75rem 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+            /* Empty States */
+            .py-4 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+
+            .fa-3x {
+                font-size: 2.5rem;
+            }
+        }
+
+        @@media (min-width: 768px) and (max-width: 991.98px) {
+            /* Tablet */
+            .col-sm-4 {
+                width: 33.333%;
+            }
+
+            .file-card {
+                min-height: 260px;
+            }
+
+            .btn-md {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Touch Device Improvements */
+        @@media (hover: none) and (pointer: coarse) {
+            .file-card:hover {
+                transform: none;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .btn {
+                min-height: 44px;
+            }
+
+            .btn-sm {
+                min-height: 36px;
+                min-width: 44px;
+            }
+
+            .nav-link {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+            }
+            /* Larger touch targets */
+            .view-btn,
+            [title="Download"],
+            [title="Delete"] {
+                min-width: 44px;
+                min-height: 36px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* iOS Safari Fixes */
+        @@supports (-webkit-touch-callout: none) {
+            .modal-body {
+                max-height: 80vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-scrollable {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Android Chrome Fixes */
+        .modal-open {
+            padding-right: 0 !important;
+        }
+
+        /* Prevent pull-to-refresh on mobile */
+        body {
+            overscroll-behavior-y: contain;
+        }
+
+        /* Fix for mobile viewport */
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Better text rendering on mobile */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Initialize tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            // Activate first tab
+            const firstTabEl = document.querySelector('#patientTabs button:first-child');
+            if (firstTabEl) {
+                const firstTab = new bootstrap.Tab(firstTabEl);
+                firstTab.show();
+            }
+
+            // Scroll to main content
+            const scrolltomain = document.getElementById('patientDetails');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                setTimeout(() => {
+                    scrolltomain.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+
+            // Initialize file viewer
+            initializeFileViewer();
+
+            // Mobile responsive initialization
+            initMobileResponsive();
+
+            // Sort files by type
+            sortFilesByType();
+        });
+
+        // Mobile responsive initialization
+        function initMobileResponsive() {
+            // Handle iOS input zoom prevention
+            document.addEventListener('touchstart', function() {}, { passive: true });
+
+            // Prevent double-tap zoom
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
+
+            // Adjust modal for mobile
+            adjustModalForMobile();
+
+            // Handle orientation change
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    // Refresh Bootstrap components on orientation change
+                    const modal = document.getElementById('fileViewerModal');
+                    if (modal && modal.classList.contains('show')) {
+                        const bsModal = bootstrap.Modal.getInstance(modal);
+                        if (bsModal) {
+                            bsModal.handleUpdate();
+                        }
+                    }
+
+                    // Fix for iOS Safari viewport height
+                    fixViewportHeight();
+                }, 300);
+            });
+
+            // Fix for mobile viewport height
+            fixViewportHeight();
+
+            window.addEventListener('resize', fixViewportHeight);
+
+            // Fix for Android Chrome address bar
+            window.addEventListener('load', fixViewportHeight);
+        }
+
+        function fixViewportHeight() {
+            // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+            let vh = window.innerHeight * 0.01;
+            // Then we set the value in the --vh custom property to the root of the document
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        function adjustModalForMobile() {
+            const modal = document.getElementById('fileViewerModal');
+            if (!modal) return;
+
+            const modalInstance = new bootstrap.Modal(modal);
+
+            modal.addEventListener('shown.bs.modal', function() {
+                // Adjust modal content for mobile
+                const modalBody = this.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.style.maxHeight = 'calc(var(--vh, 1vh) * 70)';
+                }
+
+                // Prevent body scroll when modal is open on mobile
+                if (window.innerWidth < 768) {
+                    document.body.style.overflow = 'hidden';
+                    document.body.style.position = 'fixed';
+                    document.body.style.width = '100%';
+                }
+            });
+
+            modal.addEventListener('hidden.bs.modal', function() {
+                // Restore body scroll
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+            });
+
+            // Handle escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    modalInstance.hide();
+                }
+            });
+        }
+
+        // Sort files - Images first, then PDF, then DOC
+        function sortFilesByType() {
+            const prescriptionGallery = document.getElementById('prescriptionGallery');
+            const reportsGallery = document.getElementById('reportsGallery');
+
+            sortGallery(prescriptionGallery);
+            sortGallery(reportsGallery);
+        }
+
+        function sortGallery(gallery) {
+            if (!gallery) return;
+
+            const items = Array.from(gallery.children);
+
+            // Sort items: Images first, then PDF, then DOC
+            items.sort((a, b) => {
+                const aType = getFileType(a);
+                const bType = getFileType(b);
+
+                const order = { 'image': 1, 'pdf': 2, 'doc': 3 };
+                return (order[aType] || 4) - (order[bType] || 4);
+            });
+
+            // Reorder in DOM
+            items.forEach(item => gallery.appendChild(item));
+        }
+
+        function getFileType(element) {
+            const previewDiv = element.querySelector('.file-preview');
+            return previewDiv ? previewDiv.getAttribute('data-type') : 'doc';
+        }
+
+        // Initialize file viewer functionality
+        function initializeFileViewer() {
+            const modalElement = document.getElementById('fileViewerModal');
+            if (!modalElement) return;
+
+            const modal = new bootstrap.Modal(modalElement);
+            const modalTitle = document.getElementById('fileViewerTitle');
+            const modalContent = document.getElementById('fileViewerContent');
+            const downloadBtn = document.getElementById('downloadFileBtn');
+
+            let currentFileData = null;
+            let currentFileId = null;
+            let currentTab = 'prescriptions'; // Track which tab is active
+
+            // Update current tab when tabs are clicked
+            document.querySelectorAll('#patientTabs button').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this.getAttribute('data-bs-target') === '#prescriptions') {
+                        currentTab = 'prescriptions';
+                    } else if (this.getAttribute('data-bs-target') === '#reports') {
+                        currentTab = 'reports';
+                    }
+                });
+            });
+
+            // Handle image click for preview
+            document.querySelectorAll('.file-preview img, .file-icon').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openFileViewer(this.closest('.file-preview'));
+                });
+
+                // Add touch event for better mobile experience
+                element.addEventListener('touchstart', function(e) {
+                    if (e.touches.length === 1) {
+                        // Single touch - handle after a short delay to distinguish from scroll
+                        setTimeout(() => {
+                            if (!this._scrolled) {
+                                e.preventDefault();
+                                openFileViewer(this.closest('.file-preview'));
+                            }
+                            this._scrolled = false;
+                        }, 200);
+                    }
+                }, { passive: true });
+
+                // Track scrolling
+                element.addEventListener('touchmove', function() {
+                    this._scrolled = true;
+                }, { passive: true });
+            });
+
+            // Handle view button click
+            document.querySelectorAll('.view-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const file = this.getAttribute('data-file');
+                    const type = this.getAttribute('data-type');
+
+                    // Find the parent card to get file id
+                    const card = this.closest('.file-card');
+                    if (card) {
+                        const previewDiv = card.querySelector('.file-preview');
+                        currentFileId = previewDiv ? previewDiv.getAttribute('data-id') : null;
+                    }
+
+                    showFileInModal(file, type, currentFileId);
+                    modal.show();
+                });
+            });
+
+            function openFileViewer(previewDiv) {
+                if (previewDiv) {
+                    currentFileData = previewDiv.getAttribute('data-file');
+                    const fileType = previewDiv.getAttribute('data-type');
+                    currentFileId = previewDiv.getAttribute('data-id');
+
+                    showFileInModal(currentFileData, fileType, currentFileId);
+                    modal.show();
+                }
+            }
+
+            function showFileInModal(fileName, fileType, fileId) {
+                if (!fileName || !fileType) return;
+
+                modalTitle.textContent = fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName;
+                modalTitle.title = fileName;
+
+                // Set download link
+                if (fileId) {
+                    const downloadUrl = currentTab === 'prescriptions'
+                        ? `/Nurse/DownloadPrescription/${fileId}`
+                        : `/Nurse/DownloadTestReport/${fileId}`;
+                    downloadBtn.href = downloadUrl;
+                    downloadBtn.style.display = 'inline-block';
+                } else {
+                    downloadBtn.style.display = 'none';
+                }
+
+                // Clear previous content
+                modalContent.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+                // Add appropriate content based on file type
+                setTimeout(() => {
+                    modalContent.innerHTML = '';
+
+                    if (fileType === 'image') {
+                        const img = document.createElement('img');
+                        img.src = getFilePath(fileName, fileType);
+                        img.alt = fileName;
+                        img.className = 'img-fluid';
+                        img.loading = 'lazy';
+                        modalContent.appendChild(img);
+                    }
+                    else if (fileType === 'pdf') {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = getFilePath(fileName, fileType);
+                        iframe.className = 'pdf-viewer w-100 h-100';
+                        iframe.title = fileName;
+                        iframe.loading = 'lazy';
+                        modalContent.appendChild(iframe);
+                    }
+                    else { // DOC or other files
+                        const docViewer = document.createElement('div');
+                        docViewer.className = 'doc-viewer w-100';
+
+                        const icon = document.createElement('i');
+                        icon.className = 'fas fa-file-word text-primary fa-4x mb-3';
+
+                        const fileNameElement = document.createElement('h5');
+                        fileNameElement.textContent = fileName.length > 50 ? fileName.substring(0, 50) + '...' : fileName;
+                        fileNameElement.className = 'mt-3 mb-2';
+
+                        const message = document.createElement('p');
+                        message.textContent = 'This file cannot be previewed directly. Please download it to view.';
+                        message.className = 'text-muted';
+
+                        docViewer.appendChild(icon);
+                        docViewer.appendChild(fileNameElement);
+                        docViewer.appendChild(message);
+
+                        modalContent.appendChild(docViewer);
+                    }
+                }, 100);
+            }
+
+            function getFilePath(fileName, fileType) {
+                const folder = currentTab === 'prescriptions' ? 'prescriptions' : 'reports';
+
+                if (fileType === 'image') {
+                    return `/uploads/${folder}/${fileName}`;
+                } else if (fileType === 'pdf') {
+                    return `/uploads/${folder}/${fileName}#view=FitH&toolbar=0&navpanes=0`;
+                }
+                return '';
+            }
+
+            // Clean up when modal is closed
+            modalElement.addEventListener('hidden.bs.modal', function() {
+                modalContent.innerHTML = '';
+                currentFileData = null;
+                currentFileId = null;
+                downloadBtn.style.display = 'inline-block';
+            });
+        }
+    </script>
+}

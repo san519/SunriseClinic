@@ -1,0 +1,403 @@
+﻿@{
+    ViewData["Title"] = "Appointment Management";
+    var userType = Context.Session.GetString("UserType") ?? "User";
+    var userName = Context.Session.GetString("UserName") ?? "User";
+    var currentFilter = ViewBag.CurrentFilter as string ?? "pending";
+    var searchQuery = ViewBag.SearchQuery as string ?? "";
+    var stats = ViewBag.Stats as dynamic;
+    var appointments = ViewBag.Appointments as List<dynamic> ?? new List<dynamic>();
+    var appointmentCount = ViewBag.AppointmentCount ?? 0;
+    var nurseSidebarStats = ViewBag.NurseSidebarStats as dynamic;
+    var todaysAppointments = ViewBag.TodaysAppointments as List<dynamic>;
+    var pendingAppointments = ViewBag.PendingAppointments as List<dynamic>;
+    var recentPatients = ViewBag.RecentPatients as List<dynamic>;
+    var nurse = ViewBag.Nurse as dynamic;
+}
+
+<!-- Mobile Menu for Nurse -->
+@if (userType == "Nurse")
+{
+    @await Html.PartialAsync("_MobileDashboardMenu")
+}
+
+<div class="container-fluid p-0 pt-2">
+    <div class="row">
+        <!-- Sidebar for Nurse -->
+        @if (userType == "Nurse")
+        {
+            <div class="col-lg-3">
+                @await Html.PartialAsync("_NurseSidebar")
+            </div>
+        }
+
+        <!-- Main Content Area -->
+        <div class="@(userType == "Nurse" ? "col-lg-9" : "col-12")" id="apmanagementIndex">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Header -->
+                    <div class="card border-0 shadow-sm mb-4 bg-primary text-white">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h3 class="mb-2">
+                                        <i class="fas fa-calendar-check me-2"></i>Appointment Management
+                                    </h3>
+                                    <p class="mb-0 opacity-75">
+                                        Manage all appointments with full control
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                                        <i class="fas fa-user-shield me-1"></i>@userType
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Tabs & Search -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-3">
+                            <form method="get" action="@Url.Action("Index")" id="filterForm">
+                                <input type="hidden" name="filter" id="filterInput" value="@currentFilter" />
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <!-- Filter Tabs -->
+                                        <div class="btn-group" role="group" aria-label="Filter appointments">
+                                            <button type="button" class="btn @(currentFilter == "pending" ? "btn-primary" : "btn-outline-primary")" onclick="setFilter('pending')">
+                                                <i class="fas fa-clock me-1"></i>Pending
+                                                <span class="badge bg-warning">@(stats?.Pending ?? 0)</span>
+                                            </button>
+                                            <button type="button" class="btn @(currentFilter == "emergency" ? "btn-primary" : "btn-outline-primary")" onclick="setFilter('emergency')">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Emergency
+                                                <span class="badge bg-danger">@(stats?.Emergency ?? 0)</span>
+                                            </button>
+                                            <button type="button" class="btn @(currentFilter == "today" ? "btn-primary" : "btn-outline-primary")" onclick="setFilter('today')">
+                                                <i class="fas fa-calendar-day me-1"></i>Today
+                                                <span class="badge bg-success">@(stats?.Today ?? 0)</span>
+                                            </button>
+                                            <button type="button" class="btn @(currentFilter == "all" ? "btn-primary" : "btn-outline-primary")" onclick="setFilter('all')">
+                                                <i class="fas fa-calendar-alt me-1"></i>All
+                                                <span class="badge bg-info">@(stats?.Total ?? 0)</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Search Box -->
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="search" id="searchInput"
+                                                   value="@searchQuery"
+                                                   placeholder="Search appointments...">
+                                            <button class="btn btn-outline-primary" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            @if (!string.IsNullOrEmpty(searchQuery))
+                                            {
+                                                <a href="@Url.Action("Index", new { filter = currentFilter })" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Appointments Table -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list text-primary me-2"></i>
+                                @switch (currentFilter)
+                                {
+                                    case "pending":
+                                        <span>Pending Appointments</span>
+                                        ; break;
+                                    case "emergency":
+
+                                        <span>Emergency Appointments</span>
+                                        ; break;
+                                    case "today":
+
+                                        <span>Today's Appointments</span>
+                                        ; break;
+                                    case "all":
+
+                                        <span>All Appointments</span>
+                                        ; break;
+                                    default:
+
+                                        <span>Appointments</span>
+                                        ; break;
+                                }
+                                <span class="badge bg-primary ms-2">@appointmentCount</span>
+                            </h5>
+                            <div>
+                                <a href="@Url.Action("Index", new { filter = currentFilter, search = searchQuery })" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Patient</th>
+                                            <th>Doctor</th>
+                                            <th>Date & Time</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Reason</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    @{
+                                        appointments = appointments
+                                        .OrderByDescending(a =>
+                                        ((DateTime)a.AppointmentDate)
+                                        .Add(TimeSpan.Parse(a.AppointmentTime.ToString()))
+                                        )
+                                        .ToList();
+                                    }
+
+                                    <tbody>
+                                        @if (appointments.Count > 0)
+                                        {
+                                            var counter = 1;
+                                            foreach (var app in appointments)
+                                            {
+                                                var appointmentDate = (DateTime)app.AppointmentDate;
+                                                var isToday = appointmentDate.Date == DateTime.Today;
+                                                var isPast = appointmentDate.Date < DateTime.Today;
+                                                var isEmergency = (bool)app.IsEmergency;
+                                                var status = (string)app.Status;
+
+                                                <tr class="@(isPast ? "table-danger" : "")"
+                                                    style="cursor:pointer"
+                                                    onclick="window.location='@Url.Action("Manage", new { id = app.AppointmentId })'">
+
+                                                    <td>@counter</td>
+                                                    <td>
+                                                        <div class="fw-semibold">@app.PatientName</div>
+                                                        <small class="text-muted">@app.PatientPhone</small>
+                                                    </td>
+                                                    <td>
+                                                        <div class="fw-semibold">Dr. @app.DoctorName</div>
+                                                        <small class="text-muted">@app.Specialization</small>
+                                                    </td>
+                                                    <td>
+                                                        <div class="fw-semibold">@appointmentDate.ToString("dd-MMM-yyyy") at @app.AppointmentTime</div>
+                                                        @if (isToday)
+                                                        {
+                                                            <small class="text-success fw-bold">TODAY</small>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge @(isEmergency ? "bg-danger" : "bg-info")">
+                                                            @(isEmergency ? "EMERGENCY" : "Regular")
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        @if (status == "Pending")
+                                                        {
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        }
+                                                        else if (status == "Approved")
+                                                        {
+                                                            <span class="badge bg-success">Approved</span>
+                                                        }
+                                                        else if (status == "Rejected")
+                                                        {
+                                                            <span class="badge bg-danger">Rejected</span>
+                                                        }
+                                                        else if (status == "Cancelled")
+                                                        {
+                                                            <span class="badge bg-secondary">Cancelled</span>
+                                                        }
+                                                        else if (status == "Completed")
+                                                        {
+                                                            <span class="badge bg-info">Completed</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-secondary">@status</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-truncate" style="max-width: 200px;" title="@app.Reason">
+                                                            @app.Reason
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <a href="@Url.Action("Manage", new { id = app.AppointmentId })" class="btn btn-outline-primary btn-sm" title="View & Manage">
+                                                            <i class="fas fa-eye me-1"></i>View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                counter++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="8" class="text-center py-5">
+                                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                                    <h6 class="text-muted">No appointments found</h6>
+                                                    <p class="small text-muted">
+                                                        @if (!string.IsNullOrEmpty(searchQuery))
+                                                        {
+                                                            <text>No appointments found for search: "@searchQuery"</text>
+                                                        }
+                                                        else
+                                                        {
+                                                            <text>No @currentFilter appointments available</text>
+                                                        }
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    Showing @appointmentCount appointments
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Simple filter function
+        function setFilter(filter) {
+            document.getElementById('filterInput').value = filter;
+            document.getElementById('filterForm').submit();
+        }
+
+        // Scroll to main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('apmanagementIndex');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+
+
+    </script>
+
+    <style>
+        /* Custom styles for quick appointments */
+        .nav-tabs-custom .nav-link {
+            border-radius: 0;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+            .nav-tabs-custom .nav-link.active {
+                color: #0d6efd;
+                border-bottom: 3px solid #0d6efd;
+                background-color: rgba(13, 110, 253, 0.05);
+            }
+
+        .table-sm th, .table-sm td {
+            padding: 0.5rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+
+        /* Button styles */
+        .btn-outline-primary, .btn-outline-success, .btn-outline-danger {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+    </script>
+
+    <style>
+        /* Mobile responsive styles */
+        @@media (max-width: 768px) {
+            .btn-group {
+                flex-wrap: wrap;
+                margin-bottom: 10px;
+            }
+
+                .btn-group .btn {
+                    margin-bottom: 5px;
+                    flex: 1 0 auto;
+                    min-width: 120px;
+                }
+
+            .col-md-8, .col-md-4 {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            .table th, .table td {
+                padding: 8px 5px;
+            }
+        }
+
+        .avatar-sm {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .cursor-pointer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            font-weight: 600;
+            border-top: none;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        a.text-decoration-none {
+            color: inherit;
+        }
+
+            a.text-decoration-none:hover {
+                color: inherit;
+                text-decoration: none;
+            }
+    </style>
+}

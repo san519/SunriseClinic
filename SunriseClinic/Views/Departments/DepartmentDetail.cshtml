@@ -1,0 +1,399 @@
+﻿@model Department
+@{
+    ViewData["Title"] = $"{Model.DepartmentName} Department - Sunrise Clinic Pabna";
+    ViewData["Description"] = $"{Model.DepartmentName} department at Sunrise Clinic Pabna. Expert care by Dr. {Model.HeadDoctorName} with {Model.DoctorCount} specialists. Book appointment: +8801703452323";
+    ViewData["Keywords"] = $"{Model.DepartmentName.ToLower()} pabna, {Model.DepartmentName} department, {Model.DepartmentName} doctor pabna, sunrise clinic {Model.DepartmentName}, medical department pabna";
+    ViewData["Canonical"] = $"https://www.sunriseclinicbd.com/Departments/{Model.DepartmentName.Replace(" & ", "").Replace(" ", "")}";
+    ViewData["Image"] = $"https://www.sunriseclinicbd.com/img/departments/{Model.DepartmentName.Replace(" ", "-").ToLower()}.jpg";
+
+    string domain = "https://www.sunriseclinicbd.com";
+    string departmentSlug = Model.DepartmentName.Replace(" & ", "").Replace(" ", "");
+}
+
+<!-- Schema.org Structured Data for Medical Department -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalClinic",
+      "name": "@Model.DepartmentName Department - Sunrise Clinic Pabna",
+      "description": "@Model.Description",
+      "url": "@domain/Departments/@departmentSlug",
+      "medicalSpecialty": "@Model.DepartmentName",
+      "department": {
+        "@@type": "MedicalClinic",
+        "name": "@Model.DepartmentName Department",
+        "medicalSpecialty": "@Model.DepartmentName"
+      },
+      "employee": {
+        "@@type": "Physician",
+        "name": "@Model.HeadDoctorName",
+        "jobTitle": "Head of @Model.DepartmentName Department",
+        "medicalSpecialty": "@Model.DepartmentName"
+      },
+      "numberOfEmployees": @Model.DoctorCount,
+      "openingHours": "Mo-Fr 08:00-20:00, Sa-Su 09:00-18:00",
+      "telephone": "+8801703452323",
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "TB Clinic Gate, Shalgaria",
+        "addressLocality": "Pabna Sadar",
+        "addressRegion": "Pabna",
+        "addressCountry": "Bangladesh"
+      },
+      "hasOfferCatalog": {
+        "@@type": "OfferCatalog",
+        "name": "Medical Services",
+        "itemListElement": [
+          {
+            "@@type": "Offer",
+            "itemOffered": {
+              "@@type": "Service",
+              "name": "Consultation & Diagnosis",
+              "description": "Expert medical consultation at @Model.DepartmentName department"
+            }
+          },
+          {
+            "@@type": "Offer",
+            "itemOffered": {
+              "@@type": "Service",
+              "name": "Advanced Treatment Plans",
+              "description": "Comprehensive treatment for @Model.DepartmentName related conditions"
+            }
+          }
+        ]
+      }
+    }
+</script>
+
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "@domain/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Departments",
+          "item": "@domain/Departments"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 3,
+          "name": "@Model.DepartmentName",
+          "item": "@domain/Departments/@departmentSlug"
+        }
+      ]
+    }
+</script>
+
+<!-- SEO Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Sunrise Clinic @Model.DepartmentName Department">
+<meta name="geo.region" content="BD-RS">
+<meta name="geo.placename" content="Pabna">
+<meta name="geo.position" content="24.0064;89.2372">
+<meta property="og:type" content="website">
+<meta property="og:url" content="@domain/Departments/@departmentSlug">
+<meta property="og:title" content="@Model.DepartmentName Department - Sunrise Clinic Pabna">
+<meta property="og:description" content="@Model.DepartmentName services at Sunrise Clinic Pabna. Expert doctors led by Dr. @Model.HeadDoctorName.">
+<meta property="og:image" content="@ViewData["Image"]">
+<meta property="og:image:alt" content="@Model.DepartmentName Department at Sunrise Clinic Pabna">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="@Model.DepartmentName Department - Sunrise Clinic">
+<meta name="twitter:description" content="Expert @Model.DepartmentName care in Pabna at Sunrise Clinic">
+
+<section class="py-3" id="depertmentDetails" style="margin-top: 50px;" itemscope itemtype="https://schema.org/MedicalClinic">
+    <div class="container">
+        <!-- SEO Enhanced Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4" itemprop="breadcrumb">
+            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="/" itemprop="item">
+                        <span itemprop="name">Home</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                </li>
+                <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="/Departments" itemprop="item">
+                        <span itemprop="name">Medical Departments</span>
+                    </a>
+                    <meta itemprop="position" content="2" />
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">@Model.DepartmentName</span>
+                    <meta itemprop="position" content="3" />
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- SEO Optimized Header -->
+                <h1 class="fw-bold display-5 mb-4" itemprop="name">
+                    @Model.DepartmentName Department - Sunrise Clinic Pabna
+                    <span class="badge bg-primary ms-2" style="font-size: 1rem;">@Model.DoctorCount Specialists</span>
+                </h1>
+
+                <!-- Department Description with SEO -->
+                <div class="lead text-muted mb-5" itemprop="description">
+                    @Model.Description
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>Located at Sunrise Clinic Diagnostic Center, Pabna
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Department Stats with Schema -->
+                <div class="row mb-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100" itemprop="employee" itemscope itemtype="https://schema.org/Physician">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="fas fa-user-md text-primary me-2"></i>
+                                    <span itemprop="jobTitle">Department Head</span>
+                                </h5>
+                                <p class="mb-0 fs-5" itemprop="name">
+                                    <strong>Dr. @Model.HeadDoctorName</strong>
+                                </p>
+                                <small class="text-muted" itemprop="medicalSpecialty">@Model.DepartmentName Specialist</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100" itemprop="medicalSpecialty">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    Medical Team
+                                </h5>
+                                <p class="mb-0 fs-5">
+                                    <strong itemprop="numberOfEmployees">@Model.DoctorCount</strong> Specialist Doctors
+                                </p>
+                                <small class="text-muted">Expert @Model.DepartmentName Physicians</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Offered with Schema -->
+                <div class="mb-5">
+                    <h3 class="fw-bold mb-4">
+                        <i class="fas fa-stethoscope me-2"></i>
+                        <span itemprop="medicalSpecialty">@Model.DepartmentName Services Offered</span>
+                    </h3>
+                    <div class="row" itemscope itemtype="https://schema.org/Service">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex" itemprop="hasOfferCatalog" itemscope itemtype="https://schema.org/OfferCatalog">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span itemprop="name">Consultation & Diagnosis</span>
+                                <meta itemprop="description" content="Expert medical consultation at @Model.DepartmentName department Sunrise Clinic Pabna" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span itemprop="name">Advanced Treatment Plans</span>
+                                <meta itemprop="description" content="Comprehensive treatment for @Model.DepartmentName conditions" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span itemprop="name">Follow-up Care & Monitoring</span>
+                                <meta itemprop="description" content="Regular follow-up and monitoring at @Model.DepartmentName department" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span itemprop="name">Emergency Services 24/7</span>
+                                <meta itemprop="description" content="Emergency @Model.DepartmentName services available 24/7" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO Micro Content -->
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <p class="mb-0 small text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            All @Model.DepartmentName services include access to our advanced Diagnostic Center with Pathology Lab, Radiology, and Imaging facilities at Sunrise Clinic Pabna.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Call to Action with Tracking -->
+                <div class="d-flex gap-3">
+                    <a href="/Appointment/Create?department=@Model.DepartmentName"
+                       class="btn btn-primary btn-lg px-4"
+                       aria-label="Book appointment with @Model.DepartmentName department"
+                       title="Book appointment at @Model.DepartmentName department Sunrise Clinic"
+                       onclick="trackDepartmentBooking('@Model.DepartmentName')">
+                        <i class="fas fa-calendar-check me-2"></i>Book Appointment Now
+                    </a>
+                    <a href="/Doctors?department=@Model.DepartmentName"
+                       class="btn btn-outline-primary btn-lg px-4"
+                       aria-label="View @Model.DepartmentName specialist doctors"
+                       title="Meet our @Model.DepartmentName doctors">
+                        <i class="fas fa-user-md me-2"></i>View @Model.DepartmentName Doctors
+                    </a>
+                </div>
+
+                <!-- SEO Content Block -->
+                <div class="mt-5 pt-4 border-top">
+                    <h4 class="h5 mb-3">About @Model.DepartmentName Care at Sunrise Clinic Pabna</h4>
+                    <p class="text-muted">
+                        The @Model.DepartmentName department at Sunrise Clinic Diagnostic Center Pabna provides comprehensive medical care for
+                        all @Model.DepartmentName-related conditions. Led by Dr. @Model.HeadDoctorName with a team of @Model.DoctorCount
+                        specialist doctors, we offer advanced diagnostic and treatment services in Pabna, Bangladesh.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Contact Card with Schema -->
+                <div class="card border-0 shadow-sm sticky-top" style="top: 100px;" itemprop="location" itemscope itemtype="https://schema.org/Place">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fas fa-hospital me-2"></i>
+                            @Model.DepartmentName Department Info
+                        </h5>
+
+                        <!-- Opening Hours with Schema -->
+                        <div class="mb-4" itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification">
+                            <p class="mb-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <strong itemprop="name">Opening Hours:</strong>
+                            </p>
+                            <p class="mb-0" itemprop="dayOfWeek" content="Monday,Tuesday,Wednesday,Thursday,Friday">
+                                Monday - Friday: <span itemprop="opens" content="08:00">8:00 AM</span> - <span itemprop="closes" content="20:00">8:00 PM</span>
+                            </p>
+                            <p class="mb-0" itemprop="dayOfWeek" content="Saturday,Sunday">
+                                Saturday - Sunday: <span itemprop="opens" content="09:00">9:00 AM</span> - <span itemprop="closes" content="18:00">6:00 PM</span>
+                            </p>
+                            <meta itemprop="description" content="@Model.DepartmentName department hours at Sunrise Clinic Pabna" />
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <div class="mb-4" itemprop="telephone">
+                            <p class="mb-2">
+                                <i class="fas fa-phone text-primary me-2"></i>
+                                <strong>Emergency Contact:</strong>
+                            </p>
+                            <p class="mb-0">
+                                <a href="tel:+8801703452323" class="text-decoration-none fw-bold" itemprop="telephone">
+                                    +880 1703 452323
+                                </a>
+                            </p>
+                            <small class="text-muted">24/7 Emergency @Model.DepartmentName Services</small>
+                        </div>
+
+                        <!-- Location with Schema -->
+                        <div class="mb-4" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                            <p class="mb-2">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <strong itemprop="name">Location:</strong>
+                            </p>
+                            <p class="mb-0" itemprop="streetAddress">TB Clinic Gate, Shalgaria</p>
+                            <p class="mb-0" itemprop="addressLocality">Pabna Sadar, Pabna</p>
+                            <p class="mb-0" itemprop="addressCountry">Bangladesh</p>
+                            <meta itemprop="description" content="Sunrise Clinic Diagnostic Center Pabna - @Model.DepartmentName Department" />
+                        </div>
+
+                        <!-- Additional SEO Info -->
+                        <div class="small text-muted mb-4">
+                            <p class="mb-1">
+                                <i class="fas fa-car me-1"></i> Ample parking available
+                            </p>
+                            <p class="mb-1">
+                                <i class="fas fa-wheelchair me-1"></i> Wheelchair accessible
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-ambulance me-1"></i> Emergency ambulance service
+                            </p>
+                        </div>
+
+                        <a href="/Home/Contact"
+                           class="btn btn-outline-primary w-100"
+                           aria-label="Get directions to Sunrise Clinic @Model.DepartmentName department"
+                           title="Directions to Sunrise Clinic Pabna">
+                            <i class="fas fa-directions me-2"></i>Get Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Back Button with SEO -->
+<div class="container mb-5">
+    <a href="/Departments"
+       class="btn btn-light btn-lg d-block mx-auto"
+       style="max-width: 300px;"
+       aria-label="Back to all medical departments at Sunrise Clinic"
+       title="View all medical departments">
+        <i class="fas fa-arrow-left me-2"></i>Back to All Departments
+    </a>
+</div>
+
+@section Scripts {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "FAQPage",
+          "mainEntity": [{
+            "@@type": "Question",
+            "name": "What services does the @Model.DepartmentName department offer?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "The @Model.DepartmentName department at Sunrise Clinic Pabna offers consultation & diagnosis, advanced treatment plans, follow-up care, and 24/7 emergency services for @Model.DepartmentName conditions."
+            }
+          }, {
+            "@@type": "Question",
+            "name": "Who is the head of @Model.DepartmentName department?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "The @Model.DepartmentName department is headed by Dr. @Model.HeadDoctorName, supported by @Model.DoctorCount specialist doctors at Sunrise Clinic Pabna."
+            }
+          }, {
+            "@@type": "Question",
+            "name": "How to book appointment at @Model.DepartmentName department?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "You can book appointment online through our website, call +8801703452323, or walk-in to Sunrise Clinic Diagnostic Center at TB Clinic Gate, Pabna."
+            }
+          }]
+        }
+    </script>
+
+    <script>
+        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('depertmentDetails');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO Tracking for Department Page
+            console.log('SEO: @Model.DepartmentName department page loaded');
+
+            // Track booking clicks
+            function trackDepartmentBooking(deptName) {
+                console.log('SEO: Appointment booking for', deptName, 'department');
+                // Add Google Analytics event tracking here
+                // gtag('event', 'book_appointment', {
+                //     'department': deptName,
+                //     'location': 'Pabna'
+                // });
+            }
+        });
+    </script>
+}

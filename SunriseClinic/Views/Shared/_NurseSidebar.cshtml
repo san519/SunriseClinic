@@ -1,0 +1,77 @@
+﻿@{
+    var userName = Context.Session.GetString("UserName") ?? "Nurse";
+    var userEmail = Context.Session.GetString("UserEmail") ?? "";
+    var displayId = Context.Session.GetString("DisplayId") ?? "N00000";
+    var profilePicture = Context.Session.GetString("ProfilePicture");
+
+    // ✅ ফাইল পাথ তৈরি করুন
+    string profilePicturePath;
+
+    if (string.IsNullOrEmpty(profilePicture) || profilePicture == "default.jpg")
+    {
+        profilePicturePath = "/img/default.jpg";
+    }
+    else
+    {
+        profilePicturePath = $"/uploads/profile-pictures/{profilePicture}";
+    }
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="text-center mb-4">
+            <div class="position-relative d-inline-block">
+                <img src="@profilePicturePath"
+                     class="rounded-circle" width="120" height="120"
+                     alt="Profile Picture"
+                     style="border: 3px solid #e9ecef; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='/img/default.jpg';">
+            </div>
+            <h5 class="mt-3 mb-1">@userName</h5>
+            <p class="text-muted small">
+                <i class="fas fa-id-card me-1"></i>Nurse ID: @displayId
+            </p>
+            <p class="text-muted small">
+                <i class="fas fa-envelope me-1"></i>@userEmail
+            </p>
+        </div>
+
+        <ul class="list-unstyled">
+            <li class="mb-2">
+                <a href="/Nurse/Dashboard" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("Dashboard") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Nurse/Profile" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("/Nurse/Profile") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-user-edit me-3"></i>My Profile
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Nurse/Patients" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("/Nurse/Patients") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-user-injured me-3"></i>Manage Patients
+                </a>
+            </li>
+            <!-- Appointment Management Link -->
+            <li class="mb-2">
+                <a href="/AppointmentManagement/Index" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("AppointmentManagement") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-calendar-check me-3"></i>Appointment Management
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="#" class="d-flex align-items-center p-3 rounded text-decoration-none text-dark">
+                    <i class="fas fa-file-alt me-3"></i>My Posts
+                </a>
+            </li>
+            <li>
+                <a href="/Account/Logout" class="d-flex align-items-center p-3 rounded text-decoration-none text-dark">
+                    <i class="fas fa-sign-out-alt me-3"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

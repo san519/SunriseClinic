@@ -1,0 +1,325 @@
+﻿@model SunriseClinic.Models.PatientEditModel
+
+@{
+    ViewData["Title"] = "Edit Patient";
+    var displayId = ViewBag.DisplayId as string;
+}
+
+<div class="container-fluid py-4" id="editPatient">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-1">
+                <i class="fas fa-user-edit me-2 text-warning"></i>Edit Patient
+            </h3>
+            <p class="text-muted mb-0">Update patient information</p>
+        </div>
+        <div>
+            <a href="@Url.Action("ViewPatient", "Admin", new { id = Model.UserId })"
+               class="btn btn-outline-secondary me-2">
+                <i class="fas fa-eye me-1"></i>View Details
+            </a>
+            <a href="@Url.Action("ManagePatients", "Admin")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to List
+            </a>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4">
+            <i class="fas fa-check-circle me-2"></i>
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Edit Form -->
+    <form asp-action="EditPatient" method="post" class="needs-validation" novalidate>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="UserId" />
+
+        <!-- Hidden fields that should NOT be in form (DisplayId and CreatedAt) -->
+        <input type="hidden" asp-for="DisplayId" />
+        <input type="hidden" asp-for="CreatedAt" />
+
+        <!-- Patient ID Display -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                            <i class="fas fa-id-card me-2"></i>@displayId
+                        </span>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="mb-1">Editing: @Model.FullName</h5>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-envelope me-1"></i>@Model.Email
+                            | <i class="fas fa-calendar me-1"></i>Joined: @Model.CreatedAt.ToString("dd-MMM-yyyy")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                </h5>
+                <small class="text-muted">Fields marked with <span class="text-danger">*</span> are required</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                        <input asp-for="FullName" class="form-control" required />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                        <div class="invalid-feedback">Please provide full name</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                        <div class="invalid-feedback">Please provide valid email address</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth <span class="text-danger">*</span></label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                        <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                        <div class="invalid-feedback">Please select date of birth</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Gender" class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
+                        <select asp-for="Gender" class="form-control" required>
+                            <option value="">Select Gender</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="O">Other</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger small"></span>
+                        <div class="invalid-feedback">Please select gender</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-address-book me-2 text-primary"></i>Contact Information
+                </h5>
+                <small class="text-muted">Phone number is required</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                        <input asp-for="PhoneNumber" class="form-control" required />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        <div class="invalid-feedback">Please provide phone number</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="EmergencyContact" class="form-label fw-semibold">Emergency Contact</label>
+                        <input asp-for="EmergencyContact" class="form-control" />
+                        <span asp-validation-for="EmergencyContact" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                    <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Address" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-heartbeat me-2 text-danger"></i>Medical Information
+                </h5>
+                <small class="text-muted">All fields in this section are optional</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="BloodGroup" class="form-label fw-semibold">Blood Group</label>
+                        <select asp-for="BloodGroup" class="form-control">
+                            <option value="">Select Blood Group (Optional)</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                        <span asp-validation-for="BloodGroup" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Height" class="form-label fw-semibold">Height (cm)</label>
+                        <input asp-for="Height" type="number" class="form-control" min="50" max="250" step="0.1" placeholder="Optional" />
+                        <span asp-validation-for="Height" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Weight" class="form-label fw-semibold">Weight (kg)</label>
+                        <input asp-for="Weight" type="number" class="form-control" min="20" max="200" step="0.1" placeholder="Optional" />
+                        <span asp-validation-for="Weight" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MaritalStatus" class="form-label fw-semibold">Marital Status</label>
+                        <select asp-for="MaritalStatus" class="form-control">
+                            <option value="">Select Status (Optional)</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                        <span asp-validation-for="MaritalStatus" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Occupation" class="form-label fw-semibold">Occupation</label>
+                        <input asp-for="Occupation" class="form-control" placeholder="Optional" />
+                        <span asp-validation-for="Occupation" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="InsuranceInfo" class="form-label fw-semibold">Insurance Information</label>
+                    <textarea asp-for="InsuranceInfo" class="form-control" rows="2" placeholder="Optional"></textarea>
+                    <span asp-validation-for="InsuranceInfo" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Status -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-shield me-2 text-success"></i>Account Status
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="form-check form-switch mb-0">
+                    <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" id="isActiveSwitch">
+                    <label asp-for="IsActive" class="form-check-label fw-semibold" for="isActiveSwitch">
+                        Account Active
+                    </label>
+                </div>
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    When disabled, patient cannot login to the system
+                </small>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="@Url.Action("ManagePatients", "Admin")" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-warning me-2">
+                            <i class="fas fa-save me-2"></i>Update Patient
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Disable client-side validation for optional fields
+            const optionalFields = [
+                'Address',
+                'BloodGroup',
+                'Height',
+                'Weight',
+                'EmergencyContact',
+                'InsuranceInfo',
+                'Occupation',
+                'MaritalStatus',
+                'DisplayId',  // Added this
+                'CreatedAt'   // Added this
+            ];
+
+            optionalFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                if (field) {
+                    field.removeAttribute('required');
+                    // Remove any data-val-required attributes
+                    field.removeAttribute('data-val-required');
+                }
+            });
+
+            // Form validation
+            const forms = document.querySelectorAll('.needs-validation');
+
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    // Remove validation from optional fields
+                    optionalFields.forEach(fieldName => {
+                        const field = document.getElementById(fieldName);
+                        if (field) {
+                            field.classList.remove('is-invalid');
+                        }
+                    });
+
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        // Find first invalid field and focus on it
+                        const firstInvalid = form.querySelector(':invalid');
+                        if (firstInvalid) {
+                            firstInvalid.focus();
+                        }
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+            // Scroll to content
+            const scrolltomain = document.getElementById('editPatient');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

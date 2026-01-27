@@ -1,0 +1,513 @@
+﻿@model List<Department>
+@{
+    ViewData["Title"] = "Medical Departments at Sunrise Clinic & Diagnostic Center Pabna";
+    ViewData["Description"] = "Specialized medical departments at Sunrise Clinic Pabna: Cardiology, Neurology, Pediatrics, Gynecology, Orthopedics, Diagnostic Center. Expert doctors, advanced treatment.";
+    ViewData["Keywords"] = "medical departments pabna, hospital departments, cardiology pabna, neurology pabna, pediatrics pabna, gynecology pabna, orthopedics pabna, diagnostic center";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Departments";
+    ViewData["Image"] = "https://www.sunriseclinicbd.com/img/departments-banner.jpg";
+
+    string domain = "https://www.sunriseclinicbd.com";
+    var departmentCount = Model?.Count ?? 0;
+    var totalDoctors = Model?.Sum(d => d.DoctorCount) ?? 0;
+}
+
+<!-- Schema.org Structured Data for Medical Departments -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalClinic",
+      "name": "Sunrise Clinic & Diagnostic Center",
+      "description": "Multi-specialty medical clinic with specialized departments in Pabna, Bangladesh",
+      "url": "@domain",
+      "address": {
+        "@@type": "PostalAddress",
+        "addressLocality": "Pabna",
+        "addressRegion": "Rajshahi",
+        "addressCountry": "Bangladesh"
+      },
+      "medicalSpecialty": [
+        @foreach (var dept in Model.Take(8))
+        {
+                var specialty = dept.DepartmentName switch
+                {
+                        string d when d.Contains("Cardiology") => "Cardiology",
+                        string d when d.Contains("Neurology") => "Neurology",
+                        string d when d.Contains("Pediatrics") => "Pediatrics",
+                        string d when d.Contains("Gynecology") => "Gynecology",
+                        string d when d.Contains("Orthopedics") => "Orthopedics",
+                        string d when d.Contains("Diagnostic") => "DiagnosticRadiology",
+                        string d when d.Contains("Emergency") => "EmergencyMedicine",
+                        string d when d.Contains("Surgery") => "Surgery",
+                        _ => "GeneralMedicine"
+                };
+                <text>"@specialty",</text>
+        }
+        "EmergencyMedicine"
+      ],
+      "department": [
+        @foreach (var dept in Model)
+        {
+                var specialty = dept.DepartmentName switch
+                {
+                        string d when d.Contains("Cardiology") => "Cardiology",
+                        string d when d.Contains("Neurology") => "Neurology",
+                        string d when d.Contains("Pediatrics") => "Pediatrics",
+                        string d when d.Contains("Gynecology") => "Gynecology",
+                        string d when d.Contains("Orthopedics") => "Orthopedics",
+                        string d when d.Contains("Diagnostic") => "DiagnosticRadiology",
+                        string d when d.Contains("Emergency") => "EmergencyMedicine",
+                        string d when d.Contains("Surgery") => "Surgery",
+                        _ => "GeneralMedicine"
+                };
+                <text>{
+                  "@@type": "MedicalClinic",
+                  "name": "@dept.DepartmentName Department",
+                  "medicalSpecialty": "@specialty",
+                  "numberOfEmployees": @dept.DoctorCount,
+                  "employee": {
+                    "@@type": "Physician",
+                    "name": "@dept.HeadDoctorName",
+                    "jobTitle": "Head of Department"
+                  }
+                },</text>
+        }
+      ]
+    }
+</script>
+
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "@domain/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Medical Departments",
+          "item": "@domain/Departments"
+        }
+      ]
+    }
+</script>
+
+<!-- SEO Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Sunrise Clinic Medical Departments">
+<meta name="geo.region" content="BD-RS">
+<meta name="geo.placename" content="Pabna">
+<meta name="geo.position" content="24.0064;89.2372">
+<meta property="og:type" content="website">
+<meta property="og:url" content="@domain/Departments">
+<meta property="og:title" content="Medical Departments - Sunrise Clinic Pabna">
+<meta property="og:description" content="Specialized medical departments at Sunrise Clinic Pabna: Cardiology, Neurology, Pediatrics, Gynecology, Orthopedics, Diagnostic services.">
+<meta property="og:image" content="@ViewData["Image"]">
+<meta property="og:image:alt" content="Medical Departments at Sunrise Clinic Pabna">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Medical Departments - Sunrise Clinic Pabna">
+<meta name="twitter:description" content="Specialized medical departments with expert doctors at Sunrise Clinic Pabna.">
+
+<!-- Departments Section -->
+<section class="py-3" id="departmentIndex" itemscope itemtype="https://schema.org/MedicalClinic">
+    <div class="container">
+        <!-- SEO Enhanced Header -->
+        <div class="row mb-5">
+            <div class="col text-center">
+                <h1 class="fw-bold display-5 mb-3" itemprop="name">Medical Departments at Sunrise Clinic Pabna - Best Multi-Specialty Hospital</h1>
+                <p class="text-muted fs-5" itemprop="description">Comprehensive healthcare services across @departmentCount specialized medical departments with @totalDoctors+ expert doctors in Pabna, Bangladesh</p>
+
+                <!-- SEO Micro Data -->
+                <div class="seo-micro-stats mt-4">
+                    <div class="d-flex flex-wrap justify-content-center gap-4">
+                        <span class="badge bg-primary px-3 py-2">
+                            <i class="fas fa-hospital me-1"></i> @departmentCount Departments
+                        </span>
+                        <span class="badge bg-success px-3 py-2">
+                            <i class="fas fa-user-md me-1"></i> @totalDoctors Doctors
+                        </span>
+                        <span class="badge bg-info px-3 py-2">
+                            <i class="fas fa-clock me-1"></i> 24/7 Emergency
+                        </span>
+                        <span class="badge bg-warning px-3 py-2">
+                            <i class="fas fa-map-marker-alt me-1"></i> Pabna Diagnostic Center
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Introduction -->
+        <div class="seo-intro bg-light p-4 rounded mb-5">
+            <h2 class="h4 text-primary mb-3">Specialized Medical Care in Pabna</h2>
+            <p>Sunrise Clinic & Diagnostic Center offers complete medical services through specialized departments. Each department is equipped with modern technology and staffed by experienced specialists providing quality healthcare in Pabna.</p>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <ul class="seo-feature-list">
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Expert department heads with 10+ years experience</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Advanced diagnostic equipment in each department</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="seo-feature-list">
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Same-day consultation appointments</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Integrated lab and imaging services</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" itemscope itemtype="https://schema.org/ItemList">
+            @{
+                int position = 1;
+            }
+            @foreach (var dept in Model)
+            {
+                <div class="col-md-6 col-lg-4" itemprop="itemListElement" itemscope itemtype="https://schema.org/MedicalClinic">
+                    <meta itemprop="position" content="@position" />
+
+                    <div class="card h-100 border-0 shadow-sm hover-shadow">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3" aria-hidden="true">
+                                    <i class="fas
+                                                    @(dept.DepartmentName.Contains("Cardiology") ? "fa-heart" :
+                                                                                                                            dept.DepartmentName.Contains("Neurology") ? "fa-brain" :
+                                                                                                                            dept.DepartmentName.Contains("Pediatrics") ? "fa-baby" :
+                                                                                                                            dept.DepartmentName.Contains("Gynecology") ? "fa-female" :
+                                                                                                                            dept.DepartmentName.Contains("Orthopedics") ? "fa-bone" :
+                                                                                                                            dept.DepartmentName.Contains("Diagnostic") ? "fa-microscope" :
+                                                                                                                            "fa-stethoscope") text-primary fa-2x"></i>
+                            </div>
+                            <div>
+                                <h3 class="card-title mb-0 fw-bold" itemprop="name">@dept.DepartmentName Department</h3>
+                                <small class="text-muted">
+                                    <span itemprop="numberOfEmployees">@dept.DoctorCount</span> Specialist Doctors
+                                </small>
+                                <meta itemprop="description" content="@dept.Description" />
+                            </div>
+                        </div>
+                        <p class="card-text text-muted mb-4" itemprop="description">@dept.Description</p>
+                        <div class="department-info bg-light p-3 rounded mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-md text-primary me-2"></i>
+                                <small>
+                                    <strong>Department Head:</strong>
+                                    <span itemprop="employee" itemscope itemtype="https://schema.org/Physician">
+                                        <span itemprop="name">@dept.HeadDoctorName</span>
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <a href="/Departments/@dept.DepartmentName.Replace(" & ", "").Replace(" ", "")"
+                           class="btn btn-outline-primary w-100"
+                           itemprop="url"
+                           aria-label="View @dept.DepartmentName department details"
+                           title="Learn more about @dept.DepartmentName department at Sunrise Clinic">
+                            <i class="fas fa-arrow-right me-2"></i>View Department Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+                        position++;
+            }
+        </div>
+
+        <!-- Department Services Summary -->
+        <div class="seo-services-summary mt-5 p-4 bg-white rounded border">
+            <h3 class="h4 mb-4 text-center text-primary">Complete Medical Services at Sunrise Clinic Pabna</h3>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="service-category">
+                        <h5 class="h6"><i class="fas fa-heartbeat text-danger me-2"></i>Clinical Departments</h5>
+                        <ul class="small text-muted">
+                            <li>Cardiology & Heart Care</li>
+                            <li>Neurology & Brain Health</li>
+                            <li>Pediatrics & Child Care</li>
+                            <li>Gynecology & Women's Health</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="service-category">
+                        <h5 class="h6"><i class="fas fa-x-ray text-info me-2"></i>Diagnostic Departments</h5>
+                        <ul class="small text-muted">
+                            <li>Radiology & Imaging</li>
+                            <li>Pathology Laboratory</li>
+                            <li>Cardiac Diagnostics</li>
+                            <li>Neurology Diagnostics</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="service-category">
+                        <h5 class="h6"><i class="fas fa-procedures text-success me-2"></i>Treatment Departments</h5>
+                        <ul class="small text-muted">
+                            <li>Orthopedics & Bone Care</li>
+                            <li>General Surgery</li>
+                            <li>Emergency Medicine</li>
+                            <li>Physical Therapy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row mt-5 pt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="bg-light p-5 rounded-4 border">
+                    <h3 class="fw-bold mb-3">Need Specialized Medical Care in Pabna?</h3>
+                    <p class="text-muted mb-4">Our expert doctors across @departmentCount departments are ready to provide you with personalized medical care. Book an appointment today at Sunrise Clinic Pabna.</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="tel:+8801703452323" class="btn btn-primary btn-lg"
+                           aria-label="Call Sunrise Clinic Pabna for appointment"
+                           title="Call +8801703452323 for medical appointments">
+                            <i class="fas fa-phone me-2"></i>Call Now: +880 1703 452323
+                        </a>
+                        <a href="/Appointment/Create" class="btn btn-accent btn-lg"
+                           aria-label="Book medical appointment online at Sunrise Clinic"
+                           title="Book doctor appointment online">
+                            <i class="fas fa-calendar-check me-2"></i>Book Appointment Online
+                        </a>
+                    </div>
+                    <p class="mt-3 small text-muted">Walk-in appointments also available | Emergency: 24/7 | Location: TB Clinic Gate, Pabna</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="py-5 bg-light" itemscope itemtype="https://schema.org/MedicalClinic">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4" itemprop="department" itemscope itemtype="https://schema.org/MedicalClinic">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-primary display-4" itemprop="numberOfEmployees">@departmentCount+</h3>
+                    <p class="text-muted" itemprop="name">Medical Departments</p>
+                    <meta itemprop="description" content="Specialized medical departments at Sunrise Clinic Pabna" />
+                </div>
+            </div>
+            <div class="col-md-3 mb-4" itemprop="numberOfEmployees">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-primary display-4">@totalDoctors+</h3>
+                    <p class="text-muted">Expert Doctors</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-primary display-4">24/7</h3>
+                    <p class="text-muted">Emergency Services</p>
+                    <meta itemprop="openingHours" content="24/7" />
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-primary display-4">5000+</h3>
+                    <p class="text-muted">Happy Patients</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section for Departments -->
+<div class="container mt-5 mb-5">
+    <div class="seo-faq p-4 bg-white rounded shadow-sm">
+        <h3 class="h4 mb-4 text-center">Frequently Asked Questions - Medical Departments</h3>
+        <div class="accordion" id="departmentsFAQ">
+            <div class="accordion-item">
+                <h4 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Which medical departments are available at Sunrise Clinic Pabna?
+                    </button>
+                </h4>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#departmentsFAQ">
+                    <div class="accordion-body">
+                        Sunrise Clinic Pabna has @departmentCount specialized departments including Cardiology, Neurology, Pediatrics, Gynecology, Orthopedics, Diagnostic Center, Emergency Medicine, and General Medicine departments.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h4 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        How to choose the right department for my medical condition?
+                    </button>
+                </h4>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#departmentsFAQ">
+                    <div class="accordion-body">
+                        Call our reception at +8801703452323 for guidance or visit our General Medicine department first. Our doctors will refer you to the appropriate specialist department if needed.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h4 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Are diagnostic services available in all departments?
+                    </button>
+                </h4>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#departmentsFAQ">
+                    <div class="accordion-body">
+                        Yes, all clinical departments have access to our advanced Diagnostic Center which includes Pathology Lab, Radiology, USG, X-Ray, and ECG services for comprehensive testing.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* New SEO Styles */
+    .seo-micro-stats .badge {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .seo-intro {
+        border-left: 4px solid #1a73e8;
+    }
+
+    .seo-feature-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+        .seo-feature-list li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+    .seo-services-summary {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .service-category {
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+
+        .service-category h5 {
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .service-category ul {
+            padding-left: 20px;
+        }
+
+        .service-category li {
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+            .service-category li:before {
+                content: "•";
+                color: #1a73e8;
+                position: absolute;
+                left: -15px;
+            }
+
+    .seo-faq {
+        border: 1px solid #e2e8f0;
+    }
+
+    .accordion-button {
+        font-weight: 500;
+    }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #e3f2fd;
+            color: #1a73e8;
+        }
+
+    /* Existing hover effects remain */
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+        }
+
+    .stat-item h3 {
+        font-weight: 700;
+    }
+
+    .btn-accent {
+        background-color: #00bfae;
+        border-color: #00bfae;
+        color: white;
+    }
+
+        .btn-accent:hover {
+            background-color: #00a895;
+            border-color: #00a895;
+        }
+</style>
+
+@section Scripts {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@@type": "Question",
+              "name": "Which medical departments are available at Sunrise Clinic Pabna?",
+              "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "Sunrise Clinic Pabna has @departmentCount specialized departments including Cardiology, Neurology, Pediatrics, Gynecology, Orthopedics, Diagnostic Center, Emergency Medicine, and General Medicine departments."
+              }
+            },
+            {
+              "@@type": "Question",
+              "name": "How to choose the right department for my medical condition?",
+              "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "Call our reception at +8801703452323 for guidance or visit our General Medicine department first. Our doctors will refer you to the appropriate specialist department if needed."
+              }
+            },
+            {
+              "@@type": "Question",
+              "name": "Are diagnostic services available in all departments?",
+              "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "Yes, all clinical departments have access to our advanced Diagnostic Center which includes Pathology Lab, Radiology, USG, X-Ray, and ECG services for comprehensive testing."
+              }
+            }
+          ]
+        }
+    </script>
+
+    <script>
+        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('departmentIndex');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Track department views for SEO
+            document.querySelectorAll('.card .btn-outline-primary').forEach(link => {
+                link.addEventListener('click', function() {
+                    const deptName = this.closest('.card').querySelector('.card-title').textContent;
+                    console.log('SEO: Department viewed:', deptName);
+                    // Add Google Analytics tracking here
+                });
+            });
+        });
+    </script>
+}

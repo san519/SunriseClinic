@@ -1,0 +1,216 @@
+﻿@{
+    var userId = Context.Session.GetString("UserId");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userName = Context.Session.GetString("UserName");
+    var displayId = Context.Session.GetString("DisplayId");
+    var isAppointmentPage = Context.Request.Path.Value.Contains("/Appointment/");
+    var isCreatePage = Context.Request.Path.Value.Contains("/Appointment/Create");
+    var isMyAppointmentsPage = Context.Request.Path.Value.Contains("/Appointment/MyAppointments");
+    var isPrescriptionPage = Context.Request.Path.Value.Contains("/Patient/Prescriptions");
+
+    // ✅ FIXED: First check ViewBag.Patient, then ViewBag.PatientProfilePicture
+    var profilePicture = ViewBag.Patient?.ProfilePicture as string ??
+                         ViewBag.PatientProfilePicture as string ??
+                         "default.jpg";
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="text-center mb-4">
+            <div class="position-relative d-inline-block">
+                <!-- Profile Picture - ViewBag.Patient থেকে নেবে -->
+                <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}")"
+                     class="rounded-circle" width="120" height="120"
+                     alt="Profile Picture"
+                     style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;">
+            </div>
+            <h5 class="mt-3 mb-1">@userName</h5>
+            <p class="text-muted small">
+                <i class="fas fa-id-card me-1"></i>Patient ID: @displayId
+            </p>
+        </div>
+
+        <ul class="list-unstyled">
+            <li class="mb-2">
+                <a href="/Patient/Dashboard" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("Dashboard") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Patient/Profile" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("Profile") && !Context.Request.Path.Value.Contains("MedicalHistory") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-user-edit me-3"></i>My Profile
+                </a>
+            </li>
+
+            <!-- Appointments with Bootstrap Collapse -->
+            <li class="mb-2">
+                <div class="appointments-container">
+                    <!-- Main Appointments Link - Bootstrap Collapse Trigger -->
+                    <a href="#appointmentsSubmenu"
+                       class="d-flex align-items-center p-3 rounded text-decoration-none
+                  @(isAppointmentPage ? "bg-primary text-white" : "text-dark")"
+                       data-bs-toggle="collapse"
+                       aria-expanded="@isAppointmentPage"
+                       aria-controls="appointmentsSubmenu">
+                        <i class="fas fa-calendar me-3"></i>
+                        <span>Appointments</span>
+                        <i class="fas fa-chevron-down ms-auto" id="appointmentArrow"></i>
+                    </a>
+
+                    <!-- Submenu - Bootstrap Collapse -->
+                    <div class="collapse @(isAppointmentPage ? "show" : "")"
+                         id="appointmentsSubmenu">
+                        <div class="mt-2" style="margin-left: 20px;">
+                            <!-- Book Appointment -->
+                            <a href="/Appointment/Create"
+                               class="d-flex align-items-center p-2 ps-4 rounded text-decoration-none mb-1
+                          @(isCreatePage ? "bg-primary text-white" : "text-dark")">
+                                <i class="fas fa-calendar-plus me-3"></i>
+                                <span>Book Appointment</span>
+                            </a>
+
+                            <!-- My Appointments -->
+                            <a href="/Appointment/MyAppointments"
+                               class="d-flex align-items-center p-2 ps-4 rounded text-decoration-none
+                          @(isMyAppointmentsPage ? "bg-primary text-white" : "text-dark")">
+                                <i class="fas fa-list me-3"></i>
+                                <span>My Appointments</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <!-- 🔥 FIXED: Prescriptions Link - PatientController-এর সাথে ম্যাচ করছে -->
+            <li class="mb-2">
+                <a href="/Patient/Prescriptions" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("/Patient/Prescriptions") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-prescription me-3"></i>Prescriptions
+                </a>
+            </li>
+
+            <li class="mb-2">
+                <a href="/Patient/MedicalHistory" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("MedicalHistory") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-file-medical me-3"></i>Medical History
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Patient/TestReports" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("TestReports") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-file-pdf me-3"></i>Test Reports
+                </a>
+            </li>
+            <li>
+                <a href="/Account/Logout" class="d-flex align-items-center p-3 rounded text-decoration-none text-dark">
+                    <i class="fas fa-sign-out-alt me-3"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-body p-4">
+        <h6 class="card-title mb-3">
+            <i class="fas fa-chart-line me-2 text-primary"></i>Quick Stats
+        </h6>
+        <ul class="list-unstyled mb-0">
+            <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>Total Appointments</span>
+                <span class="fw-semibold" id="totalAppointments">0</span>
+            </li>
+            <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>Prescriptions</span>
+                <span class="fw-semibold" id="totalPrescriptions">0</span>
+            </li>
+            <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>Test Reports</span>
+                <span class="fw-semibold" id="totalReports">0</span>
+            </li>
+            <li class="d-flex justify-content-between py-2">
+                <span>Member Since</span>
+                <span class="fw-semibold" id="memberSince">@DateTime.Now.ToString("MMM yyyy")</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Fetch patient data for sidebar
+    function fetchPatientSidebarData() {
+        const userId = '@Context.Session.GetString("UserId")';
+
+        if (!userId) {
+            console.log('User not logged in');
+            return;
+        }
+
+        fetch('/Patient/GetPatientStats')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Sidebar stats data:', data);
+
+                if (data.success) {
+                    // Update profile picture
+                    const sidebarImage = document.querySelector('#patientSidebar img');
+                    if (sidebarImage && data.profilePicture) {
+                        sidebarImage.src = '/uploads/profile-pictures/' + data.profilePicture + '?t=' + new Date().getTime();
+                    }
+
+                    // Update stats
+                    if (data.totalAppointments !== undefined) {
+                        document.getElementById('totalAppointments').textContent = data.totalAppointments;
+                    }
+                    if (data.totalReports !== undefined) {
+                        document.getElementById('totalReports').textContent = data.totalReports;
+                    }
+
+                    // Update prescription count (you need to add this to GetPatientStats method)
+                    if (data.totalPrescriptions !== undefined) {
+                        document.getElementById('totalPrescriptions').textContent = data.totalPrescriptions;
+                    }
+                } else {
+                    console.error('Failed to fetch stats:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching sidebar data:', error);
+            });
+    }
+
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Patient sidebar loaded, fetching stats...');
+        fetchPatientSidebarData();
+
+        // Auto open submenu if on appointment page
+        if ('@isAppointmentPage' === 'True') {
+            const arrow = document.getElementById('appointmentArrow');
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
+        }
+
+        // Add active class to current page link
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('#patientSidebar a');
+
+        sidebarLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && currentPath.includes(href.replace('/Patient/', ''))) {
+                link.classList.add('bg-primary', 'text-white');
+                link.classList.remove('text-dark');
+            }
+        });
+    });
+
+    // Also try after 1 second delay
+    setTimeout(fetchPatientSidebarData, 1000);
+</script>

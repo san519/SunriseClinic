@@ -1,0 +1,933 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "My Profile";
+    var userId = Context.Session.GetString("UserId");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userName = Context.Session.GetString("UserName");
+    var displayId = Context.Session.GetString("DisplayId");
+    var profilePicture = ViewBag.Patient?.ProfilePicture as string ??
+                         ViewBag.PatientProfilePicture as string ??
+                         "default.jpg";
+
+    var patient = ViewBag.Patient as dynamic;
+    var fullName = patient?.FullName ?? userName;
+    var phoneNumber = patient?.PhoneNumber ?? "Not set";
+    var dateOfBirth = patient?.DateOfBirth?.ToString("yyyy-MM-dd") ?? "Not set";
+    var gender = patient?.Gender == "M" ? "Male" :
+                 patient?.Gender == "F" ? "Female" :
+                 patient?.Gender == "O" ? "Other" :
+                 "Not specified";
+    var address = patient?.Address ?? "Not set";
+    var bloodGroup = patient?.BloodGroup ?? "Not set";
+    var emergencyContact = patient?.EmergencyContact ?? "Not set";
+    var height = patient?.Height?.ToString() ?? "Not set";
+    var weight = patient?.Weight?.ToString() ?? "Not set";
+    var maritalStatus = patient?.MaritalStatus ?? "Not set";
+}
+
+<div id="patientProfile">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-3">
+                <!-- Sidebar -->
+                @await Html.PartialAsync("_PatientSidebar")
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">
+                            <i class="fas fa-user-circle me-2 text-primary"></i>My Profile
+                        </h3>
+                        <p class="text-muted mb-0">Manage your personal information</p>
+                    </div>
+                </div>
+
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-4">
+                        <i class="fas fa-check-circle me-2"></i>
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show mb-4">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <!-- Profile Form -->
+                <form id="profileForm" method="post" action="@Url.Action("UpdateProfile", "Patient")">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Profile Picture Section -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <div class="position-relative d-inline-block">
+                                        <!-- Profile Picture -->
+                                        <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}")"
+                                             class="rounded-circle profile-pic"
+                                             width="150" height="150"
+                                             alt="Profile Picture"
+                                             id="profileImage"
+                                             style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;">
+
+                                        <!-- Hidden File Input -->
+                                        <input type="file" id="profilePictureInput" style="display:none;"
+                                               accept="image/*" onchange="uploadProfilePicture(this)">
+                                    </div>
+
+                                    <!-- Popup Modal -->
+                                    <div class="modal fade" id="picOptionsModal" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-header py-2">
+                                                    <h6 class="modal-title mb-0">Profile Picture</h6>
+                                                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="list-group list-group-flush">
+                                                        <button type="button" class="list-group-item list-group-item-action border-0 py-3"
+                                                                onclick="viewPicture()" data-bs-dismiss="modal">
+                                                            <i class="fas fa-eye me-2 text-primary"></i>View Full Size
+                                                        </button>
+                                                        <button type="button" class="list-group-item list-group-item-action border-0 py-3"
+                                                                onclick="changePicture()" data-bs-dismiss="modal">
+                                                            <i class="fas fa-upload me-2 text-primary"></i>Change Picture
+                                                        </button>
+                                                        @if (profilePicture != "default.jpg")
+                                                        {
+                                                            <button type="button" class="list-group-item list-group-item-action border-0 py-3 text-danger"
+                                                                    onclick="removePicture()" data-bs-dismiss="modal">
+                                                                <i class="fas fa-trash-alt me-2"></i>Remove Picture
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h4 class="mb-1">@fullName</h4>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-id-card me-1"></i>
+                                        Patient ID: @displayId
+                                    </p>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-envelope me-1"></i>
+                                        @userEmail
+                                    </p>
+                                </div>
+                                <!-- Profile Picture Section এর নিচে Change Password Button -->
+                                <div class="col-auto mt-3">
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                            onclick="showChangePasswordForm()" id="changePasswordBtn">
+                                        <i class="fas fa-key me-1"></i>Change Password
+                                    </button>
+                                </div>
+
+                                <!-- Change Password Modal -->
+                                <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title">
+                                                    <i class="fas fa-key me-2"></i>Change Password
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <form id="changePasswordForm">
+                                                    @Html.AntiForgeryToken()
+
+                                                    <!-- Current Password -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">
+                                                            <i class="fas fa-lock me-1 text-muted"></i>Current Password *
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control"
+                                                                   id="currentPassword"
+                                                                   placeholder="Enter current password" required>
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                    onclick="togglePassword('currentPassword', this)">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="text-danger small mt-1" id="currentPasswordError"></div>
+                                                    </div>
+
+                                                    <!-- New Password -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">
+                                                            <i class="fas fa-key me-1 text-muted"></i>New Password *
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control"
+                                                                   id="newPassword"
+                                                                   placeholder="Enter new password" required minlength="6">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                    onclick="togglePassword('newPassword', this)">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="text-danger small mt-1" id="newPasswordError"></div>
+                                                        <div class="form-text">
+                                                            <i class="fas fa-info-circle me-1"></i>Minimum 6 characters required
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Confirm Password -->
+                                                    <div class="mb-4">
+                                                        <label class="form-label fw-semibold">
+                                                            <i class="fas fa-key me-1 text-muted"></i>Confirm New Password *
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control"
+                                                                   id="confirmPassword"
+                                                                   placeholder="Re-enter new password" required minlength="6">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                    onclick="togglePassword('confirmPassword', this)">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="text-danger small mt-1" id="confirmPasswordError"></div>
+                                                    </div>
+
+                                                    <!-- Password Strength -->
+                                                    <div class="mb-4">
+                                                        <div class="d-flex justify-content-between mb-1">
+                                                            <small class="text-muted">Password Strength</small>
+                                                            <small class="text-muted" id="strengthText">None</small>
+                                                        </div>
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar" id="strengthBar" style="width: 0%"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Action Buttons -->
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            <i class="fas fa-times me-1"></i>Cancel
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary" id="submitPasswordBtn">
+                                                            <i class="fas fa-save me-1"></i>Change Password
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                                </h5>
+                                <!-- Edit Button moved here -->
+                                <button type="button" class="btn btn-primary py-1 px-3 fs-6 edit-profile-btn" onclick="toggleEditMode()" id="editBtn">
+                                    <i class="fas fa-edit me-1"></i>Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Full Name</label>
+                                    <input type="text" class="form-control" value="@fullName" disabled id="fullNameInput">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Email Address</label>
+                                    <input type="email" class="form-control" value="@userEmail" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Date of Birth</label>
+                                    <input type="text" class="form-control" value="@dateOfBirth" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Gender</label>
+                                    <input type="text" class="form-control" value="@gender" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Blood Group</label>
+                                    <input type="text" class="form-control" value="@bloodGroup" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Marital Status</label>
+                                    <select class="form-control" id="maritalStatusSelect" name="MaritalStatus" disabled>
+                                        <option value="">Select Status</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Divorced">Divorced</option>
+                                        <option value="Widowed">Widowed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-address-book me-2 text-primary"></i>Contact Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Phone Number *</label>
+                                    <input type="text" class="form-control"
+                                           id="phoneNumberInput"
+                                           name="PhoneNumber"
+                                           value="@phoneNumber"
+                                           required
+                                           disabled
+                                           pattern="^(\+8801|01)[3-9]\d{8}$"
+                                           maxlength="14"
+                                           title="Enter a valid phone number">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Emergency Contact *</label>
+                                    <input type="text" class="form-control"
+                                           id="emergencyContactInput"
+                                           name="EmergencyContact"
+                                           value="@emergencyContact"
+                                           required
+                                           disabled
+                                           pattern="^(\+8801|01)[3-9]\d{8}$"
+                                           maxlength="14"
+                                           title="Enter a valid emergency contact number">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Address *</label>
+                                <textarea class="form-control"
+                                          id="addressTextarea"
+                                          name="Address"
+                                          rows="3"
+                                          required
+                                          disabled>@address</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Physical Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-weight me-2 text-primary"></i>Physical Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Height (cm)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control"
+                                               id="heightInput"
+                                               name="Height"
+                                               value="@height"
+                                               min="50" max="250" step="0.1"
+                                               disabled>
+                                        <span class="input-group-text">cm</span>
+                                    </div>
+                                    <small class="text-muted">Enter height in centimeters</small>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Weight (kg)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control"
+                                               id="weightInput"
+                                               name="Weight"
+                                               value="@weight"
+                                               min="20" max="200" step="0.1"
+                                               disabled>
+                                        <span class="input-group-text">kg</span>
+                                    </div>
+                                    <small class="text-muted">Enter weight in kilograms</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons (Hidden by default) -->
+                    <div class="card border-0 shadow-sm mb-4" id="actionButtons" style="display: none;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary py-1 px-3 fs-6" onclick="cancelEdit()">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary py-1 px-3 fs-6" id="saveBtn">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Account Security Notice -->
+                <div class="alert alert-info border-0">
+                    <div class="d-flex">
+                        <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Profile Update Information</h6>
+                            <p class="mb-0">
+                                Some information can't be changed here for security reasons.
+                                Please contact the hospital for changes to these details.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .edit-profile-btn {
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        transition: all 0.2s ease;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(13, 110, 253, 0.2);
+        }
+
+        .edit-profile-btn:active {
+            transform: translateY(0);
+        }
+
+    @@media (max-width: 768px) {
+        .edit-profile-btn {
+            padding: 0.2rem 0.6rem !important;
+            font-size: 0.8rem !important;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        let isEditMode = false;
+        let originalValues = {};
+
+        function toggleEditMode() {
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+            const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+
+            if (!isEditMode) {
+                // Enter edit mode
+                isEditMode = true;
+                editBtn.innerHTML = '<i class="fas fa-times me-2"></i>Cancel Edit';
+                editBtn.classList.remove('btn-primary');
+                editBtn.classList.add('btn-secondary');
+
+                actionButtons.style.display = 'block';
+
+                // Store original values
+                inputs.forEach(input => {
+                    if (input.name && !input.readOnly) {
+                        originalValues[input.name] = input.value;
+                    }
+                });
+
+                // Enable editable fields
+                enableField('phoneNumberInput');
+                enableField('emergencyContactInput');
+                enableField('addressTextarea');
+                enableField('heightInput');
+                enableField('weightInput');
+                enableField('maritalStatusSelect');
+
+                // Set selected value for marital status
+                const maritalStatus = "@maritalStatus";
+                if (maritalStatus && maritalStatus !== "Not set") {
+                    const maritalSelect = document.getElementById('maritalStatusSelect');
+                    maritalSelect.value = maritalStatus;
+                }
+
+                // Scroll to editable fields
+                document.getElementById('phoneNumberInput').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+            } else {
+                // Cancel edit mode
+                cancelEdit();
+            }
+        }
+
+        function enableField(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.disabled = false;
+                field.classList.add('border-primary');
+                field.focus();
+            }
+        }
+
+        function cancelEdit() {
+            isEditMode = false;
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+
+            editBtn.innerHTML = '<i class="fas fa-edit me-1"></i>Edit Profile';
+            editBtn.classList.remove('btn-secondary');
+            editBtn.classList.add('btn-primary');
+
+            actionButtons.style.display = 'none';
+
+            // Restore original values
+            Object.keys(originalValues).forEach(key => {
+                const field = document.querySelector(`[name="${key}"]`);
+                if (field) {
+                    field.value = originalValues[key];
+                }
+            });
+
+            // Disable fields
+            const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+            inputs.forEach(input => {
+                if (!input.readOnly) {
+                    input.disabled = true;
+                    input.classList.remove('border-primary');
+                }
+            });
+
+            originalValues = {};
+        }
+
+        function uploadProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const formData = new FormData();
+                formData.append('profilePicture', input.files[0]);
+
+                // Show loading
+                const profileImage = document.getElementById('profileImage');
+                const originalSrc = profileImage.src;
+                profileImage.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2Y4ZjhmOCIvPjx0ZXh0IHg9IjYwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjY2NjIj5Mb2FkaW5nLjwvdGV4dD48L3N2Zz4=';
+
+                fetch('/Patient/UpdateProfilePicture', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update image with timestamp to prevent caching
+                        profileImage.src = '@Url.Content("~/uploads/profile-pictures/")' + data.fileName + '?t=' + new Date().getTime();
+
+                        // Show success message
+                        showAlert('Profile picture updated successfully!', 'success');
+                    } else {
+                        throw new Error(data.message || 'Upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    profileImage.src = originalSrc;
+                    showAlert('Failed to upload picture: ' + error.message, 'danger');
+                });
+            }
+        }
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const formData = new FormData(form);
+
+            // Convert empty strings to null for optional fields
+            const height = document.getElementById('heightInput').value;
+            const weight = document.getElementById('weightInput').value;
+
+            if (height === '' || height === 'Not set') {
+                formData.set('Height', '');
+            }
+            if (weight === '' || weight === 'Not set') {
+                formData.set('Weight', '');
+            }
+
+            // Disable save button and show loading
+            const saveBtn = document.getElementById('saveBtn');
+            const originalBtnText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+            saveBtn.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    showAlert('Profile updated successfully!', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else if (data && !data.success) {
+                    throw new Error(data.message || 'Update failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Failed to update profile: ' + error.message, 'danger');
+            })
+            .finally(() => {
+                saveBtn.innerHTML = originalBtnText;
+                saveBtn.disabled = false;
+            });
+        });
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+            alertDiv.style.zIndex = '1050';
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize marital status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const maritalStatus = "@maritalStatus";
+            if (maritalStatus && maritalStatus !== "Not set") {
+                const maritalSelect = document.getElementById('maritalStatusSelect');
+                maritalSelect.value = maritalStatus;
+            }
+
+            // Scroll to Profile on page load
+            const scrolltomain = document.getElementById('patientProfile');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Profile picture click handler
+        document.getElementById('profileImage').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('picOptionsModal'));
+            modal.show();
+        });
+
+        function viewPicture() {
+            const imgSrc = document.getElementById('profileImage').src;
+            window.open(imgSrc, '_blank');
+        }
+
+        function changePicture() {
+            document.getElementById('profilePictureInput').click();
+        }
+
+        function removePicture() {
+            if (confirm('Are you sure you want to remove your profile picture?')) {
+                fetch('/Patient/RemoveProfilePicture', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const img = document.getElementById('profileImage');
+                        img.src = '@Url.Content("~/uploads/profile-pictures/default.jpg")' + '?t=' + new Date().getTime();
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                        alertDiv.style.zIndex = '1060';
+                        alertDiv.innerHTML = `
+                            <i class="fas fa-check-circle me-2"></i>
+                            Profile picture removed
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        document.body.appendChild(alertDiv);
+                        setTimeout(() => alertDiv.remove(), 3000);
+                    }
+                });
+            }
+        }
+
+        function uploadProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const formData = new FormData();
+                formData.append('profilePicture', input.files[0]);
+
+                fetch('/Patient/UpdateProfilePicture', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const img = document.getElementById('profileImage');
+                        img.src = '@Url.Content("~/uploads/profile-pictures/")' + data.fileName + '?t=' + new Date().getTime();
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                        alertDiv.style.zIndex = '1060';
+                        alertDiv.innerHTML = `
+                            <i class="fas fa-check-circle me-2"></i>
+                            Profile picture updated
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        document.body.appendChild(alertDiv);
+                        setTimeout(() => alertDiv.remove(), 3000);
+                    }
+                });
+            }
+        }
+        // Change Password Functions
+        function showChangePasswordForm() {
+            // Reset form
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('currentPasswordError').textContent = '';
+            document.getElementById('newPasswordError').textContent = '';
+            document.getElementById('confirmPasswordError').textContent = '';
+            document.getElementById('strengthBar').style.width = '0%';
+            document.getElementById('strengthText').textContent = 'None';
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+            modal.show();
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Password strength checker
+        document.getElementById('newPassword')?.addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+
+            let strength = 0;
+            let color = 'bg-danger';
+            let text = 'Weak';
+
+            if (password.length >= 6) strength += 25;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+            if (/\d/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+            strengthBar.style.width = strength + '%';
+
+            if (strength <= 25) {
+                color = 'bg-danger';
+                text = 'Weak';
+            } else if (strength <= 50) {
+                color = 'bg-warning';
+                text = 'Fair';
+            } else if (strength <= 75) {
+                color = 'bg-info';
+                text = 'Good';
+            } else {
+                color = 'bg-success';
+                text = 'Strong';
+            }
+
+            strengthBar.className = `progress-bar ${color}`;
+            strengthText.textContent = text;
+        });
+
+        // Change Password Form Submission
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const submitBtn = document.getElementById('submitPasswordBtn');
+            const originalText = submitBtn.innerHTML;
+
+            // Clear previous errors
+            document.getElementById('currentPasswordError').textContent = '';
+            document.getElementById('newPasswordError').textContent = '';
+            document.getElementById('confirmPasswordError').textContent = '';
+
+            // Get values
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Client-side validation
+            let isValid = true;
+
+            if (!currentPassword) {
+                document.getElementById('currentPasswordError').textContent = 'Current password is required';
+                isValid = false;
+            }
+
+            if (!newPassword) {
+                document.getElementById('newPasswordError').textContent = 'New password is required';
+                isValid = false;
+            } else if (newPassword.length < 6) {
+                document.getElementById('newPasswordError').textContent = 'Password must be at least 6 characters';
+                isValid = false;
+            }
+
+            if (!confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Please confirm your new password';
+                isValid = false;
+            } else if (newPassword !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+
+            if (newPassword === currentPassword) {
+                document.getElementById('newPasswordError').textContent = 'New password must be different from current password';
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Disable button and show loading
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Processing...';
+            submitBtn.disabled = true;
+
+            // Prepare data
+            const formData = {
+                CurrentPassword: currentPassword,
+                NewPassword: newPassword,
+                ConfirmPassword: confirmPassword
+            };
+
+            // Send AJAX request
+            fetch('/Patient/ChangePassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Success
+                    showAlert(data.message, 'success');
+
+                    // Close modal after 1 second
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                        modal.hide();
+
+                        // Reset form
+                        form.reset();
+                        document.getElementById('strengthBar').style.width = '0%';
+                        document.getElementById('strengthText').textContent = 'None';
+                    }, 1000);
+                } else {
+                    // Error
+                    showAlert(data.message, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'danger');
+            })
+            .finally(() => {
+                // Restore button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        function showAlert(message, type) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll('.custom-alert');
+            existingAlerts.forEach(alert => alert.remove());
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show custom-alert position-fixed top-0 end-0 m-3`;
+            alertDiv.style.zIndex = '1060';
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+    </script>
+}

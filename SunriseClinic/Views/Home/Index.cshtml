@@ -1,0 +1,1150 @@
+﻿@* Views/Home/Index.cshtml - SEO Optimized for sunriseclinicbd.com *@
+@using SunriseClinic.Data
+@inject SunriseDbContext DbContext
+
+@{
+    string domain = "https://www.sunriseclinicbd.com";
+    string fullUrl = domain + Context.Request.Path;
+
+    ViewData["Title"] = "Sunrise Clinic & Diagnostic Center | Best Medical Lab in Pabna";
+    ViewData["Description"] = "Sunrise Clinic & Diagnostic Center Pabna offers 60+ affordable medical tests: Pathology ₹150+, Radiology ₹300+, USG ₹1000. 24/7 emergency, digital reports.";
+    ViewData["Keywords"] = "sunrise clinic pabna, diagnostic center bangladesh, medical lab pabna, blood test, usg, x-ray, ecg, pathology lab, sunriseclinicbd";
+    ViewData["Image"] = domain + "/img/sunrise-clinic.webp";
+    ViewData["Canonical"] = domain + "/";
+
+    var clinicName = "Sunrise Clinic & Diagnostic Center";
+    var clinicAddress = "TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna, Bangladesh";
+    var clinicPhone = "+8801703452323";
+    var clinicEmail = "info@sunriseclinicbd.com";
+    var clinicHours = "8:00 AM - 10:00 PM (Daily)";
+    var clinicGeo = "24.0064,89.2372";
+}
+
+<!-- Schema.org Structured Data for Medical Clinic -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalClinic",
+      "@@id": "@domain/#medicalclinic",
+      "name": "@clinicName",
+      "description": "Sunrise Clinic & Diagnostic Center offers complete diagnostic solutions with 60+ medical tests including pathology, radiology, and specialized diagnostics at affordable prices in Pabna, Bangladesh.",
+      "url": "@domain",
+      "telephone": "@clinicPhone",
+      "email": "@clinicEmail",
+      "image": "@ViewData["Image"]",
+      "logo": "@domain/img/logo.png",
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "TB Clinic Gate, Shalgaria",
+        "addressLocality": "Pabna Sadar",
+        "addressRegion": "Pabna",
+        "addressCountry": "BD",
+        "postalCode": "6600"
+      },
+      "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": "24.0064",
+        "longitude": "89.2372"
+      },
+      "openingHours": "Mo-Su 08:00-22:00",
+      "openingHoursSpecification": [
+        {
+          "@@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "08:00",
+          "closes": "22:00"
+        }
+      ],
+      "priceRange": "₹₹",
+      "medicalSpecialty": ["DiagnosticRadiology", "Pathology", "ClinicalPathology"],
+      "hasOfferCatalog": {
+        "@@type": "OfferCatalog",
+        "name": "Diagnostic Tests Packages",
+        "itemListElement": [
+          {
+            "@@type": "Offer",
+            "name": "Basic Health Checkup",
+            "description": "Complete basic health screening package",
+            "price": "1200",
+            "priceCurrency": "BDT",
+            "url": "@domain/Appointment/Create?package=basic"
+          },
+          {
+            "@@type": "Offer",
+            "name": "USG Whole Abdomen",
+            "description": "Ultrasound examination of whole abdomen",
+            "price": "1000",
+            "priceCurrency": "BDT",
+            "url": "@domain/Appointment/Create?test=USG Whole Abdomen"
+          }
+        ]
+      },
+      "aggregateRating": {
+        "@@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "5000",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "sameAs": [
+        "https://www.facebook.com/sunriseclinicbd",
+        "https://www.twitter.com/sunriseclinicbd"
+      ]
+    }
+</script>
+
+<!-- Local Business Structured Data -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "LocalBusiness",
+      "name": "@clinicName",
+      "@@id": "@domain",
+      "url": "@domain",
+      "telephone": "@clinicPhone",
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "TB Clinic Gate, Shalgaria",
+        "addressLocality": "Pabna",
+        "addressRegion": "Rajshahi",
+        "addressCountry": "Bangladesh"
+      },
+      "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": "24.0064",
+        "longitude": "89.2372"
+      },
+      "openingHours": "Mo-Su 08:00-22:00",
+      "priceRange": "₹₹",
+      "image": "@ViewData["Image"]"
+    }
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "@domain/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Diagnostic Services",
+          "item": "@domain/Services/DiagnosticServices"
+        }
+      ]
+    }
+</script>
+
+<!-- Medical Test Structured Data -->
+<script type="application/ld+json">
+    [{
+      "@@context": "https://schema.org",
+      "@@type": "MedicalTest",
+      "name": "CBC with ESR Test",
+      "description": "Complete Blood Count with Erythrocyte Sedimentation Rate test",
+      "code": {
+        "@@type": "MedicalCode",
+        "codeValue": "CBC-ESR",
+        "codingSystem": "Local"
+      },
+      "usesDevice": {
+        "@@type": "MedicalDevice",
+        "name": "5-part Hematology Analyzer"
+      },
+      "recognizingAuthority": {
+        "@@type": "Organization",
+        "name": "Sunrise Clinic Laboratory"
+      },
+      "legalStatus": "Approved",
+      "url": "@domain/Services/DiagnosticServices#hematology"
+    },
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalTest",
+      "name": "USG Whole Abdomen",
+      "description": "Ultrasound examination of complete abdominal area",
+      "code": {
+        "@@type": "MedicalCode",
+        "codeValue": "USG-WA",
+        "codingSystem": "Local"
+      },
+      "usesDevice": {
+        "@@type": "MedicalDevice",
+        "name": "Digital Color Doppler Ultrasound"
+      },
+      "recognizingAuthority": {
+        "@@type": "Organization",
+        "name": "Sunrise Clinic Radiology"
+      },
+      "legalStatus": "Approved",
+      "url": "@domain/Services/DiagnosticServices#radiology"
+    }]
+</script>
+
+<!-- SEO Meta Tags -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="bingbot" content="index, follow">
+<meta name="author" content="Sunrise Clinic & Diagnostic Center">
+<meta name="copyright" content="Sunrise Clinic BD">
+<meta name="geo.region" content="BD-RS">
+<meta name="geo.placename" content="Pabna">
+<meta name="geo.position" content="@clinicGeo">
+<meta name="ICBM" content="@clinicGeo">
+<link rel="canonical" href="@ViewData["Canonical"]" />
+<link rel="alternate" href="@domain/bn/" hreflang="bn" />
+<link rel="alternate" href="@domain/" hreflang="en" />
+<link rel="alternate" href="@domain/" hreflang="x-default" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="@domain/">
+<meta property="og:site_name" content="Sunrise Clinic BD">
+<meta property="og:title" content="@ViewData["Title"]">
+<meta property="og:description" content="@ViewData["Description"]">
+<meta property="og:image" content="@ViewData["Image"]">
+<meta property="og:image:alt" content="Sunrise Clinic & Diagnostic Center Pabna">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_BD">
+<meta property="og:locale:alternate" content="bn_BD">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@@sunriseclinicbd">
+<meta name="twitter:creator" content="@@sunriseclinicbd">
+<meta name="twitter:title" content="@ViewData["Title"]">
+<meta name="twitter:description" content="@ViewData["Description"]">
+<meta name="twitter:image" content="@ViewData["Image"]">
+<meta name="twitter:image:alt" content="Sunrise Clinic Pabna Diagnostic Center">
+
+<!-- Additional SEO Tags -->
+<meta name="application-name" content="Sunrise Clinic">
+<meta name="apple-mobile-web-app-title" content="Sunrise Clinic">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=yes">
+<meta name="msapplication-TileColor" content="#0066cc">
+<meta name="theme-color" content="#0066cc">
+<meta name="p:domain_verify" content="verify-pinterest-code">
+
+<!-- Preconnect for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="//www.google-analytics.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+
+<!-- Hero Section with Stats -->
+<section class="hero-section position-relative overflow-hidden py-3" itemscope itemtype="https://schema.org/MedicalClinic">
+    <div class="container py-3">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="fw-bold mb-3 text-dark" itemprop="name">Complete Diagnostic & Healthcare Solutions in Pabna</h1>
+                <p class="lead mb-4 text-dark" itemprop="description">Sunrise Clinic Pabna offers advanced medical testing with precision, care, and affordable pricing. Your health is our priority at our diagnostic center.</p>
+
+                <!-- Key Stats with Schema -->
+                <div class="row g-4 mb-4">
+                    <div class="col-4" itemscope itemtype="https://schema.org/QuantitativeValue">
+                        <div class="stat-box text-center">
+                            <h3 class="text-primary fw-bold mb-0" itemprop="value">60+</h3>
+                            <p class="text-muted mb-0" itemprop="description">Medical Tests Available</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-box text-center">
+                            <h3 class="text-primary fw-bold mb-0">24/7</h3>
+                            <p class="text-muted mb-0">Emergency Support</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-box text-center">
+                            <h3 class="text-primary fw-bold mb-0">₹150+</h3>
+                            <p class="text-muted mb-0">Starting Price</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-premium-register px-4 py-3 rounded-pill shadow-sm"
+                               aria-label="Register at Sunrise Clinic for faster appointments and digital reports">
+                                <i class="fas fa-user-plus me-2"></i>Register Now
+                            </a>
+                            <p class="text-muted small mt-2 mb-0">Registered patients enjoy faster appointments, digital reports, and special offers at Sunrise Clinic Pabna</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="hero-image position-relative">
+                    <img src="/img/sunrise-clinic.webp" class="img-fluid rounded-4 shadow-lg"
+                         alt="Sunrise Clinic & Diagnostic Center Pabna - Best Medical Lab in Bangladesh"
+                         title="Sunrise Clinic Pabna Diagnostic Center"
+                         loading="eager"
+                         width="600"
+                         height="400"
+                         itemprop="image">
+                    <div class="floating-badge bg-primary text-white p-3 rounded-3 shadow">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-award fa-2x me-3"></i>
+                            <div>
+                                <small class="d-block">Trusted By</small>
+                                <strong class="h5 mb-0">5000+ Patients</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section - Enhanced -->
+<section class="features-section pt-4">
+    <div class="container">
+        <div class="row mb-4 pt-3">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-title">Why Choose <span class="text-primary">Sunrise Clinic Pabna</span></h2>
+                <p class="section-subtitle">Advanced diagnostics, expert care, and transparent pricing - all under one roof at our diagnostic center</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="feature-card feature-card-primary">
+                    <div class="feature-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h4 itemprop="name">Complete Pathology Lab in Pabna</h4>
+                    <p itemprop="description">State-of-the-art laboratory with automated analyzers for Hematology, Biochemistry, Serology, and Hormone testing. Accurate results with quick turnaround time at Sunrise Clinic.</p>
+                    <div class="price-highlight mt-3">
+                        <small class="text-muted">Starting from:</small>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-primary">₹150</span>
+                            <span class="badge bg-primary">₹200</span>
+                            <span class="badge bg-primary">₹500</span>
+                        </div>
+                    </div>
+                    <a href="/Services/DiagnosticServices" class="feature-link" aria-label="View all pathology tests at Sunrise Clinic Pabna">
+                        View All Pathology Tests <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="feature-card feature-card-accent">
+                    <div class="feature-icon">
+                        <i class="fas fa-x-ray"></i>
+                    </div>
+                    <h4 itemprop="name">Advanced Radiology & Imaging Center</h4>
+                    <p itemprop="description">Digital X-Ray, High-resolution USG (Whole Abdomen, TVS, Breast, Thyroid), and ECG with expert radiologist reporting. Latest equipment for precise diagnosis at Sunrise Clinic.</p>
+                    <div class="price-highlight mt-3">
+                        <small class="text-muted">Starting from:</small>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-info">₹300</span>
+                            <span class="badge bg-info">₹500</span>
+                            <span class="badge bg-info">₹1000</span>
+                        </div>
+                    </div>
+                    <a href="/Services/Diagnostics#radiology" class="feature-link" aria-label="View imaging services and prices at Sunrise Clinic">
+                        View Imaging Services <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="feature-card feature-card-success">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4 itemprop="name">Specialized Medical Testing</h4>
+                    <p itemprop="description">Cardiac markers (Troponin-I), Comprehensive Thyroid profiles, Diabetes management (HbA1C, OGTT), Cancer markers, and advanced infectious disease testing at Sunrise Clinic.</p>
+                    <div class="price-highlight mt-3">
+                        <small class="text-muted">Starting from:</small>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-success">₹500</span>
+                            <span class="badge bg-success">₹800</span>
+                            <span class="badge bg-success">₹1200</span>
+                        </div>
+                    </div>
+                    <a href="/Services/HealthCheckup" class="feature-link" aria-label="View specialized medical tests at Sunrise Clinic">
+                        View Special Tests <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Grid with Pricing -->
+<section class="services-grid py-4 bg-light">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Our Diagnostic Services in Pabna</h6>
+            <h2 class="section-title">Comprehensive Test Menu with Transparent Pricing</h2>
+            <p class="section-description">Complete diagnostic solutions from routine checkups to specialized investigations at Sunrise Clinic</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Hematology -->
+            <div class="col-md-6 col-lg-3" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="service-card diagnostic">
+                    <div class="service-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h4 itemprop="name">Hematology Tests</h4>
+                    <p class="mb-2"><strong>Complete Blood Analysis</strong></p>
+                    <ul class="service-list">
+                        <li>CBC with ESR <span class="price">₹500</span></li>
+                        <li>HB% Test <span class="price">₹200</span></li>
+                        <li>TC, DC Test <span class="price">₹400</span></li>
+                        <li>Prothrombin Time <span class="price">₹1000</span></li>
+                        <li>Platelet Count <span class="price">₹200</span></li>
+                    </ul>
+                    <a href="/Home/Diagnostic#pathology" class="service-link" aria-label="View all hematology tests at Sunrise Clinic">
+                        View All (8+ Tests) <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Biochemistry -->
+            <div class="col-md-6 col-lg-3" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="service-card consultation">
+                    <div class="service-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h4 itemprop="name">Biochemistry Tests</h4>
+                    <p class="mb-2"><strong>Blood Chemistry & Organ Function</strong></p>
+                    <ul class="service-list">
+                        <li>RBS/FBS Test <span class="price">₹150</span></li>
+                        <li>Creatinine Test <span class="price">₹500</span></li>
+                        <li>Lipid Profile <span class="price">₹1200</span></li>
+                        <li>Liver Function <span class="price">₹500/test</span></li>
+                        <li>Electrolyte Test <span class="price">₹1000</span></li>
+                    </ul>
+                    <a href="/Home/Diagnostic#pathology" class="service-link" aria-label="View all biochemistry tests at Sunrise Clinic">
+                        View All (15+ Tests) <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Serology -->
+            <div class="col-md-6 col-lg-3" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="service-card emergency">
+                    <div class="service-icon">
+                        <i class="fas fa-virus"></i>
+                    </div>
+                    <h4 itemprop="name">Serology Tests</h4>
+                    <p class="mb-2"><strong>Infection & Disease Testing</strong></p>
+                    <ul class="service-list">
+                        <li>Dengue NS1/IgM/IgG <span class="price">₹300</span></li>
+                        <li>HIV/HCV/HBsAg <span class="price">₹500</span></li>
+                        <li>Widal Test <span class="price">₹500</span></li>
+                        <li>CRP/RA Test <span class="price">₹500</span></li>
+                        <li>Triple Antigen <span class="price">₹1200</span></li>
+                    </ul>
+                    <a href="/Home/Diagnostic#infection-tests" class="service-link" aria-label="View all serology tests at Sunrise Clinic">
+                        View All (15+ Tests) <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hormone Tests -->
+            <div class="col-md-6 col-lg-3" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="service-card wellness">
+                    <div class="service-icon">
+                        <i class="fas fa-hormone"></i>
+                    </div>
+                    <h4 itemprop="name">Hormone Tests</h4>
+                    <p class="mb-2"><strong>Endocrine & Special Tests</strong></p>
+                    <ul class="service-list">
+                        <li>Thyroid Profile (TSH/T3/T4) <span class="price">₹800</span></li>
+                        <li>FSH/LH Test <span class="price">₹1200</span></li>
+                        <li>Testosterone Test <span class="price">₹1400</span></li>
+                        <li>β hCG Test <span class="price">₹1000</span></li>
+                        <li>D-Dimer Test <span class="price">₹1500</span></li>
+                    </ul>
+                    <a href="/Home/Diagnostic#special-tests" class="service-link" aria-label="View all hormone tests at Sunrise Clinic">
+                        View All (12+ Tests) <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="/Home/Diagnostic" class="btn btn-primary btn-lg px-5 py-3 rounded-pill"
+               aria-label="View complete diagnostic price list with 60+ tests at Sunrise Clinic Pabna">
+                <i class="fas fa-file-invoice-dollar me-2"></i>View Complete Price List (60+ Tests)
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Tests Section -->
+<section class="popular-tests py-4">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Most Requested Tests</h6>
+            <h2 class="section-title">Popular Tests & Health Packages</h2>
+            <p class="section-description">Book these commonly required tests instantly at Sunrise Clinic Pabna</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="popular-test-card">
+                    <div class="test-header bg-warning text-white p-4 rounded-top">
+                        <h5 class="mb-0" itemprop="name">Basic Health Checkup Package</h5>
+                        <div class="test-price">₹1200 <small>Save ₹300</small></div>
+                    </div>
+                    <div class="test-body p-4">
+                        <ul class="test-includes">
+                            <li>CBC with ESR Test</li>
+                            <li>RBS/FBS Test</li>
+                            <li>Urine R/M/E Test</li>
+                            <li>ECG Test</li>
+                            <li>Doctor Consultation</li>
+                        </ul>
+                        <a href="/Appointment/Create?package=basic" class="btn btn-outline-warning w-100 mt-3"
+                           aria-label="Book Basic Health Checkup package at Sunrise Clinic">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="popular-test-card">
+                    <div class="test-header bg-danger text-white p-4 rounded-top">
+                        <h5 class="mb-0" itemprop="name">Diabetes Package</h5>
+                        <div class="test-price">₹1800 <small>Save ₹500</small></div>
+                    </div>
+                    <div class="test-body p-4">
+                        <ul class="test-includes">
+                            <li>FBS/RBS Test</li>
+                            <li>HbA1C Test</li>
+                            <li>Lipid Profile Test</li>
+                            <li>Kidney Function Test</li>
+                            <li>Doctor Consultation</li>
+                        </ul>
+                        <a href="/Appointment/Create?package=diabetes" class="btn btn-outline-danger w-100 mt-3"
+                           aria-label="Book Diabetes Package at Sunrise Clinic">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                <div class="popular-test-card">
+                    <div class="test-header bg-success text-white p-4 rounded-top">
+                        <h5 class="mb-0" itemprop="name">Fever Profile Package</h5>
+                        <div class="test-price">₹1500 <small>Save ₹400</small></div>
+                    </div>
+                    <div class="test-body p-4">
+                        <ul class="test-includes">
+                            <li>CBC with ESR Test</li>
+                            <li>Dengue NS1/IgM Test</li>
+                            <li>Widal Test</li>
+                            <li>Malaria Parasite Test</li>
+                            <li>CRP Test</li>
+                        </ul>
+                        <a href="/Appointment/Create?package=fever" class="btn btn-outline-success w-100 mt-3"
+                           aria-label="Book Fever Profile package at Sunrise Clinic">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Test Categories Showcase -->
+<section class="departments-showcase bg-light py-4">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Our Departments at Sunrise Clinic</h6>
+            <h2 class="section-title">Complete Diagnostic Facilities in Pabna</h2>
+            <p class="section-description">State-of-the-art equipment with expert technicians at our diagnostic center</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <!-- Radiology -->
+            <div class="col-lg-4">
+                <div class="department-feature">
+                    <div class="department-image">
+                        <img src="/img/department/radiology.webp"
+                             alt="Radiology Department at Sunrise Clinic Pabna"
+                             title="Sunrise Clinic Radiology Center Pabna"
+                             width="400"
+                             height="300">
+                        <div class="department-overlay">
+                            <a href="/Home/Diagnostic#radiology" class="btn btn-light">View Details & Prices</a>
+                        </div>
+                    </div>
+                    <div class="department-info">
+                        <div class="department-icon">
+                            <i class="fas fa-x-ray"></i>
+                        </div>
+                        <h4>Radiology & Imaging Center</h4>
+                        <p class="text-muted">Advanced digital imaging with expert radiologists at Sunrise Clinic</p>
+                        <ul class="department-services">
+                            <li>USG Whole Abdomen <span class="badge bg-primary">₹1000</span></li>
+                            <li>USG Breast/Thyroid <span class="badge bg-primary">₹1500</span></li>
+                            <li>Digital X-Ray <span class="badge bg-primary">₹500-700</span></li>
+                            <li>ECG Test <span class="badge bg-primary">₹300</span></li>
+                            <li>USG TVS <span class="badge bg-primary">₹1500</span></li>
+                        </ul>
+                        <div class="department-cta">
+                            <small class="text-muted">Reports within: 30 mins (ECG), 2 hours (X-Ray)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pathology -->
+            <div class="col-lg-4">
+                <div class="department-feature">
+                    <div class="department-image">
+                        <img src="/img/department/pathology.webp"
+                             alt="Pathology Laboratory at Sunrise Clinic Pabna"
+                             title="Sunrise Clinic Pathology Lab Pabna"
+                             width="400"
+                             height="300">
+                        <div class="department-overlay">
+                            <a href="/Home/Diagnostic#pathology" class="btn btn-light">View 40+ Tests</a>
+                        </div>
+                    </div>
+                    <div class="department-info">
+                        <div class="department-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h4>Pathology Laboratory</h4>
+                        <p class="text-muted">Fully automated laboratory with quality controls at Sunrise Clinic</p>
+                        <ul class="department-services">
+                            <li>Complete Blood Tests <span class="badge bg-success">₹200-1000</span></li>
+                            <li>Biochemistry Panel <span class="badge bg-success">₹150-1200</span></li>
+                            <li>Serology Testing <span class="badge bg-success">₹300-1200</span></li>
+                            <li>Urine Analysis <span class="badge bg-success">₹200</span></li>
+                            <li>Semen Analysis <span class="badge bg-success">₹1000</span></li>
+                        </ul>
+                        <div class="department-cta">
+                            <small class="text-muted">Most reports: 4-6 hours, Emergency: 2 hours</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Tests -->
+            <div class="col-lg-4">
+                <div class="department-feature">
+                    <div class="department-image">
+                        <img src="/img/department/special-test.webp"
+                             alt="Special Tests Department at Sunrise Clinic"
+                             title="Sunrise Clinic Special Tests Department"
+                             width="400"
+                             height="300">
+                        <div class="department-overlay">
+                            <a href="/Home/Diagnostic#special-tests" class="btn btn-light">Advanced Testing</a>
+                        </div>
+                    </div>
+                    <div class="department-info">
+                        <div class="department-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <h4>Special Tests Department</h4>
+                        <p class="text-muted">Advanced diagnostic and monitoring solutions at Sunrise Clinic</p>
+                        <ul class="department-services">
+                            <li>Cardiac Markers <span class="badge bg-warning">₹1000-2000</span></li>
+                            <li>Hormone Profiles <span class="badge bg-warning">₹800-1400</span></li>
+                            <li>Diabetes Management <span class="badge bg-warning">₹150-1000</span></li>
+                            <li>Cancer Markers <span class="badge bg-warning">₹1200</span></li>
+                            <li>Pregnancy Tests <span class="badge bg-warning">₹200-1000</span></li>
+                        </ul>
+                        <div class="department-cta">
+                            <small class="text-muted">Specialized reports: 24-48 hours</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="/Home/Diagnostic" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill"
+               aria-label="Search all tests and prices at Sunrise Clinic Pabna">
+                <i class="fas fa-search me-2"></i>Search All Tests & Prices
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Table Preview -->
+<section class="pricing-preview py-4">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Transparent Medical Pricing</h6>
+            <h2 class="section-title">Quick Price Reference at Sunrise Clinic</h2>
+            <p class="section-description">Selected popular tests for quick reference at our diagnostic center</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover pricing-table">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Test Category</th>
+                        <th>Test Name</th>
+                        <th>Sample Required</th>
+                        <th>Price (₹)</th>
+                        <th>Reporting Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr itemscope itemtype="https://schema.org/MedicalTest">
+                        <td>Radiology</td>
+                        <td itemprop="name">USG Whole Abdomen</td>
+                        <td>-</td>
+                        <td><strong itemprop="price">1000</strong></td>
+                        <td>Immediate</td>
+                        <td><a href="/Appointment/Create?test=USG Whole Abdomen" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr itemscope itemtype="https://schema.org/MedicalTest">
+                        <td>Hematology</td>
+                        <td itemprop="name">CBC with ESR Test</td>
+                        <td>Blood</td>
+                        <td><strong itemprop="price">500</strong></td>
+                        <td>2 Hours</td>
+                        <td><a href="/Appointment/Create?test=CBC with ESR" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr itemscope itemtype="https://schema.org/MedicalTest">
+                        <td>Biochemistry</td>
+                        <td itemprop="name">Lipid Profile Test</td>
+                        <td>Blood</td>
+                        <td><strong itemprop="price">1200</strong></td>
+                        <td>4 Hours</td>
+                        <td><a href="/Appointment/Create?test=Lipid Profile" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr itemscope itemtype="https://schema.org/MedicalTest">
+                        <td>Serology</td>
+                        <td itemprop="name">Dengue NS1 (ICT)</td>
+                        <td>Blood</td>
+                        <td><strong itemprop="price">300</strong></td>
+                        <td>1 Hour</td>
+                        <td><a href="/Appointment/Create?test=Dengue NS1" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr itemscope itemtype="https://schema.org/MedicalTest">
+                        <td>Hormone</td>
+                        <td itemprop="name">Thyroid TSH Test</td>
+                        <td>Blood</td>
+                        <td><strong itemprop="price">800</strong></td>
+                        <td>24 Hours</td>
+                        <td><a href="/Appointment/Create?test=Thyroid TSH" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/Services/DiagnosticServices" class="btn btn-link"
+               aria-label="Download complete price list PDF from Sunrise Clinic">
+                <i class="fas fa-download me-2"></i>Download Complete Price List (PDF)
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Carousel -->
+<section class="testimonials-carousel py-4 bg-light">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Patient Feedback</h6>
+            <h2 class="section-title">Trusted by 5000+ Patients</h2>
+            <p class="section-description">Real experiences from our valued patients</p>
+        </div>
+
+        <div class="testimonials-slider">
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">"Got my complete health checkup done. The staff was professional, prices were transparent, and reports were delivered on time. Highly recommended for accurate diagnostics."</p>
+                    <div class="testimonial-author">
+                        <img src="/img/jahangir-alom.webp" alt="Mr. Jahangir Alom" class="author-img">
+                        <div class="author-info">
+                            <h5>Mr.Jahangir Alom</h5>
+                            <small>Regular Patient | Diabetes Package</small>
+                            <div class="test-done">
+                                <i class="fas fa-vial text-primary"></i>
+                                <small>HbA1C: ₹1000 | Lipid Profile: ₹1200</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">"Emergency dengue testing for my daughter. The NS1 test (₹300) was done immediately, and we got results in 30 minutes. Affordable and life-saving service!"</p>
+                    <div class="testimonial-author">
+                        <img src="/img/fatima-khan.webp" alt="Mrs. Fatima Khan" class="author-img">
+                        <div class="author-info">
+                            <h5>Mrs. Fatima Khan</h5>
+                            <small>Emergency Case | Dengue Testing</small>
+                            <div class="test-done">
+                                <i class="fas fa-virus text-danger"></i>
+                                <small>Dengue NS1: ₹300 | CBC: ₹500</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">"Comprehensive thyroid testing at reasonable prices. TSH (₹800), T3, T4 tests were done with proper counseling. Digital reports made follow-up easy with my doctor."</p>
+                    <div class="testimonial-author">
+                        <img src="/img/sabrina-ahmed.webp" alt="Ms. Sabrina Ahmed" class="author-img">
+                        <div class="author-info">
+                            <h5>Ms. Sabrina Ahmed</h5>
+                            <small>Thyroid Patient | Hormone Tests</small>
+                            <div class="test-done">
+                                <i class="fas fa-hormone text-success"></i>
+                                <small>TSH: ₹800 | T3: ₹800 | T4: ₹800</small>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Showcase -->
+<section class="technology-showcase bg-dark text-white py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h6 class="text-primary mb-3">Advanced Medical Equipment</h6>
+                <h2 class="display-5 fw-bold mb-4">Modern Diagnostic Technology at Sunrise Clinic</h2>
+                <p class="lead mb-4">We invest in latest medical technology to ensure precise and reliable diagnostic results for our patients in Pabna</p>
+
+                <div class="tech-features">
+                    <div class="tech-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Digital Color Doppler Ultrasound</span>
+                        <small class="text-muted d-block">For USG W/A, TVS, Breast (₹1000-1500)</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Digital X-Ray with CR System</span>
+                        <small class="text-muted d-block">High-resolution imaging (₹500-700)</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Fully Automated Biochemistry Analyzer</span>
+                        <small class="text-muted d-block">For accurate blood tests (₹150-1200)</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>5-part Hematology Analyzer</span>
+                        <small class="text-muted d-block">Complete blood analysis (₹200-1000)</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>ECG Machine with Digital Interpretation</span>
+                        <small class="text-muted d-block">Instant heart monitoring (₹300)</small>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="/Home/Gallery" class="btn btn-primary btn-lg px-4 py-3 rounded-pill"
+                       aria-label="Take virtual tour of Sunrise Clinic laboratory">
+                        <i class="fas fa-video me-2"></i>Take Virtual Tour of Our Lab
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 pt-4">
+                <div class="tech-image">
+                    <img src="/img/department/advanced-equipments.webp"
+                         alt="Advanced Medical Equipment at Sunrise Clinic Pabna"
+                         title="Sunrise Clinic Advanced Medical Technology"
+                         width="600"
+                         height="400"
+                         class="img-fluid rounded-4">
+                    <div class="tech-badge bg-primary text-white p-3 rounded-3 shadow">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-shield-alt fa-2x me-3"></i>
+                            <div>
+                                <small class="d-block">Quality Certified</small>
+                                <strong class="h5 mb-0">ISO Standard Lab</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Contact & CTA -->
+<section class="quick-contact py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">Need Immediate Testing at Sunrise Clinic Pabna?</h3>
+                <p class="lead mb-0">Walk-in patients welcome | Emergency services available | Same-day reports for most tests at our diagnostic center</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex flex-column flex-lg-row gap-2 pt-2 mt-3">
+                    <a href="tel:+8801703452323" class="btn btn-primary btn-lg px-4 py-2 rounded-pill"
+                       aria-label="Call Sunrise Clinic Pabna">
+                        <i class="fas fa-phone me-2 py-3"></i>Call Now
+                    </a>
+                    <a href="/Appointment/Create" class="btn btn-outline-primary btn-lg px-2 py-3 rounded-pill"
+                       aria-label="Book appointment online at Sunrise Clinic">
+                        <i class="fas fa-calendar-alt"></i>Book Online
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2 g-4">
+            <div class="col-md-4">
+                <div class="info-box">
+                    <i class="fas fa-clock text-primary"></i>
+                    <div>
+                        <h5>Opening Hours</h5>
+                        <p class="mb-0">8:00 AM - 10:00 PM (Daily)<br>Emergency: 24/7</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <i class="fas fa-map-marker-alt text-primary"></i>
+                    <div>
+                        <h5>Location</h5>
+                        <p class="mb-0">TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna, Bangladesh</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <i class="fas fa-file-medical-alt text-primary"></i>
+                    <div>
+                        <h5>Report Collection</h5>
+                        <p class="mb-0">Physical & Digital Reports<br>Email/SMS Notification</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section for SEO -->
+<section class="faq-section py-4 bg-light">
+    <div class="container">
+        <div class="section-header text-center mb-6">
+            <h6 class="section-subtitle">Frequently Asked Questions</h6>
+            <h2 class="section-title">Sunrise Clinic Pabna - Common Questions</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="faq-item">
+                    <h5>What are Sunrise Clinic's opening hours?</h5>
+                    <p>Sunrise Clinic Pabna is open daily from 8:00 AM to 10:00 PM with 24/7 emergency services available.</p>
+                </div>
+                <div class="faq-item">
+                    <h5>What is the price of CBC test at Sunrise Clinic?</h5>
+                    <p>CBC with ESR test costs ₹500 at our diagnostic center in Pabna.</p>
+                </div>
+                <div class="faq-item">
+                    <h5>How long does it take to get blood test reports?</h5>
+                    <p>Most pathology reports are available within 4-6 hours, with emergency reports in 2 hours at Sunrise Clinic.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="faq-item">
+                    <h5>What is the cost of USG at Sunrise Clinic Pabna?</h5>
+                    <p>USG Whole Abdomen costs ₹1000, USG TVS ₹1500 at our radiology department.</p>
+                </div>
+                <div class="faq-item">
+                    <h5>Do you offer home sample collection?</h5>
+                    <p>Yes, Sunrise Clinic offers home sample collection service in Pabna area with additional charges.</p>
+                </div>
+                <div class="faq-item">
+                    <h5>Is appointment necessary for tests?</h5>
+                    <p>Walk-in patients are welcome, but appointment booking is recommended for faster service at Sunrise Clinic.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "FAQPage",
+          "mainEntity": [{
+            "@@type": "Question",
+            "name": "What are Sunrise Clinic's opening hours?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "Sunrise Clinic Pabna is open daily from 8:00 AM to 10:00 PM with 24/7 emergency services available."
+            }
+          }, {
+            "@@type": "Question",
+            "name": "What is the price of CBC test at Sunrise Clinic?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "CBC with ESR test costs ₹500 at our diagnostic center in Pabna."
+            }
+          }, {
+            "@@type": "Question",
+            "name": "How long does it take to get blood test reports?",
+            "acceptedAnswer": {
+              "@@type": "Answer",
+              "text": "Most pathology reports are available within 4-6 hours, with emergency reports in 2 hours at Sunrise Clinic."
+            }
+          }]
+        }
+    </script>
+
+    <script>
+        // Testimonial carousel
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-slide');
+
+        function showTestimonial(index) {
+            testimonials.forEach((testimonial, i) => {
+                testimonial.style.display = i === index ? 'block' : 'none';
+            });
+        }
+
+        // Auto rotate testimonials every 5 seconds
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(currentTestimonial);
+        }, 5000);
+
+        // Initialize
+        showTestimonial(0);
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.stat-box, .feature-card, .service-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Track outbound links for analytics
+        document.querySelectorAll('a[href^="http"]').forEach(link => {
+            if (!link.href.includes('sunriseclinicbd.com')) {
+                link.addEventListener('click', function(e) {
+                    // Send analytics event for outbound link
+                    console.log('Outbound link clicked:', this.href);
+                });
+            }
+        });
+
+        // Lazy loading for images
+        if ('loading' in HTMLImageElement.prototype) {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
+
+        // Price filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Sunrise Clinic Pabna - www.sunriseclinicbd.com homepage loaded with SEO optimization.');
+
+            // Add event listener for appointment booking
+            document.querySelectorAll('.btn-primary').forEach(button => {
+                if (button.textContent.includes('Book Now')) {
+                    button.addEventListener('click', function() {
+                        console.log('Appointment booking initiated from:', this.closest('.test-name')?.textContent || 'unknown');
+                    });
+                }
+            });
+        });
+
+        // Add structured data for breadcrumbs dynamically
+        const breadcrumbData = {
+            "@@context": "https://schema.org",
+            "@@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "@domain/"
+                },
+                {
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "Diagnostic Center",
+                    "item": "@domain/Home/Index"
+                }
+            ]
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(breadcrumbData);
+        document.head.appendChild(script);
+    </script>
+}

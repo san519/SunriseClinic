@@ -1,0 +1,269 @@
+﻿@{
+    ViewData["Title"] = "My Appointments";
+    var appointments = ViewBag.Appointments as List<SunriseClinic.Models.Appointment>;
+    var userType = ViewBag.UserType as string ?? Context.Session.GetString("UserType");
+}
+
+<div id="myAppointments">
+@await Html.PartialAsync("_MobileDashboardMenu")
+
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        @if (userType == "Patient")
+        {
+            <div class="col-lg-3 d-none d-lg-block">
+                @await Html.PartialAsync("_PatientSidebar")
+            </div>
+        }
+
+        <div class="@(userType == "Patient" ? "col-lg-9" : "col-12") p-3">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                <div class="mb-3 mb-md-0">
+                    <h3 class="h5 mb-1">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>My Appointments
+                    </h3>
+                    <p class="text-muted small mb-0">
+                        @(userType == "Patient" ? "Your scheduled appointments" : "Your patient appointments")
+                    </p>
+                </div>
+                @if (userType == "Patient")
+                {
+                    <a asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-calendar-plus me-1"></i>New Appointment
+                    </a>
+                }
+            </div>
+
+            <!-- Alerts -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mb-3 py-2">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mb-3 py-2">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Appointments -->
+            @if (appointments != null && appointments.Any())
+            {
+                <!-- Stats -->
+                <div class="row g-2 mt-3">
+                    <div class="col-6 col-md-3">
+                        <div class="card border-0 bg-warning bg-opacity-10">
+                            <div class="card-body py-2 text-center">
+                                <div class="h5 mb-0 text-warning">@appointments.Count(a => a.Status == "Pending")</div>
+                                <small class="text-muted">Pending</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card border-0 bg-success bg-opacity-10">
+                            <div class="card-body py-2 text-center">
+                                <div class="h5 mb-0 text-success">@appointments.Count(a => a.Status == "Approved")</div>
+                                <small class="text-muted">Approved</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card border-0 bg-info bg-opacity-10">
+                            <div class="card-body py-2 text-center">
+                                <div class="h5 mb-0 text-info">@appointments.Count(a => a.Status == "Completed")</div>
+                                <small class="text-muted">Completed</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card border-0 bg-danger bg-opacity-10">
+                            <div class="card-body py-2 text-center">
+                                <div class="h5 mb-0 text-danger">@appointments.Count(a => a.Status == "Cancelled")</div>
+                                <small class="text-muted">Cancelled</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Desktop View (Table) -->
+                    <div class="card d-none d-md-block border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="120">ID</th>
+                                            <th width="120">Date & Time</th>
+                                            @if (userType == "Patient")
+                                            {
+                                                <th>Doctor</th>
+                                                <th>Specialization</th>
+                                            }
+                                            else
+                                            {
+                                                <th>Patient</th>
+                                            }
+                                            <th>Reason</th>
+                                            <th width="100">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var appointment in appointments)
+                                        {
+                                            <!-- ✅ সম্পূর্ণ row clickable -->
+                                            <tr onclick="window.location.href='/Appointment/Details/@appointment.AppointmentId'"
+                                                style="cursor: pointer;"
+                                                class="hover-row">
+                                                <td class="fw-semibold">AP@(appointment.AppointmentId.ToString("D6"))</td>
+                                                <td>
+                                                    <div class="fw-semibold small">@appointment.AppointmentDate.ToString("dd-MMM-yy")</div>
+                                                    <small class="text-muted">@appointment.AppointmentTime.ToString(@"hh\:mm")</small>
+                                                </td>
+                                                @if (userType == "Patient")
+                                                {
+                                                    <td>
+                                                        <div class="fw-semibold">Dr. @appointment.DoctorName</div>
+                                                        <small class="text-muted">@appointment.DoctorSpecialization</small>
+                                                    </td>
+                                                    <td>@appointment.DoctorSpecialization</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="fw-semibold">@appointment.PatientName</td>
+                                                }
+                                                <td>
+                                                    <div class="text-truncate" style="max-width: 200px;">
+                                                        @appointment.Reason
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge @(appointment.Status == "Approved" ? "bg-success" :
+                                                                                                            appointment.Status == "Pending" ? "bg-warning" :
+                                                                                                            appointment.Status == "Completed" ? "bg-info" :
+                                                                                                            appointment.Status == "Cancelled" ? "bg-danger" : "bg-secondary")">
+                                                @appointment.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile View (Cards) -->
+                    <div class="d-md-none">
+                        @foreach (var appointment in appointments)
+                        {
+                            <!-- ✅ Mobile card clickable -->
+                            <div class="card border-0 shadow-sm mb-3"
+                                 onclick="window.location.href='/Appointment/Details/@appointment.AppointmentId'"
+                                 style="cursor: pointer;">
+                                <div class="card-body">
+                                    <!-- Header -->
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="mb-0 fw-semibold">AP@(appointment.AppointmentId.ToString("D6"))</h6>
+                                            <small class="text-muted">@appointment.AppointmentDate.ToString("dd-MMM-yy") @appointment.AppointmentTime.ToString(@"hh\:mm")</small>
+                                        </div>
+                                        <span class="badge @(appointment.Status == "Approved" ? "bg-success" :
+                                                                                        appointment.Status == "Pending" ? "bg-warning" :
+                                                                                        appointment.Status == "Completed" ? "bg-info" :
+                                                                                        appointment.Status == "Cancelled" ? "bg-danger" : "bg-secondary")">
+                                    @appointment.Status
+                                </span>
+                            </div>
+
+                                    <!-- Doctor/Patient Info -->
+                                    <div class="mb-2">
+                                @if (userType == "Patient")
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-user-md text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">Dr. @appointment.DoctorName</div>
+                                                    <small class="text-muted">@appointment.DoctorSpecialization</small>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-user text-primary me-2"></i>
+                                                <div class="fw-semibold">@appointment.PatientName</div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Reason -->
+                                    <div class="mb-2">
+                                        <div class="text-muted small mb-1">Reason:</div>
+                                        <div class="bg-light p-2 rounded">
+                                            @if (appointment.Reason.Length > 100)
+                                            {
+                                                <span>@appointment.Reason.Substring(0, 100)...</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@appointment.Reason</span>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <!-- Created Date -->
+                                    <div class="text-end small text-muted">
+                                        <i class="fas fa-clock me-1"></i>Booked: @appointment.CreatedAt.ToString("dd-MMM-yy")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+            }
+            else
+            {
+                <!-- No Appointments -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted"></i>
+                        </div>
+                        <h5 class="text-muted mb-2">No appointments found</h5>
+                        <p class="text-muted small mb-4">
+                            @(userType == "Patient"
+                                                    ? "You haven't booked any appointments yet"
+                                                    : "You don't have any appointments scheduled")
+                    </p>
+                    @if (userType == "Patient")
+                        {
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus me-2"></i>Book First Appointment
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <script>
+                        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('myAppointments');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

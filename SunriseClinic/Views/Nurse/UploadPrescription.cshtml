@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Upload Prescription";
+    var patientId = ViewBag.PatientId as int?;
+    var patient = ViewBag.Patient as dynamic;
+}
+
+<div class="container-fluid py-3" id="uploadP">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-success text-white py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-prescription fa-2x me-3"></i>
+                        <div>
+                            <h2 class="h4 mb-0">Upload Prescription</h2>
+                            <p class="mb-0 opacity-75">Upload prescription for patient</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-5">
+                    <form method="post" enctype="multipart/form-data" action="/Nurse/UploadPrescription">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="patientId" value="@patientId" />
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-user-injured me-2"></i>Patient ID
+                            </label>
+                            <p class="form-control-plaintext bg-light p-2 rounded">
+                                Patient ID: @ViewBag.DisplayId
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-file-upload me-2"></i>Prescription File *
+                            </label>
+                            <div class="file-upload-area border rounded p-4 text-center"
+                                 onclick="document.getElementById('prescriptionFile').click()"
+                                 style="cursor: pointer; border-style: dashed !important;">
+                                <input type="file" name="file" class="d-none" id="prescriptionFile"
+                                       accept=".jpg,.jpeg,.png,.pdf,.webp" required>
+
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted mb-2" id="fileName">Click to upload prescription file</h5>
+                                <p class="text-muted small mb-0" id="fileInfo">
+                                    JPG, PNG, PDF, or WebP (Max: 10MB)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-sticky-note me-2"></i>Notes (Optional)
+                            </label>
+                            <textarea name="notes" class="form-control" rows="3"
+                                      placeholder="Add any notes about this prescription..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg py-3">
+                                <i class="fas fa-upload me-2"></i>Upload Prescription
+                            </button>
+                            <a href="/Nurse/PatientDetails/@patientId" class="btn btn-outline-secondary btn-lg py-3">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // File upload preview
+        document.getElementById('prescriptionFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileName = document.getElementById('fileName');
+            const fileInfo = document.getElementById('fileInfo');
+
+            if (file) {
+                fileName.textContent = file.name;
+                fileInfo.textContent = formatFileSize(file.size);
+
+                // Validation
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File size must be less than 10MB');
+                    e.target.value = '';
+                    resetFileUI();
+                }
+            } else {
+                resetFileUI();
+            }
+        });
+
+        function resetFileUI() {
+            document.getElementById('fileName').textContent = 'Click to upload prescription file';
+            document.getElementById('fileInfo').textContent = 'JPG, PNG, PDF, or WebP (Max: 10MB)';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+                        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('uploadP');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+    </script>
+}

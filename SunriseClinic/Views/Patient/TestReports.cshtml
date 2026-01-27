@@ -1,0 +1,250 @@
+﻿@{
+    ViewData["Title"] = "Test Reports";
+    var reports = ViewBag.Reports as List<dynamic>;
+}
+
+<div class="container-fluid py-3" id="testReports">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">@await Html.PartialAsync("_PatientSidebar")</div>
+
+        <div class="col-lg-9">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="mb-1">
+                        <i class="fas fa-file-medical text-primary me-2"></i>
+                        My Test Reports
+                    </h4>
+                    <p class="text-muted mb-0">View and download all your medical test reports</p>
+                </div>
+                <span class="badge bg-primary rounded-pill fs-6 px-3 py-2">
+                    @(reports?.Count ?? 0)
+                </span>
+            </div>
+
+            @if (reports != null && reports.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var report in reports)
+                    {
+                        var fileName = report.ReportFile as string;
+                        var fileExtension = "";
+
+                        if (!string.IsNullOrEmpty(fileName))
+                        {
+                            fileExtension = System.IO.Path.GetExtension(fileName).ToLower();
+                        }
+
+                        var isImage = false;
+                        var isPdf = false;
+
+                        if (!string.IsNullOrEmpty(fileExtension))
+                        {
+                            isImage = fileExtension == ".jpg" || fileExtension == ".jpeg" ||
+                            fileExtension == ".png" || fileExtension == ".gif";
+                            isPdf = fileExtension == ".pdf";
+                        }
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card border shadow-sm h-100">
+                                <div class="card-body">
+                                    <!-- File Preview -->
+                                    <div class="text-center mb-3">
+                                        @if (isImage && !string.IsNullOrEmpty(fileName))
+                                        {
+                                            <img src="~/uploads/reports/@report.ReportFile"
+                                                 class="img-fluid rounded cursor-pointer"
+                                                 style="height: 180px; object-fit: contain;"
+                                                 onclick="openFullscreen(this)"
+                                                 alt="Test Report">
+                                        }
+                                        else if (isPdf)
+                                        {
+                                            <div class="text-center py-4 bg-light rounded">
+                                                <i class="fas fa-file-pdf fa-4x text-danger mb-3"></i>
+                                                <p class="small text-muted">PDF Report</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-center py-4 bg-light rounded">
+                                                <i class="fas fa-file-alt fa-4x text-primary mb-3"></i>
+                                                <p class="small text-muted">Test Report</p>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Report Info -->
+                                    <div class="mb-3">
+                                        <h6 class="mb-2 text-truncate" title="@report.ReportName">
+                                            <i class="fas fa-file-signature text-primary me-2"></i>
+                                            @report.ReportName
+                                        </h6>
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted small">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                @report.ReportDate
+                                            </span>
+                                            <span class="badge bg-secondary">Report</span>
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(report.Notes as string))
+                                        {
+                                            <div class="small text-muted mb-2">
+                                                <i class="fas fa-sticky-note me-1"></i>
+                                                @report.Notes
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="d-grid gap-2">
+                                        <a href="/Patient/DownloadReport/@report.ReportId"
+                                           class="btn btn-primary">
+                                            <i class="fas fa-download me-2"></i>Download Report
+                                        </a>
+                                        @if (!isImage)
+                                        {
+                                            <button class="btn btn-outline-secondary"
+                                                    onclick="viewReportModal('@report.ReportId', '@report.ReportFile', '@(isPdf ? "pdf" : "doc")')">
+                                                <i class="fas fa-eye me-2"></i>Preview
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="card border shadow-sm">
+                        <div class="card-body py-5">
+                            <i class="fas fa-file-medical fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted mb-3">No test reports yet</h4>
+                            <p class="text-muted mb-4">
+                                You don't have any test reports at the moment.<br>
+                                Test reports will appear here after your medical tests.
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="/Appointment/Create" class="btn btn-primary">
+                                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                                </a>
+                                <a href="/Patient/Dashboard" class="btn btn-outline-primary">
+                                    <i class="fas fa-home me-2"></i>Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Modal for PDF/DOC Reports -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-medical me-2"></i>Test Report Preview
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" id="reportModalContent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Close
+                </button>
+                <a href="#" id="reportDownloadBtn" class="btn btn-success">
+                    <i class="fas fa-download me-2"></i>Download
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Modal for Fullscreen Image -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body d-flex align-items-center justify-content-center">
+                <img id="fullImage" src="" class="img-fluid" style="max-height: 90vh; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Open image in fullscreen modal
+    function openFullscreen(imgElement) {
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        const imageElement = document.getElementById('fullImage');
+
+        imageElement.src = imgElement.src;
+        modal.show();
+    }
+
+    // Open PDF/DOC report in modal
+    function viewReportModal(reportId, fileName, type) {
+        const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+        const content = document.getElementById('reportModalContent');
+        const downloadBtn = document.getElementById('reportDownloadBtn');
+
+        downloadBtn.href = `/Patient/DownloadReport/${reportId}`;
+        content.innerHTML = '';
+
+        if (type === 'pdf') {
+            content.innerHTML = `
+                <iframe src="/uploads/reports/${fileName}"
+                        class="w-100"
+                        height="600"
+                        style="border: none;">
+                </iframe>
+            `;
+        }
+        else {
+            content.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-file-alt fa-5x text-primary mb-4"></i>
+                    <h4>${fileName}</h4>
+                    <p class="text-muted">This file cannot be previewed in browser</p>
+                    <p class="text-muted small">Please download the file to view it</p>
+                </div>
+            `;
+        }
+
+        modal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('shadow-lg');
+            });
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('shadow-lg');
+            });
+        });
+    });
+                    // Scroll to Main on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrolltomain = document.getElementById('testReports');
+        if (scrolltomain) {
+            scrolltomain.classList.add('scroll-target');
+            scrolltomain.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+</script>
+}

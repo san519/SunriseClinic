@@ -1,0 +1,825 @@
+﻿@{
+    ViewData["Title"] = "MD Nadim Mostaq Eman - Full Stack Web Developer";
+    ViewData["Description"] = "Expert Full Stack Web Developer specializing in ASP.NET Core MVC, C#, and modern web technologies. Creator of Sunrise Clinic healthcare management system.";
+    ViewData["Keywords"] = "ASP.NET Core Developer, Full Stack Developer, C# Developer, Web Developer Bangladesh, Sunrise Clinic Developer";
+    ViewData["Author"] = "MD Nadim Mostaq Eman";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="@ViewData["Description"]">
+    <meta name="keywords" content="@ViewData["Keywords"]">
+    <meta name="author" content="@ViewData["Author"]">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sunriseclinicbd.com/DevelopedBy/">
+    <meta property="og:title" content="@ViewData["Title"]">
+    <meta property="og:description" content="@ViewData["Description"]">
+    <meta property="og:image" content="https://sunriseclinicbd.com/img/Nadim/Nadim.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sunriseclinicbd.com/DevelopedBy/">
+    <meta property="twitter:title" content="@ViewData["Title"]">
+    <meta property="twitter:description" content="@ViewData["Description"]">
+    <meta property="twitter:image" content="https://sunriseclinicbd.com/img/Nadim/Nadim.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sunriseclinicbd.com/DevelopedBy/">
+
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "Person",
+            "name": "MD Nadim Mostaq Eman",
+            "jobTitle": "Full Stack Web Developer",
+            "url": "https://sunriseclinicbd.com/DevelopedBy/",
+            "sameAs": [
+                "https://github.com/san519",
+                "https://www.linkedin.com/in/md-nadim-mostaq-eman-1429151b7/"
+            ],
+            "email": "nadim.emons@gmail.com",
+            "telephone": "+8801731853149",
+            "address": {
+                "@@type": "PostalAddress",
+                "addressLocality": "Pabna",
+                "addressRegion": "Rajshahi",
+                "addressCountry": "Bangladesh"
+            },
+            "worksFor": {
+                "@@type": "Organization",
+                "name": "Sunrise Clinic & Diagnostic Center",
+                "url": "https://sunriseclinicbd.com"
+            },
+            "alumniOf": [
+                {
+                    "@@type": "CollegeOrUniversity",
+                    "name": "Chongqing University of Technology",
+                    "sameAs": "https://www.cqut.edu.cn/"
+                }
+            ],
+            "knowsAbout": ["ASP.NET Core", "C#", "JavaScript", "SQL Server", "Web Development", "MVC Architecture"],
+            "description": "@ViewData["Description"]"
+        }
+    </script>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2530 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 5px solid var(--secondary);
+        }
+
+        .profile-container {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .name-title {
+            margin-bottom: 1rem;
+        }
+
+            .name-title h1 {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+                color: white;
+            }
+
+            .name-title h2 {
+                font-size: 1.5rem;
+                color: var(--secondary);
+                font-weight: 400;
+            }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+            .contact-item a {
+                color: white;
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+                .contact-item a:hover {
+                    color: var(--secondary);
+                }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--secondary);
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+            padding: 1.25rem;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+            .section-title:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 50px;
+                height: 3px;
+                background: var(--secondary);
+            }
+
+        /* Badge Styles */
+        .badge-custom {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            margin: 0.2rem;
+            font-size: 0.85rem;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+            .timeline:before {
+                content: '';
+                position: absolute;
+                left: 7px;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background-color: #e9ecef;
+            }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -1.7rem;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--secondary);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Contact Cards */
+        .contact-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+            .contact-card:hover {
+                text-decoration: none;
+                color: inherit;
+            }
+
+        .contact-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, var(--secondary) 0%, #2980b9 100%);
+        }
+
+        /* Print Styles */
+        @@media print {
+            .no-print {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .header-section {
+                padding: 1rem 0;
+            }
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .name-title h1 {
+                font-size: 2rem;
+            }
+
+            .name-title h2 {
+                font-size: 1.2rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 text-center">
+                    <div class="profile-container">
+                        <img src="/img/Nadim/Nadim.webp" alt="MD Nadim Mostaq Eman" class="profile-img">
+                        <div class="mt-3">
+                            <span class="badge bg-success mb-2">Passport: BW0872567</span>
+                            <span class="badge bg-info">Driving Licence: PB00410331CL0001</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="name-title">
+                        <h1>MD Nadim Mostaq Eman</h1>
+                        <h2>Full Stack Web Developer</h2>
+                        <p class="lead mt-3">
+                            Dynamic web developer skilled in ASP.NET and user experience design.
+                            Proven ability to troubleshoot issues and optimize web performance,
+                            contributing to successful project outcomes.
+                        </p>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope"></i>
+                            <a href="mailto:nadim.emons@gmail.com">nadim.emons@gmail.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-telephone"></i>
+                            <a href="tel:+8801731853149">+8801731853149</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>Shalgaria, Pabna, Bangladesh</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-calendar"></i>
+                            <span>Born: March 1, 2000</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-person"></i>
+                            <span>Married</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="row">
+            <!-- Left Column - Experience & Projects -->
+            <div class="col-lg-8">
+                <!-- Experience Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Professional Experience</h2>
+
+                    <div class="timeline">
+                        <!-- Experience 1 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h3 class="h5 mb-1">Full Stack Web Developer</h3>
+                                            <h4 class="h6 text-primary mb-2">Sunrise Clinic & Diagnostic Center</h4>
+                                            <p class="text-muted mb-0">
+                                                <i class="bi bi-geo-alt me-1"></i>Pabna, Bangladesh
+                                            </p>
+                                        </div>
+                                        <span class="badge-custom">04/2024 - 12/2025</span>
+                                    </div>
+                                    <ul class="mb-0 ps-3">
+                                        <li>Developed Sunrise Clinic Website with ASP.NET Core MVC</li>
+                                        <li>Built secure appointment booking, registration/login with email verification</li>
+                                        <li>Created patient portal, nurse dashboard, doctor dashboard and admin dashboard</li>
+                                        <li>Implemented full functional feedback/complaint method with analytics</li>
+                                        <li>Used C#, EF Core, Javascript, AJAX, HTML, CSS, Bootstrap and SQL Server</li>
+                                        <li>Digitized clinic management and published website to Cloud Server</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Experience 2 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-success"></div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h3 class="h5 mb-1">Social & Community Specialist, Intern</h3>
+                                            <h4 class="h6 text-success mb-2">HR Enterprise</h4>
+                                            <p class="text-muted mb-0">
+                                                <i class="bi bi-geo-alt me-1"></i>Brahmanbaria, Bangladesh
+                                            </p>
+                                        </div>
+                                        <span class="badge bg-success">01/2025 - 02/2025</span>
+                                    </div>
+                                    <ul class="mb-0 ps-3">
+                                        <li>Assisted clients with navigating healthcare and social service systems</li>
+                                        <li>Provided immediate support to individuals in crisis situations</li>
+                                        <li>Contributed innovative ideas to enhance team performance and outcomes</li>
+                                        <li>Assisted in designing programs for diverse communities</li>
+                                        <li>Collaborated with healthcare professionals for medical programs</li>
+                                        <li>Ensured compliance with relevant safety standards</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Experience 3 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-info"></div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h3 class="h5 mb-1">WordPress Web Designer</h3>
+                                            <h4 class="h6 text-info mb-2">Self Employed</h4>
+                                            <p class="text-muted mb-0">
+                                                <i class="bi bi-geo-alt me-1"></i>Pabna, Bangladesh
+                                            </p>
+                                        </div>
+                                        <span class="badge bg-info">03/2018 - Present</span>
+                                    </div>
+                                    <ul class="mb-0 ps-3">
+                                        <li>Integrated third-party plugins to enhance website functionality</li>
+                                        <li>Managed website performance and security optimizations regularly</li>
+                                        <li>Provided technical support and troubleshooting for client websites</li>
+                                        <li>Conducted code reviews to ensure best practices and standards compliance</li>
+                                        <li>Optimized WordPress websites for search engine visibility and performance</li>
+                                        <li>Developed, tested and implemented custom WordPress themes and plugins</li>
+                                        <li>Created responsive designs using HTML, CSS, JavaScript, PHP and MySQL</li>
+                                        <li>Integrated third-party APIs into existing WordPress sites</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Projects Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Featured Projects</h2>
+
+                    <!-- Project 1 -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <div class="contact-icon-wrapper mb-3">
+                                        <i class="bi bi-hospital"></i>
+                                    </div>
+                                    <span class="badge bg-primary">Healthcare System</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <h3 class="h5 mb-2">Sunrise Clinic & Diagnostic Center</h3>
+                                    <p class="text-muted mb-2">ASP.NET Core MVC Web Application</p>
+                                    <p class="mb-3">
+                                        Developed a complete healthcare management system with multiple dashboards,
+                                        appointment booking, email verification, and analytics system.
+                                    </p>
+                                    <div class="mb-3">
+                                        <span class="skill-badge">ASP.NET Core MVC</span>
+                                        <span class="skill-badge">C#</span>
+                                        <span class="skill-badge">Entity Framework</span>
+                                        <span class="skill-badge">SQL Server</span>
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">Bootstrap</span>
+                                        <span class="skill-badge">AJAX</span>
+                                    </div>
+                                    <a href="https://www.sunriseclinicbd.com/" target="_blank" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-eye me-1"></i> View Live Project
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <div class="contact-icon-wrapper mb-3 bg-success">
+                                        <i class="bi bi-wordpress"></i>
+                                    </div>
+                                    <span class="badge bg-success">Blog & Content Website</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <h3 class="h5 mb-2">10 Minutes Make - Tech Tutorials & Blog</h3>
+                                    <p class="text-muted mb-2">WordPress Customized Website</p>
+                                    <p class="mb-3">
+                                        Developed a fully functional tech blog website with custom WordPress theme,
+                                        Google AdSense integration, SEO optimization, and content management system.
+                                        Successfully ranked on Bing search engine and approved for AdSense monetization.
+                                    </p>
+                                    <div class="mb-3">
+                                        <span class="skill-badge">WordPress</span>
+                                        <span class="skill-badge">PHP</span>
+                                        <span class="skill-badge">HTML/CSS</span>
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">SEO Optimization</span>
+                                        <span class="skill-badge">Google AdSense</span>
+                                        <span class="skill-badge">MySQL</span>
+                                    </div>
+                                    <a href="https://www.makein10.com" target="_blank" class="btn btn-success btn-sm">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i> Visit Live Website
+                                    </a>
+                                    <span class="ms-3 small">
+                                        <i class="bi bi-check-circle-fill text-success"></i> AdSense Approved
+                                        <i class="bi bi-search ms-2"></i> Bing Ranked
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column - Skills, Education, Contact -->
+            <div class="col-lg-4">
+                <!-- Skills Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Technical Skills</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="h6 mb-3 text-primary">
+                                <i class="bi bi-code-slash me-2"></i>Web Development
+                            </h3>
+                            <div class="mb-3">
+                                <span class="skill-badge">ASP.NET Core MVC</span>
+                                <span class="skill-badge">C#</span>
+                                <span class="skill-badge">JavaScript</span>
+                                <span class="skill-badge">HTML5</span>
+                                <span class="skill-badge">CSS3</span>
+                                <span class="skill-badge">Bootstrap</span>
+                                <span class="skill-badge">AJAX</span>
+                                <span class="skill-badge">ReactJS</span>
+                                <span class="skill-badge">Java</span>
+                            </div>
+
+                            <h3 class="h6 mb-3 text-success">
+                                <i class="bi bi-database me-2"></i>Database & Backend
+                            </h3>
+                            <div class="mb-3">
+                                <span class="skill-badge">SQL Server</span>
+                                <span class="skill-badge">MySQL</span>
+                                <span class="skill-badge">Entity Framework</span>
+                                <span class="skill-badge">PHP</span>
+                                <span class="skill-badge">REST APIs</span>
+                            </div>
+
+                            <h3 class="h6 mb-3 text-info">
+                                <i class="bi bi-tools me-2"></i>Tools & Platforms
+                            </h3>
+                            <div>
+                                <span class="skill-badge">WordPress</span>
+                                <span class="skill-badge">GitHub</span>
+                                <span class="skill-badge">CPanel</span>
+                                <span class="skill-badge">SEO</span>
+                                <span class="skill-badge">Google Analytics</span>
+                                <span class="skill-badge">Microsoft Clarity</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Education Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Education</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- University -->
+                            <div class="mb-4">
+                                <h3 class="h6 mb-1">Bachelor in Engineering</h3>
+                                <h4 class="h6 text-muted mb-1">Computer Science & Engineering</h4>
+                                <p class="small mb-1"><strong>Major:</strong> Computer Science and Technology</p>
+                                <p class="small mb-1">
+                                    <i class="bi bi-building me-1"></i>Chongqing University of Technology
+                                </p>
+                                <p class="small mb-1">
+                                    <i class="bi bi-calendar me-1"></i>08/2019 - 06/2025
+                                </p>
+                                <p class="small mb-0">
+                                    <i class="bi bi-geo-alt me-1"></i>Banan, Chongqing, China
+                                </p>
+                            </div>
+
+                            <!-- College -->
+                            <div class="mb-4">
+                                <h3 class="h6 mb-1">HSC Science</h3>
+                                <h4 class="h6 text-muted mb-1">Pabna Govt. College</h4>
+                                <p class="small mb-1">
+                                    <i class="bi bi-calendar me-1"></i>07/2016 - 08/2018
+                                </p>
+                                <p class="small mb-0">
+                                    <i class="bi bi-geo-alt me-1"></i>Pabna, Bangladesh
+                                </p>
+                            </div>
+
+                            <!-- School -->
+                            <div>
+                                <h3 class="h6 mb-1">SSC Science</h3>
+                                <h4 class="h6 text-muted mb-1">Mohim Chandra Jubilee High School</h4>
+                                <p class="small mb-1">
+                                    <i class="bi bi-calendar me-1"></i>01/2014 - 03/2016
+                                </p>
+                                <p class="small mb-0">
+                                    <i class="bi bi-geo-alt me-1"></i>Pabna, Bangladesh
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Contact Information</h2>
+                    <div class="row g-3">
+                        <!-- Email -->
+                        <div class="col-6">
+                            <a href="mailto:nadim.emons@gmail.com" class="contact-card">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <div class="contact-icon-wrapper mb-3">
+                                            <i class="bi bi-envelope"></i>
+                                        </div>
+                                        <h3 class="h6 mb-2">Email</h3>
+                                        <p class="small text-muted mb-0">nadim.emons@gmail.com</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- LinkedIn -->
+                        <div class="col-6">
+                            <a href="https://linkedin.com/in/md-nadim-mostaq-eman-1429151b7" target="_blank" class="contact-card">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <div class="contact-icon-wrapper mb-3 bg-info">
+                                            <i class="bi bi-linkedin"></i>
+                                        </div>
+                                        <h3 class="h6 mb-2">LinkedIn</h3>
+                                        <p class="small text-muted mb-0">md-nadim-mostaq-eman</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- GitHub -->
+                        <div class="col-6">
+                            <a href="https://github.com/san519" target="_blank" class="contact-card">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <div class="contact-icon-wrapper mb-3 bg-dark">
+                                            <i class="bi bi-github"></i>
+                                        </div>
+                                        <h3 class="h6 mb-2">GitHub</h3>
+                                        <p class="small text-muted mb-0">github.com/san519</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-6">
+                            <a href="tel:+8801731853149" class="contact-card">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <div class="contact-icon-wrapper mb-3 bg-success">
+                                            <i class="bi bi-telephone"></i>
+                                        </div>
+                                        <h3 class="h6 mb-2">Phone</h3>
+                                        <p class="small text-muted mb-0">+8801731853149</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interests Section -->
+                <section class="mb-5">
+                    <h2 class="section-title">Interests</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h3 class="h6 mb-2">
+                                    <i class="bi bi-laptop text-primary me-2"></i>Website Development
+                                </h3>
+                                <p class="small text-muted mb-0">
+                                    I've liked technology-related blog posts since childhood. I regularly follow
+                                    techtunes.io and trickbd.com Bangladeshi sites to get technology update news.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="h6 mb-2">
+                                    <i class="bi bi-lightning-charge text-warning me-2"></i>Electrical Projects
+                                </h3>
+                                <p class="small text-muted mb-0">
+                                    I'm also enthusiastic about making various electrical projects. I have a
+                                    YouTube channel where I used to make projects and upload videos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reference Section -->
+                <section>
+                    <h2 class="section-title">Reference</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="h6 mb-2">Monirujjaman Mishuk</h3>
+                            <p class="small text-muted mb-2">Manager, Sunrise Clinic & Diagnostic Center</p>
+                            <p class="small mb-1">
+                                <i class="bi bi-envelope me-1"></i>
+                                <a href="mailto:mishuk@sunriseclinicbd.com">mishuk@sunriseclinicbd.com</a>
+                            </p>
+                            <p class="small mb-0">
+                                <i class="bi bi-telephone me-1"></i>
+                                <a href="tel:01703452323">01703452323</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h3 class="h5 mb-2">MD Nadim Mostaq Eman</h3>
+                    <p class="text-muted mb-0">Full Stack Web Developer</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">
+                        <small>
+                            © @DateTime.Now.Year | Developed with ASP.NET Core MVC
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Simple script for print functionality
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        // Add hover effect to contact cards
+        document.querySelectorAll('.contact-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.querySelector('.card').style.transform = 'translateY(-5px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.querySelector('.card').style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+﻿@{
+    ViewData["Title"] = "View Patient";
+    var patient = ViewBag.Patient as dynamic;
+    var appointments = ViewBag.Appointments as List<dynamic>;
+    var medicalHistory = ViewBag.MedicalHistory as List<dynamic>;
+}
+
+<div class="container-fluid py-4" id="viewPatient">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-1">
+                <i class="fas fa-user-injured me-2 text-primary"></i>Patient Details
+            </h3>
+            <p class="text-muted mb-0">View complete patient information</p>
+        </div>
+        <div>
+            <a href="@Url.Action("ManagePatients", "Admin")" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left me-1"></i>Back to List
+            </a>
+            <a href="@Url.Action("EditPatient", "Admin", new { id = patient.UserId })"
+               class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i>Edit Patient
+            </a>
+        </div>
+    </div>
+
+    <!-- Patient Information -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <img src="@Url.Content("~/uploads/profile-pictures/default.jpg")"
+                             class="rounded-circle border border-4 border-primary"
+                             width="120" height="120" alt="Patient">
+                        <h4 class="mt-3 mb-1">@patient.FullName</h4>
+                        <p class="text-muted">
+                            <span class="badge bg-warning text-dark">@patient.DisplayId</span>
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-envelope me-1"></i>
+                            @patient.Email
+                        </p>
+                    </div>
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Status:</span>
+                                <span class="badge @(patient.IsActive ? "bg-success" : "bg-danger")">
+                                    @(patient.IsActive ? "ACTIVE" : "INACTIVE")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Member Since:</span>
+                                <span>@patient.CreatedAt.ToString("dd-MMM-yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Phone:</span>
+                                <span>@patient.PhoneNumber</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h5 class="mb-4">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>Personal Information
+                    </h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Full Name</label>
+                            <p class="form-control-static">@patient.FullName</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Date of Birth</label>
+                            <p class="form-control-static">@patient.DateOfBirth.ToString("dd-MMM-yyyy")</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Gender</label>
+                            <p class="form-control-static">
+                                @(patient.Gender == "M" ? "Male" :
+                                                                patient.Gender == "F" ? "Female" :
+                                                                patient.Gender == "O" ? "Other" : "Not specified")
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Blood Group</label>
+                            <p class="form-control-static">
+                                @if (!string.IsNullOrEmpty(patient.BloodGroup) && patient.BloodGroup != "Not set")
+                                {
+                                    <span class="badge bg-danger">@patient.BloodGroup</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not set</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-semibold text-muted">Address</label>
+                            <p class="form-control-static">@patient.Address</p>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-4">
+                        <i class="fas fa-heartbeat me-2 text-danger"></i>Medical Information
+                    </h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Emergency Contact</label>
+                            <p class="form-control-static">
+                                <i class="fas fa-ambulance me-2 text-muted"></i>
+                                @patient.EmergencyContact
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-semibold text-muted">Height</label>
+                            <p class="form-control-static">
+                                @if (patient.Height != null && patient.Height > 0)
+                                {
+                                    <span>@patient.Height cm</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not set</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-semibold text-muted">Weight</label>
+                            <p class="form-control-static">
+                                @if (patient.Weight != null && patient.Weight > 0)
+                                {
+                                    <span>@patient.Weight kg</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not set</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Marital Status</label>
+                            <p class="form-control-static">@patient.MaritalStatus</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-muted">Occupation</label>
+                            <p class="form-control-static">@patient.Occupation</p>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-semibold text-muted">Insurance Information</label>
+                            <p class="form-control-static">@patient.InsuranceInfo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment History -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>Appointment History
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (appointments != null && appointments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Date & Time</th>
+                                        <th>Doctor</th>
+                                        <th>Specialization</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th class="pe-4">Booked On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in appointments)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="mb-1">@appointment.AppointmentDate</div>
+                                                <small class="text-muted">@appointment.AppointmentTime</small>
+                                            </td>
+                                            <td>@appointment.DoctorName</td>
+                                            <td>@appointment.Specialization</td>
+                                            <td>@appointment.Reason</td>
+                                            <td>
+                                                @{
+                                                    var statusClass = appointment.Status switch
+                                                    {
+                                                        "Pending" => "bg-warning",
+                                                        "Approved" => "bg-success",
+                                                        "Completed" => "bg-info",
+                                                        "Cancelled" => "bg-danger",
+                                                        _ => "bg-secondary"
+                                                    };
+                                                }
+                                                <span class="badge @statusClass">@appointment.Status</span>
+                                            </td>
+                                            <td class="pe-4">
+                                                <small>@appointment.CreatedAt</small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No appointment history</h6>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Medical History Section - Updated with Download Only -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-medical me-2 text-success"></i>Medical Records
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                @if (medicalHistory != null && medicalHistory.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Type</th>
+                                    <th>Document Name</th>
+                                    <th>Date</th>
+                                    <th>Uploaded By</th>
+                                    <th>Uploaded At</th>
+                                    <th class="pe-4 text-center">Download</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var record in medicalHistory)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            @if (record.Type == "TestReport")
+                                            {
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-file-alt me-1"></i>Test Report
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-prescription me-1"></i>Prescription
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>@record.ReportName</td>
+                                        <td>@record.ReportDate</td>
+                                        <td>@record.UploadedByName</td>
+                                        <td>@record.UploadedAt</td>
+                                        <td class="pe-4 text-center">
+                                            <!-- DIRECT DOWNLOAD LINK -->
+                                            <a href="@Url.Action("ViewMedicalRecord", "Admin", new { 
+                                                     patientId = patient.UserId, 
+                                                     type = record.Type, 
+                                                     recordId = record.Id 
+                                                   })" 
+                                               class="btn btn-sm btn-success" 
+                                               title="Download File"
+                                               download>
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                            
+                                            <!-- OPTIONAL: Direct file preview link (if file exists) -->
+                                            @if (!string.IsNullOrEmpty(record.FileName))
+                                            {
+                                                <a href="@Url.Content("~/uploads/" + (record.Type == "TestReport" ? "reports/" : "prescriptions/") + record.FileName)" 
+                                                   target="_blank"
+                                                   class="btn btn-sm btn-outline-primary ms-1" 
+                                                   title="Preview File">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-medical-alt fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No medical records available</h6>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll to content
+            const scrolltomain = document.getElementById('viewPatient');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

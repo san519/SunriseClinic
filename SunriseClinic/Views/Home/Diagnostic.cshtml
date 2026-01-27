@@ -1,0 +1,562 @@
+﻿@{
+    ViewData["Title"] = "Diagnostic Services | Complete Medical Tests & Prices at Sunrise Clinic Pabna";
+    ViewData["Description"] = "Complete diagnostic services at Sunrise Clinic Pabna: Pathology tests from ₹150, Radiology from ₹300, USG from ₹1000, ECG ₹300. 60+ tests with prices. Book appointment online.";
+    ViewData["Keywords"] = "diagnostic services pabna, blood test price, usg cost, ecg test, pathology lab, radiology center, medical test cost, sunrise clinic diagnostic";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Home/Diagnostic";
+    ViewData["Breadcrumb"] = @"
+    {
+        ""@@type"": ""ListItem"",
+        ""position"": 2,
+        ""name"": ""Diagnostic Services"",
+        ""item"": ""https://www.sunriseclinicbd.com/Home/Diagnostic""
+    }";
+    ViewData["PageType"] = "MedicalTestPage";
+}
+
+<!-- Schema.org for Diagnostic Services -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalTestPanel",
+      "name": "Diagnostic Services at Sunrise Clinic Pabna",
+      "description": "Complete diagnostic testing services including pathology, radiology, and specialized medical tests at affordable prices",
+      "url": "https://www.sunriseclinicbd.com/Home/Diagnostic",
+      "medicalSpecialty": ["Pathology", "DiagnosticRadiology", "ClinicalPathology"],
+      "provider": {
+        "@@type": "MedicalClinic",
+        "name": "Sunrise Clinic & Diagnostic Center",
+        "url": "https://www.sunriseclinicbd.com"
+      },
+      "hasOfferCatalog": {
+        "@@type": "OfferCatalog",
+        "name": "Diagnostic Test Packages",
+        "itemListElement": [
+          {
+            "@@type": "Offer",
+            "name": "USG Whole Abdomen",
+            "description": "Ultrasound examination of complete abdominal area",
+            "price": "1000",
+            "priceCurrency": "BDT",
+            "eligibleRegion": {
+              "@@type": "Country",
+              "name": "Bangladesh"
+            }
+          },
+          {
+            "@@type": "Offer",
+            "name": "CBC with ESR",
+            "description": "Complete Blood Count with Erythrocyte Sedimentation Rate",
+            "price": "500",
+            "priceCurrency": "BDT"
+          },
+          {
+            "@@type": "Offer",
+            "name": "Lipid Profile",
+            "description": "Complete cholesterol and lipid panel test",
+            "price": "1200",
+            "priceCurrency": "BDT"
+          },
+          {
+            "@@type": "Offer",
+            "name": "ECG Test",
+            "description": "Electrocardiogram for heart monitoring",
+            "price": "300",
+            "priceCurrency": "BDT"
+          },
+          {
+            "@@type": "Offer",
+            "name": "Dengue NS1 Test",
+            "description": "Dengue virus detection test",
+            "price": "300",
+            "priceCurrency": "BDT"
+          }
+        ]
+      },
+      "areaServed": {
+        "@@type": "GeoCircle",
+        "geoMidpoint": {
+          "@@type": "GeoCoordinates",
+          "latitude": 24.0064,
+          "longitude": 89.2372
+        },
+        "geoRadius": 50000
+      }
+    }
+</script>
+
+<!-- MedicalService Schema -->
+<script type="application/ld+json">
+    [{
+      "@@context": "https://schema.org",
+      "@@type": "MedicalService",
+      "name": "Pathology Laboratory Services",
+      "serviceType": "MedicalLaboratory",
+      "provider": {
+        "@@type": "MedicalClinic",
+        "name": "Sunrise Clinic & Diagnostic Center"
+      },
+      "description": "Complete pathology services including blood tests, urine analysis, biochemistry and serology",
+      "availableChannel": {
+        "@@type": "ServiceChannel",
+        "serviceUrl": "https://www.sunriseclinicbd.com/Appointment/Create"
+      }
+    },
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalService",
+      "name": "Radiology & Imaging Services",
+      "serviceType": "DiagnosticRadiology",
+      "provider": {
+        "@@type": "MedicalClinic",
+        "name": "Sunrise Clinic & Diagnostic Center"
+      },
+      "description": "Digital X-Ray, Ultrasound (USG), ECG and advanced imaging services",
+      "availableChannel": {
+        "@@type": "ServiceChannel",
+        "serviceUrl": "https://www.sunriseclinicbd.com/Appointment/Create"
+      }
+    }]
+</script>
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.sunriseclinicbd.com/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Diagnostic Services",
+          "item": "https://www.sunriseclinicbd.com/Home/Diagnostic"
+        }
+      ]
+    }
+</script>
+
+<!-- Hero Section -->
+<section class="hero-section-d py-5" id="diagnostic" itemscope itemtype="https://schema.org/MedicalTestPanel">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 text-dark">
+                <h1 class="display-4 fw-bold mb-4" itemprop="name">Diagnostic Services at Sunrise Clinic Pabna</h1>
+                <p class="lead mb-4" itemprop="description">Advanced Diagnostic Technology for Accurate Medical Diagnosis at Affordable Prices. Complete pathology and radiology services.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/Appointment/Create" class="btn btn-primary btn-lg px-4 py-3"
+                       aria-label="Book Diagnostic Test at Sunrise Clinic Pabna">
+                        <i class="fas fa-calendar-check me-2" aria-hidden="true"></i>Book Diagnostic Test
+                    </a>
+                    <a href="#test-list" class="btn btn-outline-primary btn-lg px-4 py-3"
+                       aria-label="View All Diagnostic Tests and Prices">
+                        <i class="fas fa-list me-2" aria-hidden="true"></i>View All Tests & Prices
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <p class="mb-1">
+                        <i class="fas fa-map-marker-alt text-primary me-2" aria-hidden="true"></i>
+                        <strong>Location:</strong>
+                        <span itemprop="location" itemscope itemtype="https://schema.org/Place">
+                            <span itemprop="name">TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna</span>
+                        </span>
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-clock text-primary me-2" aria-hidden="true"></i>
+                        <strong>Timing:</strong>
+                        <span itemprop="openingHours">8:00 AM - 10:00 PM (Daily)</span> |
+                        <span itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
+                            <span itemprop="name">Emergency Service</span>:
+                            <span itemprop="value">24/7</span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <img src="/img/diagnostic-services.svg" alt="Sunrise Clinic Diagnostic Services - Medical Tests and Laboratory"
+                     class="img-fluid" itemprop="image" loading="lazy">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Diagnostic Services -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Our Diagnostic Facilities at Sunrise Clinic</h2>
+            <p class="text-muted">State-of-the-art diagnostic equipment for precise results in Pabna</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3" itemscope itemtype="https://schema.org/MedicalService">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-danger bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-x-ray text-danger fa-2x" aria-hidden="true"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3" itemprop="name">Radiology & Imaging</h4>
+                        <p class="text-muted mb-3" itemprop="description">Digital X-Ray, Ultrasound, ECG with expert radiologist reporting at Sunrise Clinic Pabna</p>
+                        <a href="#radiology" class="btn btn-sm btn-outline-danger" aria-label="View Radiology Services Details">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" itemscope itemtype="https://schema.org/MedicalService">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-success bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-vial text-success fa-2x" aria-hidden="true"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3" itemprop="name">Pathology Laboratory</h4>
+                        <p class="text-muted mb-3" itemprop="description">Blood, Urine tests with automated analyzers for accurate results at our Pabna lab</p>
+                        <a href="#pathology" class="btn btn-sm btn-outline-success" aria-label="View Pathology Services Details">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" itemscope itemtype="https://schema.org/MedicalService">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-primary bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-dna text-primary fa-2x" aria-hidden="true"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3" itemprop="name">Special Tests</h4>
+                        <p class="text-muted mb-3" itemprop="description">Hormone, Cardiac markers, Cancer markers, and advanced testing at Sunrise Clinic</p>
+                        <a href="#special-tests" class="btn btn-sm btn-outline-info" aria-label="View Special Tests Details">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" itemscope itemtype="https://schema.org/MedicalService">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-warning bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-virus text-warning fa-2x" aria-hidden="true"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3" itemprop="name">Infection Testing</h4>
+                        <p class="text-muted mb-3" itemprop="description">Dengue, HIV, HCV, HBsAg, Widal, and other infectious disease tests at our clinic</p>
+                        <a href="#infection-tests" class="btn btn-sm btn-outline-warning" aria-label="View Infection Tests Details">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Test List -->
+<section id="test-list" class="py-5" itemscope itemtype="https://schema.org/ItemList">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Available Diagnostic Tests with Prices at Sunrise Clinic Pabna</h2>
+            <p class="text-muted">Transparent pricing for all diagnostic services in our Pabna diagnostic center</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 border-0 shadow-sm" itemprop="itemListElement" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                    <div class="card-header bg-primary text-white" id="radiology">
+                        <h5 class="mb-0" itemprop="name">
+                            <i class="fas fa-x-ray me-2" aria-hidden="true"></i>Radiology & Imaging Services
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">USG Whole Abdomen</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1000</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">USG Breast/Thyroid</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">USG TVS</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">ECG</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹300</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">X-Ray P/A View</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">X-Ray L/S/B/V</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹700</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">X-Ray KUB</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹700</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4 border-0 shadow-sm" itemprop="itemListElement" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                    <div class="card-header bg-success text-white" id="pathology">
+                        <h5 class="mb-0" itemprop="name">
+                            <i class="fas fa-vial me-2" aria-hidden="true"></i>Pathology Laboratory Tests
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">CBC with ESR</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">RBS/FBS</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹150</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Lipid Profile</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹1200</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">S. Creatinine</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">SGPT/SGOT</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Urine R/M/E</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹200</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Electrolyte</span>
+                                <span class="badge bg-success rounded-pill" itemprop="price">₹1000</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4 border-0 shadow-sm" itemprop="itemListElement" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                    <div class="card-header bg-primary text-white" id="special-tests">
+                        <h5 class="mb-0" itemprop="name">
+                            <i class="fas fa-dna me-2" aria-hidden="true"></i>Special Tests
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">TSH (Thyroid)</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹800</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">T3/T4 (Thyroid)</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹800</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">HbA1C (Diabetes)</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1000</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Testosterone</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1400</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">FSH/LH</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1200</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">D-Dimer</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Troponin-I</span>
+                                <span class="badge bg-primary rounded-pill" itemprop="price">₹1000</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4 border-0 shadow-sm" itemprop="itemListElement" itemscope itemtype="https://schema.org/MedicalTestPanel">
+                    <div class="card-header bg-warning text-white" id="infection-tests">
+                        <h5 class="mb-0" itemprop="name">
+                            <i class="fas fa-virus me-2" aria-hidden="true"></i>Infection & Serology Tests
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Dengue NS1/IgM/IgG</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹300</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">HIV (ICT Method)</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">HCV (ICT Method)</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">HBsAg (ICT Method)</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Widal Test</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">CRP</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center" itemscope itemtype="https://schema.org/MedicalTest">
+                                <span itemprop="name">Triple Antigen</span>
+                                <span class="badge bg-warning rounded-pill" itemprop="price">₹1200</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appointment Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">Book Your Diagnostic Test at Sunrise Clinic Pabna</h2>
+                <p class="lead mb-2">Fast, accurate results with online report access. Get your medical tests done today.</p>
+                <p class="mb-0">
+                    <i class="fas fa-phone me-2" aria-hidden="true"></i>
+                    Call for Appointment:
+                    <a href="tel:+8801703452323" class="text-white text-decoration-none fw-bold">+880 1703 452323</a>
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/Appointment/Create" class="btn btn-light btn-lg px-4 py-3"
+                   aria-label="Book Diagnostic Test Appointment at Sunrise Clinic">
+                    <i class="fas fa-calendar-plus me-2" aria-hidden="true"></i>Book Test Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instructions -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center" itemscope itemtype="https://schema.org/HowToStep">
+                    <div class="mb-3">
+                        <div class="icon-container bg-primary bg-opacity-10 mx-auto">
+                            <i class="fas fa-calendar-check fa-2x text-primary" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold" itemprop="name">Book Appointment</h5>
+                    <p class="text-muted" itemprop="text">Book your test online or call +880 1703 452323 at Sunrise Clinic Pabna</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center" itemscope itemtype="https://schema.org/HowToStep">
+                    <div class="mb-3">
+                        <div class="icon-container bg-success bg-opacity-10 mx-auto">
+                            <i class="fas fa-syringe fa-2x text-success" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold" itemprop="name">Sample Collection</h5>
+                    <p class="text-muted" itemprop="text">Visit our clinic in Pabna for test collection (No extra charge)</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center" itemscope itemtype="https://schema.org/HowToStep">
+                    <div class="mb-3">
+                        <div class="icon-container bg-info bg-opacity-10 mx-auto">
+                            <i class="fas fa-file-medical-alt fa-2x text-info" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold" itemprop="name">Get Results</h5>
+                    <p class="text-muted" itemprop="text">Collect reports at clinic or get digital copy via email from Sunrise Clinic</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section-d {
+        background: linear-gradient(135deg, rgba(26, 115, 232, 0.1) 0%, rgba(0, 191, 174, 0.1) 100%);
+        padding: 80px 0;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 6px 12px;
+    }
+
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+        }
+
+    .icon-container {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 12px 0;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Scroll to main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('diagnostic');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO: Track diagnostic page interactions
+            console.log('Diagnostic Services page loaded - Sunrise Clinic Pabna');
+
+            // Track test clicks for analytics
+            document.querySelectorAll('.list-group-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const testName = this.querySelector('span[itemprop="name"]').textContent;
+                    const testPrice = this.querySelector('span[itemprop="price"]').textContent;
+                    console.log('SEO: Test selected:', testName, 'Price:', testPrice);
+
+                    // Google Analytics event tracking
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'test_click', {
+                            'event_category': 'Diagnostic',
+                            'event_label': testName,
+                            'value': parseInt(testPrice.replace('₹', ''))
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

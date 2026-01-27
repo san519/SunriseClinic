@@ -1,0 +1,344 @@
+﻿<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" itemscope itemtype="https://schema.org/SiteNavigationElement">
+    <div class="container">
+        <a class="navbar-brand" href="/" itemprop="url" aria-label="Sunrise Clinic & Diagnostic Center Pabna">
+            <i class="fas fa-sun me-2" aria-hidden="true"></i>Sunrise<span>Clinic</span>
+            <meta itemprop="name" content="Sunrise Clinic & Diagnostic Center">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" itemprop="name">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                       asp-controller="Home" asp-action="Index" itemprop="url"
+                       aria-label="Sunrise Clinic Home Page - Medical Diagnostic Center Pabna">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item" itemprop="name">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "About" ? "active" : "")"
+                       asp-controller="Home" asp-action="About" itemprop="url"
+                       aria-label="About Sunrise Clinic Diagnostic Center Pabna">
+                        About Us
+                    </a>
+                </li>
+                <!-- Services Dropdown -->
+                <li class="nav-item dropdown" id="servicesDropdownContainer" itemprop="name">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       id="servicesDropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       data-bs-auto-close="outside"
+                       aria-expanded="false"
+                       aria-label="Medical Services Menu - Diagnostic Tests & Healthcare">
+                        Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        <li><a class="dropdown-item" href="/Home/Gallery" aria-label="Sunrise Clinic Gallery - Medical Facility Photos"><i class="fas fa-images me-2"></i>Gallery</a></li>
+                        <li><a class="dropdown-item" href="/Departments" aria-label="Medical Departments at Sunrise Clinic"><i class="fas fa-building me-2"></i>Departments</a></li>
+                        <li><a class="dropdown-item" href="/Doctors" aria-label="Our Medical Doctors at Sunrise Clinic"><i class="fas fa-user-md me-2"></i>Our Doctors</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Emergency" aria-label="24/7 Emergency Care Services"><i class="fas fa-ambulance me-2"></i>Emergency Care</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Diagnostic" aria-label="Diagnostic Services & Medical Tests"><i class="fas fa-vial me-2"></i>Diagnostic Services</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item" itemprop="name">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Contact" ? "active" : "")"
+                       asp-controller="Home" asp-action="Contact" itemprop="url"
+                       aria-label="Contact Sunrise Clinic Pabna for Medical Appointments">
+                        Contact
+                    </a>
+                </li>
+                <!-- User Dropdown (if authenticated) -->
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li class="nav-item dropdown" id="userDropdownContainer" itemprop="name">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="userDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           data-bs-auto-close="outside"
+                           aria-expanded="false"
+                           aria-label="User Account Menu">
+                            <i class="fas fa-user-circle me-2"></i>@User.Identity.Name
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            @if (Context.Session.GetString("UserType") == "Admin")
+                            {
+                                <li><a class="dropdown-item" href="/Admin/Dashboard" aria-label="Admin Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            }
+                            else if (Context.Session.GetString("UserType") == "Patient")
+                            {
+                                <li><a class="dropdown-item" href="/Patient/Dashboard" aria-label="Patient Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/Patient/Profile" aria-label="Edit Patient Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            }
+                            else if (Context.Session.GetString("UserType") == "Nurse")
+                            {
+                                <li><a class="dropdown-item" href="/Nurse/Dashboard" aria-label="Nurse Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/Nurse/Profile" aria-label="Edit Nurse Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            }
+                            else if (Context.Session.GetString("UserType") == "Doctor")
+                            {
+                                <li><a class="dropdown-item" href="/Doctor/Dashboard" aria-label="Doctor Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/Doctor/Profile" aria-label="Edit Doctor Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            }
+                            <li><a class="dropdown-item" href="/Account/Logout" aria-label="Logout from Sunrise Clinic"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary me-2" href="/Account/Login"
+                           aria-label="Login to Sunrise Clinic Patient Portal">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-accent" href="/Appointment/Create"
+                           aria-label="Book Medical Appointment at Sunrise Clinic">
+                            <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "SiteNavigationElement",
+      "name": "Main Navigation",
+      "url": "https://www.sunriseclinicbd.com/",
+      "mainEntity": [
+        {
+          "@@type": "SiteNavigationElement",
+          "name": "Home",
+          "url": "https://www.sunriseclinicbd.com/",
+          "description": "Sunrise Clinic & Diagnostic Center Home Page"
+        },
+        {
+          "@@type": "SiteNavigationElement",
+          "name": "About Us",
+          "url": "https://www.sunriseclinicbd.com/Home/About",
+          "description": "About Sunrise Clinic Diagnostic Center Pabna"
+        },
+        {
+          "@@type": "SiteNavigationElement",
+          "name": "Services",
+          "url": "#",
+          "hasMenuItem": [
+            {
+              "@@type": "SiteNavigationElement",
+              "name": "Gallery",
+              "url": "https://www.sunriseclinicbd.com/Home/Gallery"
+            },
+            {
+              "@@type": "SiteNavigationElement",
+              "name": "Departments",
+              "url": "https://www.sunriseclinicbd.com/Departments"
+            },
+            {
+              "@@type": "SiteNavigationElement",
+              "name": "Our Doctors",
+              "url": "https://www.sunriseclinicbd.com/Doctors"
+            },
+            {
+              "@@type": "SiteNavigationElement",
+              "name": "Emergency Care",
+              "url": "https://www.sunriseclinicbd.com/Home/Emergency"
+            },
+            {
+              "@@type": "SiteNavigationElement",
+              "name": "Diagnostic Services",
+              "url": "https://www.sunriseclinicbd.com/Home/Diagnostic"
+            }
+          ]
+        },
+        {
+          "@@type": "SiteNavigationElement",
+          "name": "Contact",
+          "url": "https://www.sunriseclinicbd.com/Home/Contact",
+          "description": "Contact Sunrise Clinic Pabna"
+        }
+      ]
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to handle dropdown hover
+        function initHoverDropdowns() {
+            const dropdownContainers = document.querySelectorAll('.dropdown');
+
+            dropdownContainers.forEach(container => {
+                const toggle = container.querySelector('.dropdown-toggle');
+                const menu = container.querySelector('.dropdown-menu');
+
+                if (toggle && menu) {
+                    // PC/mouse hover events
+                    container.addEventListener('mouseenter', function() {
+                        if (window.innerWidth >= 992) { // Only for desktop
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (!bsDropdown) {
+                                new bootstrap.Dropdown(toggle).show();
+                            } else {
+                                bsDropdown.show();
+                            }
+                        }
+                    });
+
+                    container.addEventListener('mouseleave', function() {
+                        if (window.innerWidth >= 992) { // Only for desktop
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (bsDropdown) {
+                                bsDropdown.hide();
+                            }
+                        }
+                    });
+
+                    // Keep menu open when hovering over it
+                    menu.addEventListener('mouseenter', function() {
+                        if (window.innerWidth >= 992) {
+                            const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
+                            if (bsDropdown) {
+                                bsDropdown.show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Initialize dropdowns
+        initHoverDropdowns();
+
+        // Re-initialize on window resize
+        window.addEventListener('resize', function() {
+            initHoverDropdowns();
+        });
+
+        // Bootstrap dropdown initialization
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+        dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl);
+        });
+
+        // SEO: Track navigation clicks
+        const navLinks = document.querySelectorAll('a.nav-link, a.dropdown-item');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // For SEO analytics
+                const linkText = this.textContent.trim();
+                const linkHref = this.href;
+                console.log('SEO Navigation: User clicked', linkText, '->', linkHref);
+
+                // You can add Google Analytics event here
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'nav_click', {
+                        'event_category': 'Navigation',
+                        'event_label': linkText,
+                        'link_url': linkHref
+                    });
+                }
+            });
+        });
+
+        // SEO: Add structured data for current page
+        function updateBreadcrumbSchema() {
+            const currentPath = window.location.pathname;
+            let breadcrumbItems = [
+                {
+                    "@@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://www.sunriseclinicbd.com/"
+                }
+            ];
+
+            if (currentPath.includes('/Home/About')) {
+                breadcrumbItems.push({
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "About Us",
+                    "item": "https://www.sunriseclinicbd.com/Home/About"
+                });
+            } else if (currentPath.includes('/Home/Contact')) {
+                breadcrumbItems.push({
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "Contact",
+                    "item": "https://www.sunriseclinicbd.com/Home/Contact"
+                });
+            } else if (currentPath.includes('/Home/Diagnostic')) {
+                breadcrumbItems.push({
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "Diagnostic Services",
+                    "item": "https://www.sunriseclinicbd.com/Home/Diagnostic"
+                });
+            } else if (currentPath.includes('/Home/Emergency')) {
+                breadcrumbItems.push({
+                    "@@type": "ListItem",
+                    "position": 2,
+                    "name": "Emergency Care",
+                    "item": "https://www.sunriseclinicbd.com/Home/Emergency"
+                });
+            }
+
+            const breadcrumbSchema = {
+                "@@context": "https://schema.org",
+                "@@type": "BreadcrumbList",
+                "itemListElement": breadcrumbItems
+            };
+
+            // Remove existing breadcrumb script if any
+            const existingScript = document.querySelector('script[data-breadcrumb-schema]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+
+            // Add new breadcrumb script
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.setAttribute('data-breadcrumb-schema', 'true');
+            script.textContent = JSON.stringify(breadcrumbSchema);
+            document.head.appendChild(script);
+        }
+
+        // Initialize breadcrumb schema
+        updateBreadcrumbSchema();
+
+        // SEO: Update aria-current attribute for active links
+        function updateAriaCurrent() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (linkPath === currentPath ||
+                   (currentPath === '/' && linkPath === '/') ||
+                   (currentPath.includes('/Home/About') && linkPath === '/Home/About') ||
+                   (currentPath.includes('/Home/Contact') && linkPath === '/Home/Contact')) {
+                    link.setAttribute('aria-current', 'page');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
+        }
+
+        updateAriaCurrent();
+    });
+</script>
+
+<!-- End of Navigation -->

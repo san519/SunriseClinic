@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "Manage Patients";
+    var patients = Model as List<dynamic>;
+    var searchTerm = ViewBag.SearchTerm as string;
+    var currentPage = ViewBag.CurrentPage as int? ?? 1;
+    var pageSize = ViewBag.PageSize as int? ?? 10;
+    var totalRecords = ViewBag.TotalRecords as int? ?? 0;
+    var totalPages = ViewBag.TotalPages as int? ?? 1;
+}
+
+<div id="managePatients">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-3">
+                @await Html.PartialAsync("_NurseSidebar")
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">
+                            <i class="fas fa-user-injured me-2 text-primary"></i>Manage Patients
+                        </h3>
+                        <p class="text-muted mb-0">View and manage patient records</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-info">Total: @totalRecords patients</span>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-3">
+                        <form method="get" class="row g-2">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search"
+                                           value="@searchTerm" placeholder="Search patients by name, email, or phone...">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select" name="pageSize" onchange="this.form.submit()">
+                                    <option value="10" selected="@(pageSize == 10)">10 per page</option>
+                                    <option value="20" selected="@(pageSize == 20)">20 per page</option>
+                                    <option value="50" selected="@(pageSize == 50)">50 per page</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Patients Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        @if (patients != null && patients.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Patient ID</th>
+                                            <th>Full Name</th>
+                                            <th>Contact Info</th>
+                                            <th>Blood Group</th>
+                                            <th>Emergency</th>
+                                            <th>Registered</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var patient in patients)
+                                        {
+                                            <tr style="cursor:pointer"
+                                                onclick="window.location.href='/Nurse/PatientDetails/@patient.UserId'">
+
+                                                <td>
+                                                    <span class="badge bg-primary">@patient.DisplayId</span>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-semibold">@patient.FullName</div>
+                                                    <small class="text-muted">@patient.Email</small>
+                                                </td>
+                                                <td>
+                                                    <div><i class="fas fa-phone me-2"></i>@patient.PhoneNumber</div>
+                                                </td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(patient.BloodGroup) && patient.BloodGroup != "Not set")
+                                                    {
+                                                        <span class="badge bg-danger">@patient.BloodGroup</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">Not set</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <small>@patient.EmergencyContact</small>
+                                                </td>
+                                                <td>
+                                                    <small>@patient.CreatedAt</small>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="/Nurse/PatientDetails/@patient.UserId"
+                                                           class="btn btn-outline-primary" title="View Details">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="/Nurse/UploadPrescription?patientId=@patient.UserId"
+                                                           class="btn btn-outline-success" title="Upload Prescription">
+                                                            <i class="fas fa-prescription"></i>
+                                                        </a>
+                                                        <a href="/Nurse/UploadTestReport?patientId=@patient.UserId"
+                                                           class="btn btn-outline-warning" title="Upload Test Report">
+                                                            <i class="fas fa-file-medical"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            @if (totalPages > 1)
+                            {
+                                <div class="card-footer bg-white py-3">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination pagination-sm justify-content-center mb-0">
+                                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                                <a class="page-link"
+                                                   href="/Nurse/Patients?page=@(currentPage - 1)&pageSize=@pageSize&search=@searchTerm">
+                                                    Previous
+                                                </a>
+                                            </li>
+
+                                            @for (int i = 1; i <= totalPages; i++)
+                                            {
+                                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                                    <a class="page-link"
+                                                       href="/Nurse/Patients?page=@i&pageSize=@pageSize&search=@searchTerm">
+                                                        @i
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                                <a class="page-link"
+                                                   href="/Nurse/Patients?page=@(currentPage + 1)&pageSize=@pageSize&search=@searchTerm">
+                                                    Next
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                    <div class="text-center mt-2">
+                                        <small class="text-muted">
+                                            Page @currentPage of @totalPages • Showing @((currentPage - 1) * pageSize + 1)-@Math.Min(currentPage * pageSize, totalRecords) of @totalRecords patients
+                                        </small>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">No patients found</h6>
+                                <p class="small text-muted">
+                                    @if (!string.IsNullOrEmpty(searchTerm))
+                                    {
+                                        <span>No patients match your search "<strong>@searchTerm</strong>"</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No patients registered yet</span>
+                                    }
+                                </p>
+                                @if (!string.IsNullOrEmpty(searchTerm))
+                                {
+                                    <a href="/Nurse/Patients" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-times me-1"></i>Clear Search
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('managePatients');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

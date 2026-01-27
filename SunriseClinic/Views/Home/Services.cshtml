@@ -1,0 +1,241 @@
+﻿@{
+    ViewData["Title"] = "Our Services | Sunrise Clinic";
+    ViewData["ActivePage"] = "Services";
+}
+
+<!-- Hero Section -->
+<section class="hero-section py-5" id="services">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 text-dark">
+                <h1 class="display-4 fw-bold mb-4">Our Medical Services</h1>
+                <p class="lead mb-4">Comprehensive healthcare services for all your medical needs</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/Appointment/Create" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                    </a>
+                    <a href="tel:+8801703452323" class="btn btn-danger btn-lg">
+                        <i class="fas fa-phone-alt me-2"></i>Emergency Call
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <img src="/img/medical-services.svg" alt="Medical Services" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- All Services -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Our Healthcare Services</h2>
+            <p class="text-muted">Comprehensive medical services under one roof</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Emergency Care -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-danger bg-opacity-10 mb-4">
+                            <i class="fas fa-ambulance text-danger fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">24/7 Emergency Care</h4>
+                        <p class="text-muted mb-4">Round-the-clock emergency medical services with immediate response and advanced life support.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Emergency ICU</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Trauma Care</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Cardiac Emergency</li>
+                        </ul>
+                        <a href="/Home/Emergency" class="btn btn-outline-danger">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagnostic Services -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-primary bg-opacity-10 mb-4">
+                            <i class="fas fa-microscope text-primary fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Advanced Diagnostics</h4>
+                        <p class="text-muted mb-4">State-of-the-art diagnostic facilities including imaging, lab tests, and specialized diagnostics.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>CT Scan & MRI</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Laboratory Tests</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Cardiac Tests</li>
+                        </ul>
+                        <a href="/Home/Diagnostic" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPD Services -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-success bg-opacity-10 mb-4">
+                            <i class="fas fa-stethoscope text-success fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">OPD Services</h4>
+                        <p class="text-muted mb-4">Outpatient consultation with expert doctors across all medical specialties.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>General Consultation</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Specialist Consultation</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Follow-up Care</li>
+                        </ul>
+                        <a href="/Home/OPD" class="btn btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Checkup -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-info bg-opacity-10 mb-4">
+                            <i class="fas fa-heartbeat text-info fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Health Checkup</h4>
+                        <p class="text-muted mb-4">Comprehensive health screening packages for preventive healthcare and early detection.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Basic Checkup</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Executive Checkup</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Comprehensive Checkup</li>
+                        </ul>
+                        <a href="/Home/Checkup" class="btn btn-outline-info">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ambulance Service -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-warning bg-opacity-10 mb-4">
+                            <i class="fas fa-ambulance text-warning fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Ambulance Service</h4>
+                        <p class="text-muted mb-4">24/7 ambulance service with basic and advanced life support systems.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>BLS Ambulance</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>ALS Ambulance</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Neonatal Ambulance</li>
+                        </ul>
+                        <a href="/Home/Ambulance" class="btn btn-outline-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Services -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="service-icon bg-secondary bg-opacity-10 mb-4">
+                            <i class="fas fa-plus-circle text-secondary fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Other Services</h4>
+                        <p class="text-muted mb-4">Additional healthcare services including pharmacy, physiotherapy, and more.</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>In-patient Care</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Pharmacy</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Physiotherapy</li>
+                        </ul>
+                        <a href="/Home/Contact" class="btn btn-outline-secondary">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">Need Medical Assistance?</h2>
+                <p class="lead mb-0">Our team of healthcare professionals is ready to help you 24/7.</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="tel:+8801703452323" class="btn btn-light btn-lg">
+                    <i class="fas fa-phone-alt me-2"></i>Call Now: +880 1703 452323
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-primary display-4">24/7</h3>
+                    <p class="text-muted">Emergency Service</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-success display-4">50+</h3>
+                    <p class="text-muted">Diagnostic Tests</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-info display-4">15+</h3>
+                    <p class="text-muted">OPD Specialties</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="fw-bold text-warning display-4">10+</h3>
+                    <p class="text-muted">Ambulances</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(26, 115, 232, 0.1) 0%, rgba(0, 191, 174, 0.1) 100%);
+    }
+
+    .service-card {
+        transition: transform 0.3s ease;
+    }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .service-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stat-item h3 {
+        font-size: 3.5rem;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('services');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

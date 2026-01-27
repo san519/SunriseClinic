@@ -1,0 +1,496 @@
+﻿@model SunriseClinic.Models.PatientRegistrationModel
+
+@{
+    ViewData["Title"] = "Register Patient | Create Account at Sunrise Clinic & Diagnostic Center Pabna";
+    ViewData["Description"] = "Register as patient at Sunrise Clinic Pabna to book appointments online, access medical reports, and manage healthcare services. Fast registration process.";
+    ViewData["Keywords"] = "patient registration, create account, sunrise clinic register, medical portal signup, healthcare registration, diagnostic center signup";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Account/Register";
+    ViewData["Robots"] = "noindex"; // Registration pages usually should be noindex
+    ViewData["PageType"] = "RegistrationPage";
+}
+
+<!-- FAQ Schema for Featured Snippet -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@@type": "Question",
+          "name": "How to register as patient at Sunrise Clinic Pabna?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Visit https://www.sunriseclinicbd.com/Account/Register and fill the patient registration form with personal, medical, and contact information to create your account at Sunrise Clinic."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "What information is required for Sunrise Clinic patient registration?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Required information: Full name, email, phone number, date of birth, gender, address, emergency contact, blood group, and secure password for Sunrise Clinic patient account."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "What are the benefits of registering at Sunrise Clinic?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Benefits: Online appointment booking, access to medical reports, diagnostic test results, prescription management, health record tracking, and faster service at Sunrise Clinic Pabna."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "Is patient registration free at Sunrise Clinic?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Yes, patient registration is completely free at Sunrise Clinic & Diagnostic Center. Create your account to access healthcare services in Pabna."
+          }
+        }
+      ]
+    }
+</script>
+
+<!-- HowTo Schema for Registration Process -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "HowTo",
+      "name": "How to Register as Patient at Sunrise Clinic Pabna",
+      "description": "Step-by-step guide to create patient account at Sunrise Clinic Diagnostic Center",
+      "estimatedCost": {
+        "@@type": "MonetaryAmount",
+        "currency": "BDT",
+        "value": "0"
+      },
+      "step": [
+        {
+          "@@type": "HowToStep",
+          "name": "Visit Registration Page",
+          "text": "Go to https://www.sunriseclinicbd.com/Account/Register"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Fill Personal Information",
+          "text": "Enter your full name, email, phone number, date of birth, gender, and address"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Add Medical Information",
+          "text": "Provide blood group and emergency contact details"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Create Account Security",
+          "text": "Set a secure password and confirm it"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Submit Registration",
+          "text": "Click 'Create Patient Account' to complete registration at Sunrise Clinic"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Access Services",
+          "text": "After registration, login to book appointments and access healthcare services"
+        }
+      ]
+    }
+</script>
+
+<!-- Medical WebPage Schema -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebPage",
+      "name": "Patient Registration - Sunrise Clinic & Diagnostic Center",
+      "description": "Patient account registration portal for Sunrise Clinic healthcare services in Pabna",
+      "url": "https://www.sunriseclinicbd.com/Account/Register",
+      "isPartOf": {
+        "@@type": "WebSite",
+        "name": "Sunrise Clinic & Diagnostic Center",
+        "url": "https://www.sunriseclinicbd.com"
+      },
+      "about": {
+        "@@type": "MedicalClinic",
+        "name": "Sunrise Clinic & Diagnostic Center"
+      }
+    }
+</script>
+
+<div id="SignUpForm" class="container py-3" itemscope itemtype="https://schema.org/CreateAction">
+    <meta itemprop="name" content="Sunrise Clinic Patient Registration">
+    <meta itemprop="description" content="Patient account registration form for Sunrise Clinic & Diagnostic Center Pabna">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-light py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-plus fa-2x me-3" aria-hidden="true"></i>
+                        <div>
+                            <h1 class="h4 mb-0" itemprop="headline">Create Patient Account at Sunrise Clinic Pabna</h1>
+                            <p class="mb-0 opacity-75">Register for Sunrise Clinic Services - Appointment Booking, Medical Reports & Healthcare Management</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+
+                    <!-- Hidden SEO Content for Featured Snippet -->
+                    <div class="visually-hidden" aria-hidden="true" itemprop="mainContentOfPage">
+                        <h2>Sunrise Clinic Patient Registration Information</h2>
+                        <p>Register as patient at Sunrise Clinic & Diagnostic Center in Pabna, Bangladesh to access complete healthcare services.</p>
+
+                        <h3>Registration Requirements:</h3>
+                        <ul>
+                            <li>Valid email address</li>
+                            <li>Bangladeshi phone number (+880 format)</li>
+                            <li>Personal identification details</li>
+                            <li>Emergency contact information</li>
+                            <li>Medical information (blood group)</li>
+                            <li>Secure password</li>
+                        </ul>
+
+                        <h3>Registration Benefits:</h3>
+                        <ul>
+                            <li>Online appointment booking</li>
+                            <li>Digital medical reports access</li>
+                            <li>Diagnostic test results viewing</li>
+                            <li>Prescription management</li>
+                            <li>Health record tracking</li>
+                            <li>Faster service at clinic</li>
+                        </ul>
+
+                        <h3>Contact Information:</h3>
+                        <p><strong>Clinic:</strong> Sunrise Clinic & Diagnostic Center</p>
+                        <p><strong>Location:</strong> TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna</p>
+                        <p><strong>Emergency:</strong> +880 1703 452323 (24/7)</p>
+                        <p><strong>Services:</strong> Diagnostic Tests, Radiology, Pathology, OPD, Emergency Care</p>
+                    </div>
+
+                    <!-- SUCCESS messages শুধু উপরে দেখাবে -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" aria-label="Success Message">
+                            <i class="fas fa-check-circle me-2" aria-hidden="true"></i>
+                            <span itemprop="successMessage">@TempData["SuccessMessage"]</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post" class="needs-validation" novalidate
+                          itemprop="potentialAction" itemscope itemtype="https://schema.org/Action">
+                        @Html.AntiForgeryToken()
+
+                        <meta itemprop="name" content="Patient Registration Form">
+                        <meta itemprop="description" content="Patient account registration form for Sunrise Clinic">
+                        <meta itemprop="url" content="https://www.sunriseclinicbd.com/Account/Register">
+
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-user-circle me-2" aria-hidden="true"></i>Personal Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control form-control-lg"
+                                           placeholder="Enter your full name" required
+                                           aria-label="Full Name"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address *</label>
+                                    <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                           placeholder="name@example.com" required
+                                           aria-label="Email Address"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth *</label>
+                                    <input asp-for="DateOfBirth" type="text"
+                                           class="form-control form-control-lg"
+                                           placeholder="YYYY-MM-DD"
+                                           pattern="\d{4}-\d{2}-\d{2}"
+                                           title="Please enter date in YYYY-MM-DD format"
+                                           required
+                                           onfocus="(this.type='date')"
+                                           onblur="if(!this.value) this.type='text'"
+                                           aria-label="Date of Birth"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="Gender" class="form-label fw-semibold">Gender *</label>
+                                    <select asp-for="Gender" class="form-select form-select-lg" required
+                                            aria-label="Gender"
+                                            aria-required="true"
+                                            itemprop="value">
+                                        <option selected disabled value="">Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="+8801712345678"
+                                           pattern="^(\+8801|01)[3-9]\d{8}$"
+                                           maxlength="14"
+                                           title="Bangladeshi phone number only"
+                                           required
+                                           aria-label="Phone Number"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                    <small class="text-muted">Example: +8801712345678 or 01712345678</small>
+                                </div>
+
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="EmergencyContact" class="form-label fw-semibold">Emergency Contact *</label>
+                                    <input asp-for="EmergencyContact"
+                                           class="form-control form-control-lg"
+                                           placeholder="+8801712345678"
+                                           pattern="^(\+8801|01)[3-9]\d{8}$"
+                                           maxlength="14"
+                                           title="Bangladeshi phone number only"
+                                           required
+                                           aria-label="Emergency Contact"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="EmergencyContact" class="text-danger small"></span>
+                                    <small class="text-muted">Same format as phone number</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                <label asp-for="Address" class="form-label fw-semibold">Address *</label>
+                                <textarea asp-for="Address" class="form-control form-control-lg"
+                                          rows="2" placeholder="Your complete address"
+                                          aria-label="Address"
+                                          aria-required="true"
+                                          itemprop="value"></textarea>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-heartbeat me-2" aria-hidden="true"></i>Medical Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="BloodGroup" class="form-label fw-semibold">Blood Group *</label>
+                                    <select asp-for="BloodGroup" class="form-select form-select-lg"
+                                            aria-label="Blood Group"
+                                            aria-required="true"
+                                            itemprop="value">
+                                        <option selected disabled value="">Select Blood Group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                    <span asp-validation-for="BloodGroup" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-lock me-2" aria-hidden="true"></i>Account Security
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="Password" class="form-label fw-semibold">Password *</label>
+                                    <input asp-for="Password" type="password" class="form-control form-control-lg"
+                                           placeholder="Minimum 6 characters" required
+                                           aria-label="Password"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                                    <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg"
+                                           placeholder="Re-enter password" required
+                                           aria-label="Confirm Password"
+                                           aria-required="true"
+                                           itemprop="value">
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="mb-4">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg py-2 py-md-3"
+                                        aria-label="Create patient account at Sunrise Clinic"
+                                        itemprop="actionOption">
+                                    <i class="fas fa-user-plus me-1 me-md-2" aria-hidden="true"></i>
+                                    <span class="d-none d-md-inline">Create Patient Account at Sunrise Clinic</span>
+                                    <span class="d-md-none">Create Account</span>
+                                </button>
+
+                                <a asp-action="Login" asp-controller="Account"
+                                   class="btn btn-outline-primary btn-lg py-2 py-md-3"
+                                   aria-label="Login to existing Sunrise Clinic account">
+                                    <i class="fas fa-sign-in-alt me-1 me-md-2" aria-hidden="true"></i>
+                                    <span class="d-none d-md-inline">Already have an account? Login to Sunrise Clinic</span>
+                                    <span class="d-md-none">Already have account? Login</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Hidden FAQ Content for Featured Snippet -->
+                        <div class="visually-hidden" aria-hidden="true">
+                            <h3>Frequently Asked Questions - Patient Registration</h3>
+                            <p>
+                                <strong>Q: Is registration free at Sunrise Clinic?</strong><br>
+                                A: Yes, patient registration is completely free at Sunrise Clinic Pabna.
+                            </p>
+
+                            <p>
+                                <strong>Q: What documents are needed for registration?</strong><br>
+                                A: No physical documents needed for online registration. Bring ID proof during first visit.
+                            </p>
+
+                            <p>
+                                <strong>Q: Can I book appointment without registration?</strong><br>
+                                A: Yes, but registered patients get priority booking and digital reports.
+                            </p>
+
+                            <p>
+                                <strong>Q: How long does registration take?</strong><br>
+                                A: Registration takes 2-3 minutes to complete the online form.
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Quick Links for SEO -->
+                    <div class="mt-4 pt-4 border-top text-center">
+                        <p class="small text-muted mb-2">Need help with registration? Contact Sunrise Clinic:</p>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <a href="/Home/Contact" class="btn btn-sm btn-outline-primary" aria-label="Contact Sunrise Clinic">Contact Us</a>
+                            <a href="/Home/Diagnostic" class="btn btn-sm btn-outline-primary" aria-label="View Diagnostic Services">Services</a>
+                            <a href="tel:+8801703452323" class="btn btn-sm btn-outline-success" aria-label="Call Sunrise Clinic">Call: +8801703-452323</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.sunriseclinicbd.com/"
+            },
+            {
+              "@@type": "ListItem",
+              "position": 2,
+              "name": "Patient Registration",
+              "item": "https://www.sunriseclinicbd.com/Account/Register"
+            }
+          ]
+        }
+    </script>
+
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+
+                        // SEO Event Tracking
+                        console.log('SEO: Registration form submitted - Sunrise Clinic Pabna');
+                    }, false)
+                })
+        })()
+
+        // Scroll to form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('SignUpForm');
+            if (registerForm) {
+                registerForm.classList.add('scroll-target');
+                registerForm.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO: Track registration page views
+            console.log('SEO: Patient Registration Page Loaded - Sunrise Clinic');
+            console.log('SEO: Featured Snippet Content Ready for Registration');
+
+            // Track form field interactions
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                field.addEventListener('focus', function() {
+                    console.log('SEO: Registration field focused -', this.name || this.id);
+                });
+            });
+        });
+
+        // Additional SEO Tracking
+        window.addEventListener('load', function() {
+            // Add registration-specific structured data
+            const registrationData = {
+                "@@context": "https://schema.org",
+                "@@type": "WebPage",
+                "name": "Sunrise Clinic Patient Registration Portal",
+                "description": "Patient account registration for Sunrise Clinic & Diagnostic Center in Pabna",
+                "url": window.location.href,
+                "mainEntity": {
+                    "@@type": "FAQPage",
+                    "name": "Patient Registration FAQs"
+                }
+            };
+
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.textContent = JSON.stringify(registrationData);
+            document.head.appendChild(script);
+
+            console.log('SEO: Registration structured data added for featured snippet');
+        });
+    </script>
+}

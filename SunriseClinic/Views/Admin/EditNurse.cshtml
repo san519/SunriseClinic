@@ -1,0 +1,319 @@
+﻿@model SunriseClinic.Models.NurseEditModel
+
+@{
+    ViewData["Title"] = "Edit Nurse Details";
+    var displayId = ViewBag.DisplayId as string ?? "N-XXXX";
+    var nurseId = ViewBag.NurseId as int?;
+    
+    // ✅ Format dates properly for HTML input
+    var dateOfBirthStr = Model.DateOfBirth.ToString("yyyy-MM-dd");
+    var createdAtStr = Model.CreatedAt.ToString("yyyy-MM-dd");
+    
+    // Ensure dates are valid
+    if (Model.DateOfBirth.Year < 1900) 
+        dateOfBirthStr = DateTime.Now.AddYears(-25).ToString("yyyy-MM-dd");
+    
+    if (Model.CreatedAt.Year < 1900) 
+        createdAtStr = DateTime.Now.ToString("yyyy-MM-dd");
+}
+
+<div class="container py-3" id="editNurse">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-info text-white py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-edit fa-2x me-3"></i>
+                        <div>
+                            <h2 class="h4 mb-0">Edit Nurse Details</h2>
+                            <p class="mb-0 opacity-75">Update nurse information</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    <!-- Success/Error Messages -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>@Html.Raw(TempData["SuccessMessage"])
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@Html.Raw(TempData["ErrorMessage"])
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- Nurse ID Card -->
+                    <div class="card mb-4 border-info">
+                        <div class="card-header bg-light border-info py-3">
+                            <h5 class="mb-0 text-info">
+                                <i class="fas fa-id-card me-2"></i>Nurse Information
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Nurse ID</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-info text-white">
+                                            <i class="fas fa-id-badge"></i>
+                                        </span>
+                                        <input type="text" class="form-control form-control-lg bg-light" 
+                                               value="@displayId" readonly>
+                                    </div>
+                                    <div class="form-text text-muted">System generated ID (Cannot be changed)</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="CreatedAt" class="form-label fw-semibold">Join Date *</label>
+                                    <input asp-for="CreatedAt" 
+                                           type="date" 
+                                           class="form-control form-control-lg"
+                                           value="@createdAtStr"
+                                           min="1900-01-01"
+                                           max="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                           required>
+                                    <span asp-validation-for="CreatedAt" class="text-danger small"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        Date when nurse joined the clinic
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="EditNurse" method="post" id="editNurseForm" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="UserId" />
+                        
+                        <!-- Hidden field for raw CreatedAt value -->
+                        <input type="hidden" id="createdAtRaw" name="createdAtRaw" value="@createdAtStr" />
+
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="text-info mb-3 border-bottom pb-2">
+                                <i class="fas fa-user-circle me-2"></i>Personal Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control form-control-lg"
+                                           placeholder="Nurse Full Name" required>
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address *</label>
+                                    <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                           placeholder="nurse@sunriseclinic.com" required>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth *</label>
+                                    <input asp-for="DateOfBirth" 
+                                           type="date" 
+                                           class="form-control form-control-lg"
+                                           value="@dateOfBirthStr"
+                                           max="@DateTime.Now.AddYears(-21).ToString("yyyy-MM-dd")" 
+                                           required>
+                                    <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                                    <div class="form-text">Minimum age: 21 years</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Gender" class="form-label fw-semibold">Gender *</label>
+                                    <select asp-for="Gender" class="form-select form-select-lg" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="M" selected="@(Model.Gender == "M")">Male</option>
+                                        <option value="F" selected="@(Model.Gender == "F")">Female</option>
+                                        <option value="O" selected="@(Model.Gender == "O")">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="+880 1XXX XXX XXX" required>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                                <textarea asp-for="Address" class="form-control form-control-lg"
+                                          rows="2" placeholder="Residential address"></textarea>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="mb-4">
+                            <h5 class="text-info mb-3 border-bottom pb-2">
+                                <i class="fas fa-briefcase-medical me-2"></i>Professional Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Department" class="form-label fw-semibold">Department *</label>
+                                    <select asp-for="Department" class="form-select form-select-lg" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Emergency" selected="@(Model.Department == "Emergency")">Emergency</option>
+                                        <option value="ICU" selected="@(Model.Department == "ICU")">ICU</option>
+                                        <option value="Surgery" selected="@(Model.Department == "Surgery")">Surgery</option>
+                                        <option value="Cardiology" selected="@(Model.Department == "Cardiology")">Cardiology</option>
+                                        <option value="Pediatrics" selected="@(Model.Department == "Pediatrics")">Pediatrics</option>
+                                        <option value="Gynecology" selected="@(Model.Department == "Gynecology")">Gynecology</option>
+                                        <option value="Orthopedics" selected="@(Model.Department == "Orthopedics")">Orthopedics</option>
+                                        <option value="General Ward" selected="@(Model.Department == "General Ward")">General Ward</option>
+                                        <option value="OPD" selected="@(Model.Department == "OPD")">OPD</option>
+                                        <option value="Diagnostic" selected="@(Model.Department == "Diagnostic")">Diagnostic</option>
+                                    </select>
+                                    <span asp-validation-for="Department" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ShiftTime" class="form-label fw-semibold">Shift Time *</label>
+                                    <select asp-for="ShiftTime" class="form-select form-select-lg" required>
+                                        <option value="">Select Shift</option>
+                                        <option value="Day Shift (8 AM - 4 PM)" selected="@(Model.ShiftTime == "Day Shift (8 AM - 4 PM)")">Day Shift (8 AM - 4 PM)</option>
+                                        <option value="Evening Shift (4 PM - 12 AM)" selected="@(Model.ShiftTime == "Evening Shift (4 PM - 12 AM)")">Evening Shift (4 PM - 12 AM)</option>
+                                        <option value="Night Shift (12 AM - 8 AM)" selected="@(Model.ShiftTime == "Night Shift (12 AM - 8 AM)")">Night Shift (12 AM - 8 AM)</option>
+                                        <option value="Morning Shift (6 AM - 2 PM)" selected="@(Model.ShiftTime == "Morning Shift (6 AM - 2 PM)")">Morning Shift (6 AM - 2 PM)</option>
+                                        <option value="Full Time" selected="@(Model.ShiftTime == "Full Time")">Full Time</option>
+                                    </select>
+                                    <span asp-validation-for="ShiftTime" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="NurseLicense" class="form-label fw-semibold">Nurse License Number *</label>
+                                    <input asp-for="NurseLicense" class="form-control form-control-lg"
+                                           placeholder="BNMC registration number" required>
+                                    <span asp-validation-for="NurseLicense" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ExperienceYears" class="form-label fw-semibold">Experience (Years)</label>
+                                    <input asp-for="ExperienceYears" type="number" min="0" max="50"
+                                           class="form-control form-control-lg" 
+                                           value="@Model.ExperienceYears"
+                                           placeholder="0">
+                                    <span asp-validation-for="ExperienceYears" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Status -->
+                        <div class="mb-4">
+                            <h5 class="text-info mb-3 border-bottom pb-2">
+                                <i class="fas fa-user-shield me-2"></i>Account Status
+                            </h5>
+
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox"
+                                           id="isActiveSwitch" @@(Model.IsActive ? "checked" : "") style="width: 3em; height: 1.5em;">
+                                    <label class="form-check-label fw-semibold" for="isActiveSwitch">
+                                        Account Active
+                                    </label>
+                                </div>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    When inactive, nurse cannot login to the system
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mb-4">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a asp-action="ManageNurses" asp-controller="Admin"
+                                   class="btn btn-outline-secondary btn-lg me-md-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                                </a>
+                                <button type="submit" class="btn btn-info btn-lg" id="submitBtn">
+                                    <i class="fas fa-save me-2"></i>Update Nurse Details
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        $(document).ready(function () {
+            console.log("Edit Nurse form loaded");
+            
+            // Capture the raw date value before form submission
+            $('#editNurseForm').on('submit', function(e) {
+                var createdAtInput = $('input[name="CreatedAt"]');
+                var rawDateValue = createdAtInput.val();
+                $('#createdAtRaw').val(rawDateValue);
+                console.log('Submitting form with CreatedAt raw value:', rawDateValue);
+            });
+
+            // Set max date for Date of Birth (minimum age 21)
+            var dobField = $('#DateOfBirth');
+            if (dobField.length) {
+                var maxDate = new Date();
+                maxDate.setFullYear(maxDate.getFullYear() - 21);
+                dobField.attr('max', maxDate.toISOString().split('T')[0]);
+            }
+
+            // Set max date for CreatedAt (cannot be future date)
+            var createdAtField = $('#CreatedAt');
+            if (createdAtField.length) {
+                var today = new Date();
+                createdAtField.attr('max', today.toISOString().split('T')[0]);
+                console.log('CreatedAt max date set to:', today.toISOString().split('T')[0]);
+            }
+
+            // Auto-hide alerts
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+
+            // Form validation
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+
+
+                        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('editNurse');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,166 @@
+﻿/* CLEAN SMOOTH ECG WAVE ONLY */
+.clean-ecg-container {
+    width: 100%;
+    height: 40px;
+    margin: 8px auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.clean-ecg {
+    width: 100%;
+    height: 100%;
+}
+
+.ecg-smooth-wave {
+    stroke: var(--gold-accent);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: smoothDraw 4s linear infinite;
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.4));
+}
+
+.ecg-glow {
+    stroke: rgba(255, 215, 0, 0.3);
+    stroke-width: 4;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: smoothDraw 4s linear infinite;
+    filter: blur(2px);
+    opacity: 0.5;
+}
+
+.ecg-smooth-dot {
+    fill: #ff3366;
+    filter: drop-shadow(0 0 3px #ff3366) drop-shadow(0 0 6px rgba(255, 51, 102, 0.6));
+    opacity: 0.9;
+}
+
+/* Infinite seamless animation */
+@keyframes smoothDraw {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Create seamless loop effect */
+.clean-ecg-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.05) 10%, transparent 30%, transparent 90%, rgba(255, 215, 0, 0.05) 95%, transparent 100%);
+    animation: seamlessLoop 4s linear infinite;
+    z-index: 2;
+    pointer-events: none;
+}
+
+@keyframes seamlessLoop {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0.3;
+    }
+
+    10% {
+        opacity: 0.5;
+    }
+
+    90% {
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateX(100%);
+        opacity: 0.3;
+    }
+}
+
+@keyframes heartPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    25% {
+        transform: scale(1.02);
+        opacity: 0.95;
+    }
+
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    75% {
+        transform: scale(0.98);
+        opacity: 0.95;
+    }
+}
+
+.clean-ecg-container {
+    animation: heartPulse 4s ease-in-out infinite;
+}
+
+/* Make it ultra smooth with CSS will-change */
+.ecg-smooth-wave,
+.ecg-glow,
+.ecg-smooth-dot {
+    will-change: transform, stroke-dashoffset;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .clean-ecg-container {
+        width: 100%;
+        height: 40px;
+        margin: 6px auto;
+    }
+
+    .ecg-smooth-wave {
+        stroke-width: 1.8;
+    }
+
+    .ecg-glow {
+        stroke-width: 3;
+    }
+}
+
+@media (max-width: 480px) {
+    .clean-ecg-container {
+        width: 100%;
+        height: 30px;
+        margin: 5px auto;
+    }
+
+    .ecg-smooth-wave {
+        stroke-width: 1.5;
+    }
+
+    .ecg-glow {
+        stroke-width: 2.5;
+    }
+
+    .ecg-smooth-dot {
+        r: 2;
+    }
+}
+
+/* Optimize for performance */
+.clean-ecg-container {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+}

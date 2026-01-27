@@ -1,0 +1,310 @@
+﻿@{
+    ViewData["Title"] = "Manage Nurses";
+    var nurses = ViewBag.Nurses as List<dynamic>;
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<div class="container-fluid py-4" id="manageNurse">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-1">
+                <i class="fas fa-user-nurse me-2 text-success"></i>Manage Nurses
+            </h3>
+            <p class="text-muted mb-0">All registered nurses in the system</p>
+        </div>
+        <a href="/Admin/CreateNurse" class="btn btn-success">
+            <i class="fas fa-user-plus me-2"></i>Add New Nurse
+        </a>
+    </div>
+
+    <!-- ✅ SUCCESS MESSAGE - TempData থেকে -->
+    @if (TempData["DeleteSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@Html.Raw(TempData["DeleteSuccess"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- ✅ ERROR MESSAGE - TempData থেকে -->
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["DeleteError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Regular success message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Nurses Table -->
+    <div class="card border-0 shadow-sm">
+        <!-- এখানে card-header পরিবর্তিত হয়েছে -->
+        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2 text-success"></i>Nurses List
+                </h5>
+            </div>
+
+            <!-- সার্চ ফর্ম -->
+            <div class="d-flex align-items-center">
+                <form method="get" action="/Admin/ManageNurses" class="d-flex" id="searchForm">
+                    <div class="input-group input-group-sm" style="width: 300px;">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text"
+                               name="searchTerm"
+                               id="searchInput"
+                               class="form-control border-start-0"
+                               placeholder="Search by Name, ID, Email, Phone, License..."
+                               value="@searchTerm">
+                        @if (!string.IsNullOrEmpty(searchTerm))
+                        {
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    id="clearSearch"
+                                    title="Clear search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        }
+                        <button type="submit"
+                                class="btn btn-success"
+                                title="Search">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            @if (nurses != null && nurses.Any())
+            {
+                <!-- সার্চ রেজাল্ট ইনফো -->
+                @if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    <div class="alert alert-info alert-dismissible fade show m-3 mb-0" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Showing results for "<strong>@searchTerm</strong>"
+                        - @nurses.Count nurse(s) found
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nurse ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Shift Time</th>
+                                <th>Contact</th>
+                                <th>Experience</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var nurse in nurses)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-success">@nurse.DisplayId</span>
+                                        @if (!nurse.IsActive)
+                                        {
+                                            <span class="badge bg-danger ms-1">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">@nurse.FullName</div>
+                                        <small class="text-muted">@nurse.Email</small>
+                                    </td>
+                                    <td>@nurse.Department</td>
+                                    <td>@nurse.ShiftTime</td>
+                                    <td>
+                                        <div>@nurse.PhoneNumber</div>
+                                        <small class="text-muted">License: @nurse.NurseLicense</small>
+                                    </td>
+                                    <td>
+                                        @if (nurse.ExperienceYears > 0)
+                                        {
+                                            <span class="fw-semibold">@nurse.ExperienceYears years</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Fresh</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small>@nurse.CreatedAt.ToString("dd-MMM-yyyy")</small>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("EditNurse", "Admin", new { id = nurse.UserId })"
+                                           class="btn btn-sm btn-outline-success me-1"
+                                           title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-nurse-btn"
+                                                data-nurse-id="@nurse.UserId"
+                                                data-nurse-name="@nurse.FullName"
+                                                data-nurse-displayid="@nurse.DisplayId"
+                                                data-nurse-department="@nurse.Department"
+                                                title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    @if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        <i class="fas fa-search fa-3x text-warning mb-3"></i>
+                        <h6 class="text-muted">No nurses found</h6>
+                        <p class="small text-muted mb-4">
+                            No nurses found for "<strong>@searchTerm</strong>"
+                        </p>
+                        <a href="/Admin/ManageNurses" class="btn btn-outline-success">
+                            <i class="fas fa-times me-2"></i>Clear Search
+                        </a>
+                    }
+                    else
+                    {
+                        <i class="fas fa-user-nurse fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No nurses found</h6>
+                        <p class="small text-muted mb-4">No nurses have been registered yet</p>
+                        <a href="/Admin/CreateNurse" class="btn btn-success">
+                            <i class="fas fa-user-plus me-2"></i>Add First Nurse
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Delete Confirmation Modal (Single Modal) -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-trash-alt me-2"></i>Delete Nurse
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this nurse?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    This action cannot be undone! All related data will be deleted.
+                </div>
+                <div class="nurse-details mt-3">
+                    <p><strong>Name:</strong> <span id="nurseName"></span></p>
+                    <p><strong>ID:</strong> <span id="nurseDisplayId"></span></p>
+                    <p><strong>Department:</strong> <span id="nurseDepartment"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form id="deleteForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-1"></i>Delete Nurse
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Delete button click handler
+            document.querySelectorAll('.delete-nurse-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const nurseId = this.getAttribute('data-nurse-id');
+                    const nurseName = this.getAttribute('data-nurse-name');
+                    const nurseDisplayId = this.getAttribute('data-nurse-displayid');
+                    const nurseDepartment = this.getAttribute('data-nurse-department');
+
+                    // Set modal content
+                    document.getElementById('nurseName').textContent = nurseName;
+                    document.getElementById('nurseDisplayId').textContent = nurseDisplayId;
+                    document.getElementById('nurseDepartment').textContent = nurseDepartment;
+
+                    // Set form action
+                    const deleteForm = document.getElementById('deleteForm');
+                    deleteForm.action = '/Admin/DeleteUser/' + nurseId;
+
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                    modal.show();
+                });
+            });
+
+            // Clear search button
+            const clearSearchBtn = document.getElementById('clearSearch');
+            if (clearSearchBtn) {
+                clearSearchBtn.addEventListener('click', function() {
+                    window.location.href = '/Admin/ManageNurses';
+                });
+            }
+
+            // সার্চ ফর্ম submit - Enter key support
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        searchForm.submit();
+                    }
+                });
+
+                // Focus on search input
+                searchInput.focus();
+                searchInput.select();
+            }
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+
+        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('manageNurse');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+    </script>
+}

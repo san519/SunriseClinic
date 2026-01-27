@@ -1,0 +1,462 @@
+﻿@model SunriseClinic.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Patient Login | Sunrise Clinic & Diagnostic Center Patient Portal";
+    ViewData["Description"] = "Login to Sunrise Clinic Patient Portal to book appointments, view medical reports, manage health records, and access diagnostic services in Pabna.";
+    ViewData["Keywords"] = "sunrise clinic login, patient portal, medical login, healthcare portal, diagnostic center login, patient account";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Account/Login";
+    ViewData["Robots"] = "noindex"; // Login pages usually should be noindex
+    ViewData["PageType"] = "LoginPage";
+
+    // Fix: Directly check ViewBag without variable assignment
+}
+
+<!-- FAQ Schema for Login Page (Featured Snippet পেতে) -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@@type": "Question",
+          "name": "How to login to Sunrise Clinic patient portal?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Visit https://www.sunriseclinicbd.com/Account/Login and enter your registered email/username and password to access your patient account at Sunrise Clinic Pabna."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "What can I do after logging into Sunrise Clinic portal?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "After login, you can book appointments, view medical reports, access diagnostic test results, update profile, and manage your healthcare services at Sunrise Clinic."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "I forgot my Sunrise Clinic login password. What should I do?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Click on 'Forgot Password?' link on login page or visit https://www.sunriseclinicbd.com/Account/ForgotPassword to reset your password for Sunrise Clinic patient portal."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "How to create a new patient account at Sunrise Clinic?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Click 'Create Patient Account' button on login page or visit https://www.sunriseclinicbd.com/Account/Register to register as new patient at Sunrise Clinic Diagnostic Center Pabna."
+          }
+        }
+      ]
+    }
+</script>
+
+<!-- Medical WebPage Schema -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebPage",
+      "name": "Patient Login - Sunrise Clinic & Diagnostic Center",
+      "description": "Secure patient login portal for Sunrise Clinic healthcare services",
+      "url": "https://www.sunriseclinicbd.com/Account/Login",
+      "isPartOf": {
+        "@@type": "WebSite",
+        "name": "Sunrise Clinic & Diagnostic Center",
+        "url": "https://www.sunriseclinicbd.com"
+      },
+      "about": {
+        "@@type": "MedicalClinic",
+        "name": "Sunrise Clinic & Diagnostic Center"
+      },
+      "breadcrumb": {
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.sunriseclinicbd.com/"
+          },
+          {
+            "@@type": "ListItem",
+            "position": 2,
+            "name": "Patient Login",
+            "item": "https://www.sunriseclinicbd.com/Account/Login"
+          }
+        ]
+      }
+    }
+</script>
+
+<!-- HowTo Schema for Login Process -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "HowTo",
+      "name": "How to Login to Sunrise Clinic Patient Portal",
+      "description": "Step-by-step guide to login to Sunrise Clinic patient account",
+      "image": {
+        "@@type": "ImageObject",
+        "url": "https://www.sunriseclinicbd.com/img/login-portal.jpg"
+      },
+      "estimatedCost": {
+        "@@type": "MonetaryAmount",
+        "currency": "BDT",
+        "value": "0"
+      },
+      "step": [
+        {
+          "@@type": "HowToStep",
+          "name": "Visit Login Page",
+          "text": "Go to https://www.sunriseclinicbd.com/Account/Login"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Enter Credentials",
+          "text": "Enter your registered email/username and password"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Click Login",
+          "text": "Click the login button to access your patient dashboard"
+        },
+        {
+          "@@type": "HowToStep",
+          "name": "Access Services",
+          "text": "Once logged in, you can book appointments, view reports, and manage healthcare services"
+        }
+      ]
+    }
+</script>
+
+<div id="loginForm" class="container py-3" itemscope itemtype="https://schema.org/LoginAction">
+    <meta itemprop="name" content="Sunrise Clinic Patient Login">
+    <meta itemprop="description" content="Secure patient login portal for Sunrise Clinic & Diagnostic Center Pabna">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-light py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-sign-in-alt fa-2x me-3" aria-hidden="true"></i>
+                        <div>
+                            <h1 class="h4 mb-0" itemprop="headline">Login to Sunrise Clinic Patient Portal</h1>
+                            <p class="small mb-0 mt-1">Access your medical records, appointments, and diagnostic reports</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+
+                    <!-- Featured Snippet Content (Hidden but readable by search engines) -->
+                    <div class="visually-hidden" aria-hidden="true" itemprop="mainContentOfPage">
+                        <h2>Sunrise Clinic Patient Login Guide</h2>
+                        <p>Login to your Sunrise Clinic & Diagnostic Center patient account to access healthcare services in Pabna, Bangladesh.</p>
+                        <h3>Login Steps:</h3>
+                        <ol>
+                            <li>Enter your registered email address or patient ID</li>
+                            <li>Enter your secure password</li>
+                            <li>Click Login button to access dashboard</li>
+                        </ol>
+                        <h3>After Login You Can:</h3>
+                        <ul>
+                            <li>Book medical appointments online</li>
+                            <li>View diagnostic test results</li>
+                            <li>Access medical reports</li>
+                            <li>Update personal information</li>
+                            <li>Manage healthcare services</li>
+                        </ul>
+                        <p>Emergency: Call +880 1703 452323 | Location: TB Clinic Gate, Shalgaria, Pabna</p>
+                    </div>
+
+                    <!-- APPOINTMENT WARNING (ONLY TOP) -->
+                    @if (ViewBag.AppointmentWarning != null && !string.IsNullOrEmpty(ViewBag.AppointmentWarning.ToString()))
+                    {
+                        <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert" aria-label="Appointment Warning">
+                            <i class="fas fa-calendar-check me-2" aria-hidden="true"></i>
+                            <span itemprop="warning">@ViewBag.AppointmentWarning</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- GENERAL ERROR MESSAGES (ONLY FROM MODELSTATE) -->
+                    @if (ViewData.ModelState[""]?.Errors?.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" aria-label="Error Messages">
+                            <i class="fas fa-exclamation-circle me-2" aria-hidden="true"></i>
+                            @foreach (var error in ViewData.ModelState[""].Errors)
+                            {
+                                <div itemprop="error">@error.ErrorMessage</div>
+                            }
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- SUCCESS MESSAGES (IF ANY) -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" aria-label="Success Message">
+                            <i class="fas fa-check-circle me-2" aria-hidden="true"></i>
+                            <span itemprop="successMessage">@TempData["SuccessMessage"]</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post" class="needs-validation" novalidate
+                          itemprop="potentialAction" itemscope itemtype="https://schema.org/Action">
+                        @Html.AntiForgeryToken()
+
+                        <meta itemprop="name" content="Patient Login Form">
+                        <meta itemprop="description" content="Login form for Sunrise Clinic patient portal">
+                        <meta itemprop="url" content="https://www.sunriseclinicbd.com/Account/Login">
+
+                        <div class="mb-4" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                            <label asp-for="EmailOrUsername" class="form-label fw-semibold">
+                                <i class="fas fa-user me-2" aria-hidden="true"></i>Email or Patient ID *
+                            </label>
+                            <input asp-for="EmailOrUsername"
+                                   class="form-control form-control-lg @(ViewData.ModelState["EmailOrUsername"]?.Errors?.Count > 0 ? "is-invalid" : "")"
+                                   placeholder="Enter your email or username"
+                                   required
+                                   autofocus
+                                   aria-label="Email or Username"
+                                   aria-required="true"
+                                   itemprop="value">
+
+                            <!-- Field-specific error message (ONLY BELOW THE INPUT) -->
+                            @if (ViewData.ModelState["EmailOrUsername"]?.Errors?.Count > 0)
+                            {
+                                <div class="invalid-feedback d-block mt-1">
+                                    @foreach (var error in ViewData.ModelState["EmailOrUsername"].Errors)
+                                    {
+                                        <div class="small">
+                                            <i class="fas fa-exclamation-triangle me-1" aria-hidden="true"></i>
+                                            @error.ErrorMessage
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4" itemprop="object" itemscope itemtype="https://schema.org/PropertyValue">
+                            <label asp-for="Password" class="form-label fw-semibold">
+                                <i class="fas fa-lock me-2" aria-hidden="true"></i>Password *
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password"
+                                       class="form-control form-control-lg @(ViewData.ModelState["Password"]?.Errors?.Count > 0 ? "is-invalid" : "")"
+                                       placeholder="Enter your password"
+                                       required
+                                       aria-label="Password"
+                                       aria-required="true"
+                                       itemprop="value">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                                        aria-label="Show/Hide Password">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <!-- Password error message (ONLY BELOW THE INPUT) -->
+                            @if (ViewData.ModelState["Password"]?.Errors?.Count > 0)
+                            {
+                                <div class="invalid-feedback d-block mt-1">
+                                    @foreach (var error in ViewData.ModelState["Password"].Errors)
+                                    {
+                                        <div class="small">
+                                            <i class="fas fa-exclamation-triangle me-1" aria-hidden="true"></i>
+                                            @error.ErrorMessage
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
+                                <label asp-for="RememberMe" class="form-check-label" for="rememberMe">
+                                    Remember me on this device
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg py-3"
+                                    aria-label="Login to patient account"
+                                    itemprop="actionOption">
+                                <i class="fas fa-sign-in-alt me-2" aria-hidden="true"></i>Login to Sunrise Clinic
+                            </button>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <a asp-action="ForgotPassword" asp-controller="Account"
+                               class="text-decoration-none"
+                               aria-label="Reset forgotten password">
+                                <i class="fas fa-key me-1" aria-hidden="true"></i>Forgot Password? Reset Here
+                            </a>
+                        </div>
+
+                        <hr class="my-4" aria-hidden="true">
+
+                        <div class="text-center">
+                            <p class="mb-3 fw-bold">New to Sunrise Clinic Pabna?</p>
+                            <p class="small text-muted mb-3">Register for patient account to book appointments online</p>
+                            <a asp-action="Register" asp-controller="Account"
+                               class="btn btn-outline-primary btn-lg w-100 py-3"
+                               aria-label="Register as new patient at Sunrise Clinic">
+                                <i class="fas fa-user-plus me-2" aria-hidden="true"></i>Create New Patient Account
+                            </a>
+                        </div>
+
+                        <!-- Hidden SEO Content for Featured Snippet -->
+                        <div class="visually-hidden" aria-hidden="true">
+                            <h3>Sunrise Clinic Login Information</h3>
+                            <p><strong>Clinic Name:</strong> Sunrise Clinic & Diagnostic Center</p>
+                            <p><strong>Location:</strong> TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna, Bangladesh</p>
+                            <p><strong>Emergency Contact:</strong> +880 1703 452323 (24/7)</p>
+                            <p><strong>Services:</strong> Diagnostic Tests, Radiology, Pathology, Emergency Care, OPD</p>
+                            <p><strong>Login Benefits:</strong> Appointment Booking, Report Access, Medical Records</p>
+                        </div>
+                    </form>
+
+                    <!-- Quick Links for SEO -->
+                    <div class="mt-4 pt-4 border-top text-center">
+                        <p class="small text-muted mb-2">Quick Access Links:</p>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <a href="/" class="btn btn-sm btn-outline-secondary" aria-label="Sunrise Clinic Home">Home</a>
+                            <a href="/Home/Contact" class="btn btn-sm btn-outline-secondary" aria-label="Contact Sunrise Clinic">Contact</a>
+                            <a href="/Home/Diagnostic" class="btn btn-sm btn-outline-secondary" aria-label="Diagnostic Services">Services</a>
+                            <a href="/Appointment/Create" class="btn btn-sm btn-outline-secondary" aria-label="Book Appointment">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.sunriseclinicbd.com/"
+            },
+            {
+              "@@type": "ListItem",
+              "position": 2,
+              "name": "Patient Login",
+              "item": "https://www.sunriseclinicbd.com/Account/Login"
+            }
+          ]
+        }
+    </script>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('Password');
+            const icon = this.querySelector('i');
+            const isPassword = passwordInput.type === 'password';
+
+            passwordInput.type = isPassword ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isPassword);
+            icon.classList.toggle('fa-eye-slash', isPassword);
+
+            // SEO Event Tracking
+            console.log('SEO: Password visibility toggled');
+        });
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+
+                        // SEO Event Tracking
+                        console.log('SEO: Login form submitted');
+                    }, false)
+                })
+        })()
+
+        // Clear validation styling on input
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid')) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+
+        // Auto focus on first invalid input
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInvalidInput = document.querySelector('.is-invalid');
+            if (firstInvalidInput) {
+                firstInvalidInput.focus();
+            }
+
+            // Scroll to login form
+            const scrolltomain = document.getElementById('loginForm');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO: Track login page views
+            console.log('SEO: Sunrise Clinic Login Page Loaded');
+            console.log('SEO: Featured Snippet Content Ready');
+
+            // Track link clicks for analytics
+            document.querySelectorAll('a[href]').forEach(link => {
+                link.addEventListener('click', function() {
+                    const linkText = this.textContent.trim();
+                    const linkHref = this.href;
+                    console.log('SEO: Link clicked -', linkText, '->', linkHref);
+                });
+            });
+
+            // Track form interactions
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', function() {
+                    console.log('SEO: Input field focused -', this.name || this.id);
+                });
+            });
+        });
+
+        // Additional SEO Features
+        window.addEventListener('load', function() {
+            // Add structured data for featured snippet eligibility
+            const structuredData = {
+                "@@context": "https://schema.org",
+                "@@type": "WebPage",
+                "name": "Sunrise Clinic Patient Login Portal",
+                "description": "Secure patient login for Sunrise Clinic & Diagnostic Center in Pabna",
+                "url": window.location.href,
+                "mainEntity": {
+                    "@@type": "FAQPage",
+                    "name": "Patient Login FAQs"
+                }
+            };
+
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.textContent = JSON.stringify(structuredData);
+            document.head.appendChild(script);
+
+            console.log('SEO: Featured Snippet structured data added');
+        });
+    </script>
+}

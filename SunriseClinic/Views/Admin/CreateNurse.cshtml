@@ -1,0 +1,247 @@
+﻿@model SunriseClinic.Models.NurseRegistrationModel
+
+@{
+    ViewData["Title"] = "Create Nurse Account";
+}
+
+<div class="container py-3" id="createNurse">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-hover shadow-lg border-0">
+                <div class="card-header bg-success text-white py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-nurse fa-2x me-3"></i>
+                        <div>
+                            <h2 class="h4 mb-0">Create Nurse Account</h2>
+                            <p class="mb-0 opacity-75">Add new nurse to the system</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @Html.Raw(TempData["SuccessMessage"])
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="CreateNurse" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="text-success mb-3 border-bottom pb-2">
+                                <i class="fas fa-user-circle me-2"></i>Personal Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control form-control-lg"
+                                           placeholder="Nurse Full Name" required>
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address *</label>
+                                    <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                           placeholder="nurse@sunriseclinic.com" required>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth *</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control form-control-lg"
+                                           max="@DateTime.Now.AddYears(-21).ToString("yyyy-MM-dd")" required>
+                                    <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                                    <div class="form-text">Minimum age: 21 years</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Gender" class="form-label fw-semibold">Gender *</label>
+                                    <select asp-for="Gender" class="form-select form-select-lg" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="+880 1XXX XXX XXX" required>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                                <textarea asp-for="Address" class="form-control form-control-lg"
+                                          rows="2" placeholder="Residential address"></textarea>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="mb-4">
+                            <h5 class="text-success mb-3 border-bottom pb-2">
+                                <i class="fas fa-briefcase-medical me-2"></i>Professional Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Department" class="form-label fw-semibold">Department *</label>
+                                    <select asp-for="Department" class="form-select form-select-lg" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="ICU">ICU</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Gynecology">Gynecology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="General Ward">General Ward</option>
+                                        <option value="OPD">OPD</option>
+                                        <option value="Diagnostic">Diagnostic</option>
+                                    </select>
+                                    <span asp-validation-for="Department" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ShiftTime" class="form-label fw-semibold">Shift Time *</label>
+                                    <select asp-for="ShiftTime" class="form-select form-select-lg" required>
+                                        <option value="">Select Shift</option>
+                                        <option value="Day Shift (8 AM - 4 PM)">Day Shift (8 AM - 4 PM)</option>
+                                        <option value="Evening Shift (4 PM - 12 AM)">Evening Shift (4 PM - 12 AM)</option>
+                                        <option value="Night Shift (12 AM - 8 AM)">Night Shift (12 AM - 8 AM)</option>
+                                        <option value="Morning Shift (6 AM - 2 PM)">Morning Shift (6 AM - 2 PM)</option>
+                                        <option value="Full Time">Full Time</option>
+                                    </select>
+                                    <span asp-validation-for="ShiftTime" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="NurseLicense" class="form-label fw-semibold">Nurse License Number *</label>
+                                    <input asp-for="NurseLicense" class="form-control form-control-lg"
+                                           placeholder="BNMC registration number" required>
+                                    <span asp-validation-for="NurseLicense" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ExperienceYears" class="form-label fw-semibold">Experience (Years)</label>
+                                    <input asp-for="ExperienceYears" type="number" min="0" max="50"
+                                           class="form-control form-control-lg" placeholder="0">
+                                    <span asp-validation-for="ExperienceYears" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="mb-4">
+                            <h5 class="text-success mb-3 border-bottom pb-2">
+                                <i class="fas fa-lock me-2"></i>Account Security
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Password" class="form-label fw-semibold">Password *</label>
+                                    <input asp-for="Password" type="password" class="form-control form-control-lg"
+                                           placeholder="Minimum 6 characters" required>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>Nurse will use this to login
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg"
+                                           placeholder="Re-enter password" required>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes and Submit -->
+                        <div class="mb-4">
+                            <div class="alert alert-info border-0">
+                                <div class="d-flex">
+                                    <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-2">Important Notes</h6>
+                                        <p class="mb-0">
+                                            • Nurse ID will be generated automatically (Starting from 19000)<br>
+                                            • Nurse will receive their ID and credentials<br>
+                                            • License number must be valid and registered<br>
+                                            • All information must be verified before submission
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg py-3">
+                                    <i class="fas fa-user-plus me-2"></i>Create Nurse Account
+                                </button>
+                                <a asp-action="ManageNurses" asp-controller="Admin"
+                                   class="btn btn-outline-success btn-lg py-3">
+                                    <i class="fas fa-list me-2"></i>View All Nurses
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        // Set maximum date for date of birth (minimum age 21)
+        var maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 21);
+        document.getElementById('DateOfBirth').max = maxDate.toISOString().split('T')[0];
+
+                        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('createNurse');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+    </script>
+}

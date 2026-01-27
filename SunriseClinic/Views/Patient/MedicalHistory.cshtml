@@ -1,0 +1,289 @@
+﻿@{
+    ViewData["Title"] = "Medical History";
+    var diseases = ViewBag.Diseases as List<dynamic>;
+    var reports = ViewBag.Reports as List<dynamic>;
+    var appointments = ViewBag.Appointments as List<dynamic>;
+
+    // Initialize with default values
+    decimal? height = null;
+    decimal? weight = null;
+    decimal? bmi = null;
+    string bmiStatus = "";
+    string bmiStatusClass = "";
+
+    // Check if patient exists
+    if (ViewBag.Patient != null)
+    {
+        var patient = ViewBag.Patient as dynamic;
+
+        // Safely get height and weight
+        if (patient != null)
+        {
+            height = patient.Height as decimal?;
+            weight = patient.Weight as decimal?;
+        }
+
+        // Calculate BMI if both height and weight are available
+        if (height.HasValue && height > 0 && weight.HasValue && weight > 0)
+        {
+            decimal heightInMeters = height.Value / 100;
+            bmi = Math.Round(weight.Value / (heightInMeters * heightInMeters), 1);
+
+            if (bmi < 18.5m)
+            {
+                bmiStatus = "Underweight";
+                bmiStatusClass = "bg-warning";
+            }
+            else if (bmi < 25m)
+            {
+                bmiStatus = "Normal";
+                bmiStatusClass = "bg-success";
+            }
+            else if (bmi < 30m)
+            {
+                bmiStatus = "Overweight";
+                bmiStatusClass = "bg-warning";
+            }
+            else
+            {
+                bmiStatus = "Obese";
+                bmiStatusClass = "bg-danger";
+            }
+        }
+    }
+}
+
+<div id="medicalHistory">
+        @await Html.PartialAsync("_MobileDashboardMenu")
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-3">
+            @await Html.PartialAsync("_PatientSidebar")
+        </div>
+
+        <div class="col-lg-9">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="mb-1">
+                        <i class="fas fa-history me-2 text-primary"></i>Medical History
+                    </h3>
+                    <p class="text-muted mb-0">Complete record of your medical history</p>
+                </div>
+            </div>
+
+            <!-- BMI Section -->
+            @if (bmi.HasValue || (height.HasValue && weight.HasValue))
+            {
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-weight-scale me-2 text-info"></i>Your BMI
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (bmi.HasValue)
+                        {
+                            <div class="row text-center">
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-light rounded">
+                                        <i class="fas fa-ruler-vertical fa-2x text-primary mb-2 py-4"></i>
+                                        <h5>@height cm</h5>
+                                        <p class="text-muted mb-0">Height</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-light rounded">
+                                        <i class="fas fa-weight fa-2x text-primary mb-2 py-4"></i>
+                                        <h5>@weight kg</h5>
+                                        <p class="text-muted mb-0">Weight</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 bg-light rounded">
+                                        <i class="fas fa-heartbeat fa-2x text-primary mb-2"></i>
+                                        <h3 class="text-info">@bmi</h3>
+                                        <span class="badge @bmiStatusClass mb-2">@bmiStatus</span>
+                                        <p class="text-muted mb-0">Body Mass Index</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="fas fa-calculator fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">BMI Not Calculated</h6>
+                                <p class="small text-muted mb-0">
+                                    Update your height and weight in
+                                    <a href="/Patient/Profile" class="text-decoration-none">Profile Settings</a>
+                                    to calculate BMI
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Disease History -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-disease me-2 text-danger"></i>Disease History
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (diseases != null && diseases.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Disease</th>
+                                        <th>Diagnosed Date</th>
+                                        <th>Status</th>
+                                        <th>Diagnosed By</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var disease in diseases)
+                                    {
+                                        <tr>
+                                            <td>@disease.DiseaseName</td>
+                                            <td>@disease.DiagnosedDate</td>
+                                            <td>
+                                                <span class="badge @(disease.Status == "Active" ? "bg-danger" : disease.Status == "Recovered" ? "bg-success" : "bg-warning")">
+                                                    @disease.Status
+                                                </span>
+                                            </td>
+                                            <td>@disease.DoctorName</td>
+                                            <td>@disease.Notes</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No disease records found</h6>
+                            <p class="small text-muted">Your disease history will appear here after diagnosis</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent Test Reports -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-medical me-2 text-success"></i>Recent Test Reports
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (reports != null && reports.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Report Name</th>
+                                        <th>Date</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var report in reports.Take(5))
+                                    {
+                                        <tr>
+                                            <td>@report.ReportName</td>
+                                            <td>@report.ReportDate</td>
+                                            <td>@report.Notes</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No test reports available</h6>
+                            <p class="small text-muted">Your test reports will appear here</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Appointment History -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>Appointment History
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (appointments != null && appointments.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Doctor</th>
+                                        <th>Specialization</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in appointments.Take(10))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div>@appointment.AppointmentDate</div>
+                                                <small class="text-muted">@appointment.AppointmentTime</small>
+                                            </td>
+                                            <td>@appointment.DoctorName</td>
+                                            <td>@appointment.Specialization</td>
+                                            <td>@appointment.Reason</td>
+                                            <td>
+                                                <span class="badge @(appointment.Status == "Completed" ? "bg-success" : appointment.Status == "Approved" ? "bg-info" : appointment.Status == "Pending" ? "bg-warning" : "bg-danger")">
+                                                    @appointment.Status
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No appointment history</h6>
+                            <p class="small text-muted">Your appointment history will appear here</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+                // Scroll to Main on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrolltomain = document.getElementById('medicalHistory');
+        if (scrolltomain) {
+            scrolltomain.classList.add('scroll-target');
+            scrolltomain.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+</script>

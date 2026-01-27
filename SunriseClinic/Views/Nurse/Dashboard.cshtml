@@ -1,0 +1,386 @@
+﻿@{
+    ViewData["Title"] = "Nurse Dashboard";
+    var stats = ViewBag.Stats as dynamic;
+    var todaysAppointments = ViewBag.TodaysAppointments as List<dynamic>;
+    var pendingAppointments = ViewBag.PendingAppointments as List<dynamic>;
+    var recentPatients = ViewBag.RecentPatients as List<dynamic>;
+    var nurse = ViewBag.Nurse as dynamic;
+    var userName = Context.Session.GetString("UserName") ?? "Nurse";
+}
+
+@await Html.PartialAsync("_MobileDashboardMenu")
+
+<div class="container-fluid p-0 pt-2" id="nurseDashboard">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            @await Html.PartialAsync("_NurseSidebar")
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Welcome Card -->
+            <div class="card border-0 shadow-sm mb-4 bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="mb-2">Welcome, @userName</h3>
+                            <p class="mb-0 opacity-75">
+                                <i class="fas fa-quote-left me-2"></i>
+                                Manage patient care efficiently with our dashboard tools.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="fas fa-user-nurse fa-4x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <a href="/Nurse/Patients" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100 cursor-pointer">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Total Patients</h6>
+                                        <h3 class="mb-0">@stats?.TotalPatients</h3>
+                                    </div>
+                                    <div class="avatar-sm rounded-circle bg-success text-white p-3">
+                                        <i class="fas fa-users fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a href="/AppointmentManagement/Index?filter=today" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100 cursor-pointer">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Today's Appointments</h6>
+                                        <h3 class="mb-0">@stats?.TodaysAppointments</h3>
+                                    </div>
+                                    <div class="avatar-sm rounded-circle bg-success text-white p-3">
+                                        <i class="fas fa-calendar-day fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <a href="/AppointmentManagement/Index?filter=pending" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100 cursor-pointer">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Pending Approvals</h6>
+                                        <!-- Stats থেকে PendingAppointments নিন -->
+                                        <h3 class="mb-0">@stats?.PendingAppointments</h3>
+                                    </div>
+                                    <div class="avatar-sm rounded-circle bg-warning text-white p-3">
+                                        <i class="fas fa-clock fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="text-muted">My Posts</h6>
+                                    <h3 class="mb-0">0</h3>
+                                </div>
+                                <div class="avatar-sm rounded-circle bg-info text-white p-3">
+                                    <i class="fas fa-file-alt fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Today's Schedule - Left Side -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar-day text-success me-2"></i>
+                                    Today's Approved Schedule                                 @if (todaysAppointments != null && todaysAppointments.Any())
+                                    {
+                                        <span>(@todaysAppointments.Count)</span>
+                                    }
+                                </h5>
+                            </div>
+                            @if (todaysAppointments != null && todaysAppointments.Count > 5)
+                            {
+                                <a href="/Nurse/TodaysAllSchedules" class="btn btn-sm btn-outline-success">
+                                    View All Approved <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            }
+                        </div>
+                        <div class="card-body p-0">
+                            @{
+                                var showTodaysAppointments = todaysAppointments?.Take(5).ToList();
+                            }
+
+                            @if (showTodaysAppointments != null && showTodaysAppointments.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var app in showTodaysAppointments)
+                                    {
+                                        <div class="list-group-item border-0 py-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="mb-1">@app.PatientName</h6>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-user-md me-1"></i>@app.DoctorName
+                                                    </small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="fw-semibold">@app.AppointmentTime</div>
+                                                    <span class="badge bg-success">
+                                                        @app.Status
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small><i class="fas fa-stethoscope me-1"></i>@app.Reason</small>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (todaysAppointments.Count > 5)
+                                    {
+                                        <div class="list-group-item border-0 py-3 text-center">
+                                            <a href="/Nurse/TodaysAllSchedules" class="text-decoration-none text-success">
+                                                <i class="fas fa-plus-circle me-1"></i>
+                                                Show @(todaysAppointments.Count - 5) More Approved Appointments
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No approved appointments today</h6>
+                                    <p class="small text-muted">No approved schedules for today</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals - Right Side -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">
+                                <i class="fas fa-clock text-warning me-2"></i>Pending Approvals (@stats?.PendingAppointments)
+                            </h5>
+                        <div class="card-body p-0">
+                            @if (pendingAppointments != null && pendingAppointments.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Patient</th>
+                                                <th>Doctor</th>
+                                                <th>Date & Time</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var app in pendingAppointments)
+                                            {
+                                                <tr onclick="window.location.href='/AppointmentManagement/Index'"
+                                                    style="cursor: pointer;">
+                                                    <td>@app.PatientName</td>
+                                                    <td>@app.DoctorName</td>
+                                                    <td>
+                                                        <div>@app.AppointmentDate</div>
+                                                        <small class="text-muted">@app.AppointmentTime</small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="fas fa-clock me-1"></i>Pending
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No pending approvals</h6>
+                                    <p class="small text-muted">All appointments are processed</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Recent Patients -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-injured text-primary me-2"></i>Recent Patients
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @if (recentPatients != null && recentPatients.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Contact</th>
+                                            <th>Registered</th>
+                                            <th>Quick Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var patient in recentPatients)
+                                        {
+                                            <tr onclick="window.location.href='/Nurse/PatientDetails/@patient.UserId'"
+                                                style="cursor: pointer;">
+                                                <td>
+                                                    <div class="fw-semibold">@patient.FullName</div>
+                                                    <small class="text-muted">@patient.Email</small>
+                                                </td>
+                                                <td>@patient.PhoneNumber</td>
+                                                <td>@patient.CreatedAt</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm" role="group"
+                                                         onclick="event.stopPropagation()">
+                                                        <a href="/Nurse/PatientDetails/@patient.UserId"
+                                                           class="btn btn-outline-info"
+                                                           title="View Details">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="/Nurse/UploadPrescription?patientId=@patient.UserId"
+                                                           class="btn btn-outline-success"
+                                                           title="Upload Prescription">
+                                                            <i class="fas fa-prescription"></i>
+                                                        </a>
+                                                        <a href="/Nurse/UploadTestReport?patientId=@patient.UserId"
+                                                           class="btn btn-outline-warning"
+                                                           title="Upload Test Report">
+                                                            <i class="fas fa-file-medical"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-white text-center py-3">
+                                <a href="/Nurse/Patients" class="text-decoration-none">
+                                    View All Patients <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">No recent patients</h6>
+                                <p class="small text-muted">Patient list will appear here</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <style>
+                    tr:hover {
+                        background-color: #f8f9fa !important;
+                    }
+
+                    .btn-group .btn {
+                        border-radius: 4px !important;
+                        margin: 0 2px;
+                    }
+                </style>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateStatus(appointmentId, status) {
+        if(confirm('Are you sure?')) {
+            fetch('/Nurse/UpdateAppointmentStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ appointmentId, status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+    }
+
+                    // Scroll to Main on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                const scrolltomain = document.getElementById('nurseDashboard');
+                if (scrolltomain) {
+                    scrolltomain.classList.add('scroll-target');
+                    scrolltomain.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+</script>
+
+<style>
+    .avatar-sm {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+
+        .list-group-item:first-child {
+            border-top: none;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+</style>

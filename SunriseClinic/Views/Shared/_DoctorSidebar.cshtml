@@ -1,0 +1,68 @@
+﻿@{
+    var userName = Context.Session.GetString("UserName");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var displayId = Context.Session.GetString("DisplayId");
+    var userId = Context.Session.GetString("UserId");
+
+    var doctor = ViewBag.Doctor as dynamic;
+    var profilePicture = doctor?.ProfilePicture ?? "default.jpg";
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="text-center mb-4">
+            <div class="position-relative d-inline-block">
+                <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}")"
+                     class="rounded-circle" width="120" height="120"
+                     alt="Profile Picture"
+                     style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;">
+            </div>
+            <h5 class="mt-3 mb-1">Dr. @userName</h5>
+            <p class="text-muted small">
+                <i class="fas fa-id-card me-1"></i>Doctor ID: @displayId
+            </p>
+        </div>
+
+        <ul class="list-unstyled">
+            <li class="mb-2">
+                <a href="/Doctor/Dashboard" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("Dashboard") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Doctor/MyAppointments" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("MyAppointments") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-calendar-check me-3"></i>Today's Appointments
+                </a>
+            </li>
+            <li class="mb-2">
+                <a href="/Doctor/Profile" class="d-flex align-items-center p-3 rounded text-decoration-none
+                   @(Context.Request.Path.Value.Contains("Profile") ? "bg-primary text-white" : "text-dark")">
+                    <i class="fas fa-user-edit me-3"></i>My Profile
+                </a>
+            </li>
+            <li>
+                <a href="/Account/Logout" class="d-flex align-items-center p-3 rounded text-decoration-none text-dark">
+                    <i class="fas fa-sign-out-alt me-3"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    // Update stats from dashboard data
+    document.addEventListener('DOMContentLoaded', function() {
+        const stats = @Html.Raw(Json.Serialize(ViewBag.Stats));
+        const todaysAppointments = @Html.Raw(Json.Serialize(ViewBag.TodaysAppointments));
+
+        if (stats) {
+            document.getElementById('totalPatients').textContent = stats.totalPatients || 0;
+        }
+        if (todaysAppointments) {
+            document.getElementById('todaysAppointments').textContent = todaysAppointments.length || 0;
+        }
+    });
+</script>

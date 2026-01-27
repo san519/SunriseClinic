@@ -1,0 +1,432 @@
+﻿@* Views/Complaint/Index.cshtml *@
+@{
+    ViewData["Title"] = "Manage Feedbacks";
+    var complaints = ViewBag.Complaints as List<dynamic>;
+}
+
+<div class="container-fluid py-4" id="manageComplaints">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>
+            <i class="fas fa-comment-medical me-2 text-primary"></i>Manage Feedbacks
+        </h3>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary" onclick="filterComplaints('all')">
+                All
+            </button>
+            <button class="btn btn-outline-warning" onclick="filterComplaints('pending')">
+                Pending
+            </button>
+            <button class="btn btn-outline-success" onclick="filterComplaints('resolved')">
+                Resolved
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput"
+                   placeholder="Search by Patient ID (P100000), Name, Email, Phone or Subject...">
+            <button class="btn btn-primary" onclick="searchComplaints()">
+                <i class="fas fa-search"></i> Search
+            </button>
+            <button class="btn btn-outline-secondary" onclick="clearSearch()" id="clearBtn" style="display:none">
+                Clear
+            </button>
+        </div>
+    </div>
+
+    @functions {
+        string GetSubjectBadgeClass(string subject)
+        {
+            return subject switch
+            {
+                "Complaint" => "bg-danger",
+                "Suggestion" => "bg-info",
+                "Appreciation" => "bg-success",
+                "Technical Issue" => "bg-warning",
+                _ => "bg-secondary"
+            };
+        }
+
+        string GetUserTypeBadgeClass(string userType)
+        {
+            return userType switch
+            {
+                "Patient" => "bg-primary",
+                "Doctor" => "bg-success",
+                "Nurse" => "bg-info",
+                "Admin" => "bg-dark",
+                _ => "bg-secondary"
+            };
+        }
+    }
+
+    @if (complaints != null && complaints.Any())
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="complaintsTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Submitted By</th>
+                                <th>Contact</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var complaint in complaints)
+                            {
+                                <tr class="@(complaint.IsResolved ? "" : "table-warning")"
+                                    data-status="@(complaint.IsResolved ? "resolved" : "pending")"
+                                    data-important="@complaint.IsImportant.ToString().ToLower()"
+                                    id="row-@complaint.ComplaintId">
+
+                                    <td>#@complaint.ComplaintId</td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <strong>@complaint.VisitorName</strong>
+                                            <small class="text-muted">
+                                                @if (complaint.IsLoggedInUser)
+                                                {
+                                                    <span class="badge @GetUserTypeBadgeClass(complaint.UserType)">
+                                                        @complaint.UserType
+                                                    </span>
+                                                    <span>@complaint.DisplayId</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Visitor</span>
+                                                }
+                                            </small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @complaint.VisitorEmail<br>
+                                        <small>@complaint.VisitorPhone</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetSubjectBadgeClass(complaint.Subject)">
+                                            @complaint.Subject
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @complaint.ComplaintDate.ToString("dd-MMM-yyyy")<br>
+                                        <small>@complaint.ComplaintDate.ToString("hh:mm tt")</small>
+                                    </td>
+                                    <td>
+                                        @if (complaint.IsResolved)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Resolved
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>Pending
+                                            </span>
+                                        }
+
+                                        @if (complaint.IsImportant)
+                                        {
+                                            <br>
+                                            <span class="badge bg-danger mt-1">
+                                                <i class="fas fa-exclamation-circle me-1"></i>Important
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary"
+                                                    onclick="viewComplaint(@complaint.ComplaintId)"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#complaintModal"
+                                                    title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+
+                                            @if (!complaint.IsResolved)
+                                            {
+                                                <button class="btn btn-outline-success"
+                                                        onclick="resolveComplaint(@complaint.ComplaintId, true)"
+                                                        title="Mark as Resolved">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-outline-warning"
+                                                        onclick="resolveComplaint(@complaint.ComplaintId, false)"
+                                                        title="Re-open">
+                                                    <i class="fas fa-redo"></i>
+                                                </button>
+                                            }
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No complaints found</h5>
+            <p class="text-muted">All feedback submissions will appear here.</p>
+        </div>
+    }
+</div>
+
+<!-- View Complaint Modal -->
+<div class="modal fade" id="complaintModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complaint Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="complaintDetails">
+                <!-- Details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+
+        /* ✅ সব unresolved complaint এর জন্য হলুদ background */
+        #complaintsTable tbody tr[data-status="pending"] {
+            background-color: #fffde7 !important;
+        }
+
+        /* ✅ Resolved complaint গুলোর জন্য সাদা background */
+        #complaintsTable tbody tr[data-status="resolved"] {
+            background-color: white !important;
+        }
+
+        /* ✅ Important complaint এর জন্য extra border বা effect */
+        #complaintsTable tbody tr[data-important="true"] {
+            border-left: 4px solid #ff9800 !important;
+        }
+
+        /* ✅ Hover effect */
+        #complaintsTable tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05) !important;
+        }
+
+        /* ✅ Resolved complaint hover effect */
+        #complaintsTable tbody tr[data-status="resolved"]:hover {
+            background-color: rgba(0, 150, 136, 0.05) !important;
+        }
+
+        .badge {
+            font-size: 0.75em;
+            padding: 4px 8px;
+        }
+
+        .btn-group-sm .btn {
+            padding: 0.25rem 0.5rem;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Search Function
+        function searchComplaints() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            let rows = document.querySelectorAll('#complaintsTable tbody tr');
+            let count = 0;
+
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = '';
+                    count++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('clearBtn').style.display = query ? 'inline-block' : 'none';
+
+            // Show notification
+            if (query) {
+                showNotification(`Found ${count} matching complaint(s)`, count > 0 ? 'success' : 'warning');
+            }
+        }
+
+        // Clear Search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('#complaintsTable tbody tr').forEach(row => {
+                row.style.display = '';
+            });
+            document.getElementById('clearBtn').style.display = 'none';
+        }
+
+        // Enter key support for search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchComplaints();
+        });
+
+        // View complaint details
+        function viewComplaint(id) {
+            fetch(`/Complaint/Details/${id}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('complaintDetails').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('complaintDetails').innerHTML =
+                        '<div class="alert alert-danger">Error loading complaint details</div>';
+                });
+        }
+
+        // Resolve/Re-open complaint
+        function resolveComplaint(id, isResolved) {
+            const action = isResolved ? 'resolve' : 're-open';
+            const notes = prompt(`Add notes (optional) for ${action}:`);
+
+            if (notes === null) return; // User cancelled
+
+            fetch('/Complaint/UpdateStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: new URLSearchParams({
+                    complaintId: id,
+                    isResolved: isResolved,
+                    adminNotes: notes || ''
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.message, data.success ? 'success' : 'danger');
+                if (data.success) {
+                    setTimeout(() => location.reload(), 1500);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to update complaint status', 'danger');
+            });
+        }
+
+        // Toggle important status
+        function toggleImportant(id, isImportant) {
+            const action = isImportant ? "Mark as important?" : "Remove important?";
+
+            if (!confirm(action)) return;
+
+            fetch('/Complaint/ToggleImportant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: new URLSearchParams({
+                    complaintId: id,
+                    isImportant: isImportant
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.message, data.success ? 'success' : 'danger');
+                if (data.success) {
+                    setTimeout(() => location.reload(), 1500);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to update important status', 'danger');
+            });
+        }
+
+        // Filter complaints
+        function filterComplaints(filter) {
+            const rows = document.querySelectorAll('#complaintsTable tbody tr');
+
+            rows.forEach(row => {
+                let show = true;
+
+                switch(filter) {
+                    case 'pending':
+                        show = row.getAttribute('data-status') === 'pending';
+                        break;
+                    case 'resolved':
+                        show = row.getAttribute('data-status') === 'resolved';
+                        break;
+                    case 'important':
+                        show = row.getAttribute('data-important') === 'true';
+                        break;
+                    default:
+                        show = true;
+                }
+
+                row.style.display = show ? '' : 'none';
+            });
+
+            // Update search input if it has value
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.value) {
+                searchComplaints(); // Re-apply search after filter
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = `
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+            `;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            // Add to body
+            document.body.appendChild(notification);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+                        // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('manageComplaints');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

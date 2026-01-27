@@ -1,0 +1,797 @@
+﻿@* Views/Gallery.cshtml *@
+@{
+    ViewData["Title"] = "Photo Gallery - Sunrise Clinic & Diagnostic Center Pabna | Medical Facility Images";
+    ViewData["Description"] = "Gallery of Sunrise Clinic Pabna diagnostic center. View our pathology lab, radiology department, waiting area, medical equipment and clinic facilities photos.";
+    ViewData["Keywords"] = "sunrise clinic gallery, medical lab photos pabna, diagnostic center images, hospital pictures, radiology department photos, pathology lab images";
+    ViewData["Canonical"] = "https://www.sunriseclinicbd.com/Home/Gallery";
+    ViewData["Image"] = "https://www.sunriseclinicbd.com/img/sunrise-clinic.png";
+
+    string domain = "https://www.sunriseclinicbd.com";
+}
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "MedicalClinic",
+      "name": "Sunrise Clinic & Diagnostic Center Gallery",
+      "description": "Photo gallery of medical facilities at Sunrise Clinic Pabna diagnostic center",
+      "url": "@domain/Home/Gallery",
+      "image": [
+        "@domain/img/sunrise-clinic.png",
+        "@domain/img/gallery/waiting-area.webp",
+        "@domain/img/department/pathology.webp",
+        "@domain/images/radiology-room.jpg"
+      ],
+      "photo": {
+        "@@type": "Photograph",
+        "about": "Medical clinic facilities and diagnostic equipment",
+        "creator": {
+          "@@type": "Organization",
+          "name": "Sunrise Clinic & Diagnostic Center"
+        }
+      }
+    }
+</script>
+
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "@domain/"
+        },
+        {
+          "@@type": "ListItem",
+          "position": 2,
+          "name": "Gallery",
+          "item": "@domain/Home/Gallery"
+        }
+      ]
+    }
+</script>
+
+<!-- SEO Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Sunrise Clinic Photography">
+<meta name="geo.region" content="BD-RS">
+<meta name="geo.placename" content="Pabna">
+<meta property="og:type" content="website">
+<meta property="og:url" content="@domain/Home/Gallery">
+<meta property="og:title" content="Sunrise Clinic Pabna Gallery - Medical Facility Photos">
+<meta property="og:description" content="View photos of Sunrise Clinic diagnostic center in Pabna: Pathology lab, radiology, waiting area, medical equipment images.">
+<meta property="og:image" content="@ViewData["Image"]">
+<meta property="og:image:alt" content="Sunrise Clinic Pabna Gallery Photos">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sunrise Clinic Pabna Gallery - Medical Facility Images">
+<meta name="twitter:description" content="Gallery of diagnostic center facilities at Sunrise Clinic Pabna">
+
+<!-- Hero Section -->
+<section class="hero-section-g py-5" id="galleryHero" itemscope itemtype="https://schema.org/MedicalClinic">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4 text-dark" itemprop="name">
+                    Sunrise Clinic Pabna Gallery - Diagnostic Center Facilities Photos
+                </h1>
+                <p class="lead mb-4 text-dark" itemprop="description">
+                    Explore photos of our modern diagnostic facilities, advanced medical equipment, and patient-friendly environment at Sunrise Clinic Pabna
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#clinic-facilities" class="btn btn-primary btn-lg px-4 py-3" aria-label="View clinic facilities photos">
+                        <i class="fas fa-building me-2"></i>Clinic Facilities Photos
+                    </a>
+                    <a href="#diagnostic-lab" class="btn btn-outline-primary btn-lg px-4 py-3" aria-label="View diagnostic lab images">
+                        <i class="fas fa-microscope me-2"></i>Pathology Lab Images
+                    </a>
+                    <a href="#radiology-imaging" class="btn btn-outline-primary btn-lg px-4 py-3" aria-label="View radiology department photos">
+                        <i class="fas fa-x-ray me-2"></i>Radiology Photos
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="hero-image position-relative">
+                    <img src="/img/gallery/waiting-area.webp"
+                         class="img-fluid rounded-4 shadow-lg"
+                         alt="Sunrise Clinic Pabna Main Entrance - Diagnostic Center Waiting Area"
+                         title="Sunrise Clinic Pabna Reception Area"
+                         itemprop="image">
+                    <div class="floating-badge bg-primary text-white p-3 rounded-3 shadow">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-camera fa-2x me-3"></i>
+                            <div>
+                                <small class="d-block">Medical Facility</small>
+                                <strong class="h5 mb-0">50+ Photos</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Clinic Facilities Gallery -->
+<section id="clinic-facilities" class="py-5" itemscope itemtype="https://schema.org/Photograph">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Sunrise Clinic Pabna Facilities Photos</h2>
+            <p class="text-muted">Modern diagnostic center facilities at Sunrise Clinic Pabna</p>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-8">
+                <div class="gallery-item-large rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/sunrise-clinic.webp"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Pabna Main Reception Area - Diagnostic Center Waiting Lounge"
+                         title="Sunrise Clinic Reception Area Pabna"
+                         style="height: 400px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h5 class="text-white fw-bold">Main Reception & Waiting Area Pabna</h5>
+                            <p class="text-white mb-0">Comfortable waiting lounge at Sunrise Clinic diagnostic center</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                            <img src="/img/gallery/waiting-area.png"
+                                 class="img-fluid w-100"
+                                 alt="Waiting Area Sunrise Clinic Pabna - Patient Comfort Zone"
+                                 title="Sunrise Clinic Waiting Area Pabna"
+                                 style="height: 190px; object-fit: cover;">
+                            <div class="gallery-overlay">
+                                <div class="gallery-text">
+                                    <h6 class="text-white fw-bold">Comfortable Waiting Area</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                            <img src="/img/gallery/consultation-room.webp"
+                                 class="img-fluid w-100"
+                                 alt="Doctor Consultation Room Sunrise Clinic Pabna"
+                                 title="Medical Consultation Room at Sunrise Clinic"
+                                 style="height: 190px; object-fit: cover;">
+                            <div class="gallery-overlay">
+                                <div class="gallery-text">
+                                    <h6 class="text-white fw-bold">Doctor Consultation Room</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/gallery/reception.webp"
+                         class="img-fluid w-100"
+                         alt="Reception Desk Sunrise Clinic Pabna - Front Desk"
+                         title="Sunrise Clinic Reception Desk Pabna"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Reception Desk Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/gallery/registration-counter.webp"
+                         class="img-fluid w-100"
+                         alt="Registration Counter Sunrise Clinic Pabna - Patient Registration"
+                         title="Sunrise Clinic Registration Counter"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Registration Counter</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/gallery/billing-counter.webp"
+                         class="img-fluid w-100"
+                         alt="Billing Counter Sunrise Clinic Pabna - Payment Desk"
+                         title="Sunrise Clinic Billing Counter Pabna"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Billing & Payment Counter</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/gallery/report-collection.webp"
+                         class="img-fluid w-100"
+                         alt="Report Collection Desk Sunrise Clinic Pabna - Test Report Collection"
+                         title="Sunrise Clinic Report Collection Pabna"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Report Collection Desk</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Diagnostic Lab Gallery -->
+<section id="diagnostic-lab" class="py-5 bg-light" itemscope itemtype="https://schema.org/MedicalTestPanel">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3" itemprop="name">Pathology Laboratory Photos - Sunrise Clinic Pabna</h2>
+            <p class="text-muted">State-of-the-art pathology lab with automated diagnostic systems in Pabna</p>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="gallery-item-large rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/img/department/pathology.webp"
+                         class="img-fluid w-100"
+                         alt="Pathology Laboratory Sunrise Clinic Pabna - Medical Testing Lab"
+                         title="Sunrise Clinic Pathology Lab Pabna"
+                         style="height: 350px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h5 class="text-white fw-bold">Main Pathology Laboratory Pabna</h5>
+                            <p class="text-white mb-0">Fully automated analyzers for accurate diagnostic results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                            <img src="/img/department/sample-collection.webp"
+                                 class="img-fluid w-100"
+                                 alt="Sample Collection Room Sunrise Clinic Pabna - Blood Test Collection"
+                                 title="Sunrise Clinic Sample Collection Pabna"
+                                 style="height: 170px; object-fit: cover;">
+                            <div class="gallery-overlay">
+                                <div class="gallery-text">
+                                    <h6 class="text-white fw-bold">Sample Collection Room</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                            <img src="/images/biochemistry-analyzer.jpg"
+                                 class="img-fluid w-100"
+                                 alt="Biochemistry Analyzer Sunrise Clinic Pabna - Medical Equipment"
+                                 title="Biochemistry Analyzer at Sunrise Clinic"
+                                 style="height: 170px; object-fit: cover;">
+                            <div class="gallery-overlay">
+                                <div class="gallery-text">
+                                    <h6 class="text-white fw-bold">Biochemistry Analyzer</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/hematology-analyzer.jpg"
+                         class="img-fluid w-100"
+                         alt="Hematology Analyzer Sunrise Clinic Pabna - Blood Test Machine"
+                         title="Hematology Analyzer at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Hematology Analyzer</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/microscope-lab.jpg"
+                         class="img-fluid w-100"
+                         alt="Microscope Laboratory Sunrise Clinic Pabna - Medical Testing"
+                         title="Microscope Lab at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Microscope Laboratory Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/urine-analysis.jpg"
+                         class="img-fluid w-100"
+                         alt="Urine Analysis Section Sunrise Clinic Pabna - Diagnostic Testing"
+                         title="Urine Analysis at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Urine Analysis Section</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/serology-lab.jpg"
+                         class="img-fluid w-100"
+                         alt="Serology Testing Area Sunrise Clinic Pabna - Infection Testing"
+                         title="Serology Lab at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Serology Testing Area</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Radiology & Imaging Gallery -->
+<section id="radiology-imaging" class="py-5" itemscope itemtype="https://schema.org/MedicalTestPanel">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3" itemprop="name">Radiology Department Photos - Sunrise Clinic Pabna</h2>
+            <p class="text-muted" itemprop="description">Advanced digital imaging technology at Sunrise Clinic diagnostic center Pabna</p>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="gallery-item-large rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/radiology-room.jpg"
+                         class="img-fluid w-100"
+                         alt="Radiology Room Sunrise Clinic Pabna - Digital X-Ray Facility"
+                         title="Radiology Department at Sunrise Clinic"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h5 class="text-white fw-bold">Radiology Department Pabna</h5>
+                            <p class="text-white mb-0">Digital X-Ray facility at Sunrise Clinic diagnostic center</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gallery-item-large rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/usg-room.jpg"
+                         class="img-fluid w-100"
+                         alt="Ultrasound Room Sunrise Clinic Pabna - USG Facility"
+                         title="USG Room at Sunrise Clinic Pabna"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h5 class="text-white fw-bold">Ultrasound Room Pabna</h5>
+                            <p class="text-white mb-0">Digital Color Doppler Ultrasound at Sunrise Clinic</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="gallery-item-large rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/ecg-room.jpg"
+                         class="img-fluid w-100"
+                         alt="ECG Room Sunrise Clinic Pabna - Heart Test Facility"
+                         title="ECG Room at Sunrise Clinic Pabna"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h5 class="text-white fw-bold">ECG Room Pabna</h5>
+                            <p class="text-white mb-0">Digital ECG with interpretation at Sunrise Clinic</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/x-ray-machine.jpg"
+                         class="img-fluid w-100"
+                         alt="Digital X-Ray Machine Sunrise Clinic Pabna - Medical Imaging Equipment"
+                         title="X-Ray Machine at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Digital X-Ray Machine Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/usg-machine.jpg"
+                         class="img-fluid w-100"
+                         alt="Ultrasound Machine Sunrise Clinic Pabna - USG Equipment"
+                         title="Ultrasound Machine at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Ultrasound Machine Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/ecg-machine.jpg"
+                         class="img-fluid w-100"
+                         alt="ECG Machine Sunrise Clinic Pabna - Heart Monitor Equipment"
+                         title="ECG Machine at Sunrise Clinic"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">ECG Machine Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="gallery-item rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/radiologist.jpg"
+                         class="img-fluid w-100"
+                         alt="Expert Radiologist Sunrise Clinic Pabna - Medical Specialist"
+                         title="Radiologist at Sunrise Clinic Pabna"
+                         style="height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">
+                            <h6 class="text-white fw-bold">Expert Radiologist Pabna</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Equipment Gallery -->
+<section id="medical-equipment" class="py-5 bg-light" itemscope itemtype="https://schema.org/MedicalDevice">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3" itemprop="name">Advanced Medical Equipment at Sunrise Clinic Pabna</h2>
+            <p class="text-muted">Modern diagnostic technology for accurate medical testing in Pabna</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="equipment-card rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/medical-equipment.jpg"
+                         class="img-fluid w-100"
+                         alt="Automated Biochemistry Analyzer Sunrise Clinic Pabna - Blood Test Equipment"
+                         title="Biochemistry Analyzer at Sunrise Clinic"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="equipment-info p-4 bg-white">
+                        <h5 class="fw-bold mb-2" itemprop="name">Automated Biochemistry Analyzer</h5>
+                        <p class="text-muted mb-0">For accurate blood chemistry tests (₹150-1200) at Sunrise Clinic Pabna</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="equipment-card rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/lab-equipment.jpg"
+                         class="img-fluid w-100"
+                         alt="5-part Hematology Analyzer Sunrise Clinic Pabna - Blood Analysis Machine"
+                         title="Hematology Analyzer at Sunrise Clinic"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="equipment-info p-4 bg-white">
+                        <h5 class="fw-bold mb-2" itemprop="name">5-part Hematology Analyzer</h5>
+                        <p class="text-muted mb-0">Complete blood analysis (₹200-1000) at Sunrise Clinic diagnostic center</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="equipment-card rounded-4 overflow-hidden position-relative shadow">
+                    <img src="/images/digital-equipment.jpg"
+                         class="img-fluid w-100"
+                         alt="Digital Diagnostic Systems Sunrise Clinic Pabna - Medical Imaging Equipment"
+                         title="Digital Diagnostic Equipment at Sunrise Clinic"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="equipment-info p-4 bg-white">
+                        <h5 class="fw-bold mb-2" itemprop="name">Digital Diagnostic Systems</h5>
+                        <p class="text-muted mb-0">Advanced digital imaging technology at Sunrise Clinic Pabna</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Photo Gallery Grid -->
+<section class="py-5" itemscope itemtype="https://schema.org/ImageGallery">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">More Photos of Sunrise Clinic Diagnostic Center Pabna</h2>
+            <p class="text-muted">Additional glimpses of our medical facilities and diagnostic center</p>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-1.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 1 - Pabna Diagnostic Center"
+                         title="Sunrise Clinic Pabna Photo 1"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-2.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 2 - Medical Lab Pabna"
+                         title="Sunrise Clinic Pabna Photo 2"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-3.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 3 - Radiology Department Pabna"
+                         title="Sunrise Clinic Pabna Photo 3"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-4.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 4 - Waiting Area Pabna"
+                         title="Sunrise Clinic Pabna Photo 4"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-5.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 5 - Consultation Room Pabna"
+                         title="Sunrise Clinic Pabna Photo 5"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="gallery-thumb rounded-3 overflow-hidden shadow-sm">
+                    <img src="/images/gallery-6.jpg"
+                         class="img-fluid w-100"
+                         alt="Sunrise Clinic Facility Photo 6 - Medical Equipment Pabna"
+                         title="Sunrise Clinic Pabna Photo 6"
+                         style="height: 150px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Virtual Tour CTA -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">Virtual Tour of Sunrise Clinic Pabna Diagnostic Center</h2>
+                <p class="lead mb-0">Explore our modern medical facilities through virtual tour - Sunrise Clinic diagnostic center in Pabna</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/Home/Index#technology-showcase"
+                   class="btn btn-light btn-lg px-4 py-3"
+                   aria-label="Take virtual tour of Sunrise Clinic Pabna"
+                   title="Virtual Tour of Sunrise Clinic Pabna">
+                    <i class="fas fa-video me-2"></i>Virtual Tour
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Schema for Gallery Page -->
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@@type": "Question",
+          "name": "Can I visit Sunrise Clinic Pabna before booking appointment?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Yes, view our gallery to see Sunrise Clinic facilities. You can also visit our diagnostic center at TB Clinic Gate, Shalgaria, Pabna for a physical tour."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "What diagnostic equipment does Sunrise Clinic Pabna have?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Sunrise Clinic Pabna has Digital Color Doppler Ultrasound, Digital X-Ray, automated biochemistry and hematology analyzers, ECG machines, and advanced pathology lab equipment as shown in our gallery."
+          }
+        },
+        {
+          "@@type": "Question",
+          "name": "Are photos of waiting area available?",
+          "acceptedAnswer": {
+            "@@type": "Answer",
+            "text": "Yes, our gallery includes photos of waiting area, reception, consultation rooms, pathology lab, radiology department, and all medical facilities at Sunrise Clinic Pabna diagnostic center."
+          }
+        }
+      ]
+    }
+</script>
+
+<style>
+    .hero-section-g {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .floating-badge {
+        position: absolute;
+        bottom: -20px;
+        right: 20px;
+        z-index: 10;
+    }
+
+    .gallery-item {
+        transition: transform 0.3s ease;
+    }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+
+    .gallery-text {
+        color: white;
+    }
+
+    .gallery-item-large {
+        transition: transform 0.3s ease;
+    }
+
+        .gallery-item-large:hover {
+            transform: scale(1.02);
+        }
+
+    .equipment-card {
+        transition: transform 0.3s ease;
+    }
+
+        .equipment-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .equipment-info {
+        border-top: 4px solid #007bff;
+    }
+
+    .gallery-thumb {
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+        .gallery-thumb:hover {
+            transform: scale(1.05);
+        }
+
+    /* Section spacing */
+    section {
+        padding: 80px 0;
+    }
+
+        section.bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        section {
+            padding: 60px 0;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+
+        .btn-lg {
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+
+        .floating-badge {
+            position: relative;
+            bottom: 0;
+            right: 0;
+            margin: 20px auto;
+            display: inline-block;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        section {
+            padding: 40px 0;
+        }
+
+        .display-4 {
+            font-size: 2rem;
+        }
+
+        .lead {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Scroll to main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('galleryHero');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // SEO tracking for gallery views
+            console.log('SEO: Sunrise Clinic Pabna Gallery page loaded');
+
+            // Track gallery section views
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                            console.log('SEO: Gallery section viewed:', targetId);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,288 @@
+﻿@model SunriseClinic.Models.DoctorRegistrationModel
+
+@{
+    ViewData["Title"] = "Create Doctor Account";
+}
+
+<div class="container py-3" id="createDoctor">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-hover shadow-lg border-0">
+                <div class="card-header bg-primary text-white py-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-md fa-2x me-3"></i>
+                        <div>
+                            <h2 class="h4 mb-0">Create Doctor Account</h2>
+                            <p class="mb-0 opacity-75">Add new doctor to the system</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @Html.Raw(TempData["SuccessMessage"])
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    <form asp-action="CreateDoctor" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-user-circle me-2"></i>Personal Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control form-control-lg"
+                                           placeholder="Dr. Full Name" required>
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address *</label>
+                                    <input asp-for="Email" type="email" class="form-control form-control-lg"
+                                           placeholder="doctor@sunriseclinic.com" required>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth *</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control form-control-lg"
+                                           max="@DateTime.Now.AddYears(-25).ToString("yyyy-MM-dd")" required>
+                                    <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                                    <div class="form-text">Minimum age: 25 years</div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="Gender" class="form-label fw-semibold">Gender *</label>
+                                    <select asp-for="Gender" class="form-select form-select-lg" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="+880 1XXX XXX XXX" required>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                                <textarea asp-for="Address" class="form-control form-control-lg"
+                                          rows="2" placeholder="Residential address"></textarea>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-briefcase-medical me-2"></i>Professional Information
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Specialization" class="form-label fw-semibold">Specialization *</label>
+                                    <select asp-for="Specialization" class="form-select form-select-lg" required>
+                                        <option value="">Select Specialization</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Gynecology">Gynecology</option>
+                                        <option value="Dermatology">Dermatology</option>
+                                        <option value="Psychiatry">Psychiatry</option>
+                                        <option value="General Medicine">General Medicine</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="ENT">ENT (Ear, Nose, Throat)</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="Dentistry">Dentistry</option>
+                                    </select>
+                                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Qualification" class="form-label fw-semibold">Qualification *</label>
+                                    <input asp-for="Qualification" class="form-control form-control-lg"
+                                           placeholder="MBBS, MD, FCPS, etc." required>
+                                    <span asp-validation-for="Qualification" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="LicenseNumber" class="form-label fw-semibold">License Number *</label>
+                                    <input asp-for="LicenseNumber" class="form-control form-control-lg"
+                                           placeholder="BMDC registration number" required>
+                                    <span asp-validation-for="LicenseNumber" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ConsultationFee" class="form-label fw-semibold">Consultation Fee (৳) *</label>
+                                    <input asp-for="ConsultationFee" type="number" step="0.01" class="form-control form-control-lg"
+                                           placeholder="500.00" required>
+                                    <span asp-validation-for="ConsultationFee" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="AvailableDays" class="form-label fw-semibold">Available Days *</label>
+                                    <select asp-for="AvailableDays" class="form-select form-select-lg" required>
+                                        <option value="">Select Days</option>
+                                        <option value="Mon-Fri">Monday to Friday</option>
+                                        <option value="Mon-Sat">Monday to Saturday</option>
+                                        <option value="Sun-Thu">Sunday to Thursday</option>
+                                        <option value="Everyday">Everyday</option>
+                                        <option value="Mon,Wed,Fri">Mon, Wed, Fri</option>
+                                        <option value="Tue,Thu,Sat">Tue, Thu, Sat</option>
+                                    </select>
+                                    <span asp-validation-for="AvailableDays" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="AvailableTime" class="form-label fw-semibold">Available Time *</label>
+                                    <select asp-for="AvailableTime" class="form-select form-select-lg" required>
+                                        <option value="">Select Time</option>
+                                        <option value="9:00 AM - 5:00 PM">9:00 AM - 5:00 PM</option>
+                                        <option value="10:00 AM - 6:00 PM">10:00 AM - 6:00 PM</option>
+                                        <option value="8:00 AM - 4:00 PM">8:00 AM - 4:00 PM</option>
+                                        <option value="9:00 AM - 1:00 PM">9:00 AM - 1:00 PM (Morning)</option>
+                                        <option value="5:00 PM - 9:00 PM">5:00 PM - 9:00 PM (Evening)</option>
+                                    </select>
+                                    <span asp-validation-for="AvailableTime" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ExperienceYears" class="form-label fw-semibold">Experience (Years)</label>
+                                <input asp-for="ExperienceYears" type="number" class="form-control form-control-lg"
+                                       placeholder="Years of experience">
+                                <span asp-validation-for="ExperienceYears" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3 border-bottom pb-2">
+                                <i class="fas fa-lock me-2"></i>Account Security
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Password" class="form-label fw-semibold">Password *</label>
+                                    <input asp-for="Password" type="password" class="form-control form-control-lg"
+                                           placeholder="Minimum 6 characters" required>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>Doctor will use this to login
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg"
+                                           placeholder="Re-enter password" required>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes and Submit -->
+                        <div class="mb-4">
+                            <div class="alert alert-info border-0">
+                                <div class="d-flex">
+                                    <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-2">Important Notes</h6>
+                                        <p class="mb-0">
+                                            • Doctor ID will be generated automatically (Starting from 10000)<br>
+                                            • Doctor will receive their ID and credentials<br>
+                                            • All information must be verified before submission<br>
+                                            • License number must be valid and registered
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg py-3">
+                                    <i class="fas fa-user-plus me-2"></i>Create Doctor Account
+                                </button>
+                                <a asp-action="ManageDoctors" asp-controller="Admin"
+                                   class="btn btn-outline-primary btn-lg py-3">
+                                    <i class="fas fa-list me-2"></i>View All Doctors
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        // Set maximum date for date of birth (minimum age 25)
+        var maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 25);
+        document.getElementById('DateOfBirth').max = maxDate.toISOString().split('T')[0];
+
+
+        // Debugging: Form submit হওয়ার সময় console log করুন
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('Form submitted');
+            console.log('Form data:', {
+                FullName: document.getElementById('FullName').value,
+                Email: document.getElementById('Email').value,
+                Specialization: document.getElementById('Specialization').value
+            });
+        });
+                                // Scroll to Main on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('createDoctor');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

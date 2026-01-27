@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "My Appointments";
+    var appointments = ViewBag.Appointments as List<dynamic>;
+}
+
+<div id="doctorAppointments">
+    @await Html.PartialAsync("_MobileDashboardMenu")
+
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-3">
+                @await Html.PartialAsync("_DoctorSidebar")
+            </div>
+
+            <div class="col-lg-9">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">
+                            <i class="fas fa-calendar-check me-2 text-primary"></i>My Appointments
+                        </h3>
+                        <p class="text-muted mb-0">View all patient appointments</p>
+                    </div>
+                </div>
+
+                <!-- Appointments Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Patient</th>
+                                        <th>Medical Info</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (appointments != null && appointments.Any())
+                                    {
+                                        @foreach (var appointment in appointments)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-semibold">@appointment.AppointmentDate</div>
+                                                    <small class="text-muted">@appointment.AppointmentTime</small>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-semibold">@appointment.PatientName</div>
+                                                </td>
+                                                <td>
+                                                    <div class="small">
+                                                        <span class="text-muted">Blood:</span> @appointment.BloodGroup<br>
+                                                        <span class="text-muted">Ht/Wt:</span> @appointment.Height / @appointment.Weight
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="d-inline-block text-truncate" style="max-width: 200px;">
+                                                        @appointment.Reason
+                                                    </span>
+                                                    @if (!string.IsNullOrEmpty(appointment.Symptoms))
+                                                    {
+                                                        <br>
+                                                        <small class="text-muted">Symptoms: @appointment.Symptoms</small>
+                                                    }
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                            @(appointment.Status == "Approved" ? "bg-success" :
+                                                                                                                appointment.Status == "Pending" ? "bg-warning" :
+                                                                                                                appointment.Status == "Completed" ? "bg-info" :
+                                                                                                                appointment.Status == "Cancelled" ? "bg-danger" : "bg-secondary")">
+                                                @appointment.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="/Doctor/PatientDetails/@appointment.PatientId"
+                                               class="btn btn-sm btn-outline-primary" title="View Patient">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5">
+                                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                                <h6 class="text-muted">No appointments found</h6>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('doctorAppointments');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,343 @@
+﻿@{
+    ViewData["Title"] = "OPD Services | Sunrise Clinic";
+    ViewData["ActivePage"] = "OPD";
+}
+
+<!-- Hero Section -->
+<section class="hero-section-o py-5" id="opd">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 text-dark">
+                <h1 class="display-4 fw-bold mb-4">OPD Services</h1>
+                <p class="lead mb-4">Outpatient Department with Expert Medical Consultation at Sunrise Clinic</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/Appointment/Create" class="btn btn-primary btn-lg px-4 py-3">
+                        <i class="fas fa-calendar-check me-2"></i>Book OPD Appointment
+                    </a>
+                    <a href="#schedule" class="btn btn-outline-primary btn-lg px-4 py-3">
+                        <i class="fas fa-clock me-2"></i>View OPD Schedule
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <p class="mb-1"><i class="fas fa-map-marker-alt text-primary me-2"></i><strong>Location:</strong> TB Clinic Gate, Shalgaria, Pabna Sadar, Pabna</p>
+                    <p class="mb-0"><i class="fas fa-phone text-primary me-2"></i><strong>OPD Registration:</strong> +880 1703 452323</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <img src="/img/opd-services.svg" alt="OPD Services" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OPD Services -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Our OPD Services</h2>
+            <p class="text-muted">Comprehensive outpatient care by experienced specialists</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-primary bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-lungs text-primary fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Chest & TB Diseases</h4>
+                        <p class="text-muted mb-3">Consultation with Dr. Md. Khalilur Rahman for respiratory disorders.</p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Asthma & COPD management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>TB diagnosis & treatment</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Pneumonia & bronchitis care</li>
+                            <li><i class="fas fa-check text-success me-2"></i>30+ years experience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-success bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-female text-success fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Gynecology & Obstetrics</h4>
+                        <p class="text-muted mb-3">Women's healthcare by Dr. Farjana Mahjabin (Ovi).</p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Pregnancy care & delivery</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Gynecological surgeries</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Family planning & infertility</li>
+                            <li><i class="fas fa-check text-success me-2"></i>20+ years surgical experience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-hover h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-container bg-warning bg-opacity-10 mx-auto mb-4">
+                            <i class="fas fa-procedures text-warning fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Laparoscopic Surgery</h4>
+                        <p class="text-muted mb-3">Minimally invasive surgery by Dr. Shamima Khatun Poly.</p>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="fas fa-check text-success me-2"></i>Laparoscopic procedures</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Gynecological surgery</li>
+                            <li><i class="fas fa-check text-success me-2"></i>General surgical consultation</li>
+                            <li><i class="fas fa-check text-success me-2"></i>FCPS qualified surgeon</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OPD Schedule -->
+<section id="schedule" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">OPD Consultation Schedule</h2>
+            <p class="text-muted">Consultation hours for our specialist doctors</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover border shadow-sm">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Department</th>
+                        <th>Doctor</th>
+                        <th>Days</th>
+                        <th>Time</th>
+                        <th>Consultation Fee</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Chest & TB Diseases</td>
+                        <td>Dr. Md. Khalilur Rahman</td>
+                        <td>Sunday - Thursday</td>
+                        <td>9:00 AM - 2:00 PM<br>5:00 PM - 9:00 PM</td>
+                        <td>₹500</td>
+                        <td><a href="/Appointment/Create?doctor=Dr.+Md.+Khalilur+Rahman" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>Gynecology & Obstetrics</td>
+                        <td>Dr. Farjana Mahjabin (Ovi)</td>
+                        <td>Saturday - Wednesday</td>
+                        <td>10:00 AM - 1:00 PM<br>4:00 PM - 8:00 PM</td>
+                        <td>₹600</td>
+                        <td><a href="/Appointment/Create?doctor=Dr.+Farjana+Mahjabin" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>Laparoscopic Surgery</td>
+                        <td>Dr. Shamima Khatun Poly</td>
+                        <td>Monday, Wednesday, Friday</td>
+                        <td>11:00 AM - 3:00 PM<br>6:00 PM - 9:00 PM</td>
+                        <td>₹700</td>
+                        <td><a href="/Appointment/Create?doctor=Dr.+Shamima+Khatun+Poly" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>General Consultation</td>
+                        <td>Available Doctors</td>
+                        <td>Everyday</td>
+                        <td>8:00 AM - 10:00 PM</td>
+                        <td>₹300</td>
+                        <td><a href="/Appointment/Create" class="btn btn-sm btn-primary">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td>Emergency Consultation</td>
+                        <td>24/7 Available</td>
+                        <td>24 Hours</td>
+                        <td>24/7 Emergency</td>
+                        <td>₹800</td>
+                        <td><a href="tel:+8801703452323" class="btn btn-sm btn-danger">Emergency Call</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <div class="d-flex">
+                <i class="fas fa-info-circle fa-2x me-3 text-info"></i>
+                <div>
+                    <h6 class="fw-bold mb-2">Important Information:</h6>
+                    <p class="mb-0">
+                        • Please arrive 15 minutes before your scheduled appointment time<br>
+                        • Bring previous medical records if available<br>
+                        • Consultation fees may include basic examination<br>
+                        • Emergency consultation available 24/7 at higher fee
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Diagnostic Services Available -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Diagnostic Services with OPD</h2>
+            <p class="text-muted">Get same-day diagnostic tests during your OPD visit</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="icon-container bg-danger bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-vial text-danger fa-2x"></i>
+                    </div>
+                    <h6 class="fw-bold">Blood Tests</h6>
+                    <p class="text-muted small">CBC, Diabetes, Lipid Profile, etc.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="icon-container bg-primary bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-x-ray text-primary fa-2x"></i>
+                    </div>
+                    <h6 class="fw-bold">Imaging</h6>
+                    <p class="text-muted small">X-Ray, USG, ECG available</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="icon-container bg-success bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-urine text-success fa-2x"></i>
+                    </div>
+                    <h6 class="fw-bold">Urine Tests</h6>
+                    <p class="text-muted small">Complete urine analysis</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="icon-container bg-warning bg-opacity-10 mx-auto mb-3">
+                        <i class="fas fa-dna text-warning fa-2x"></i>
+                    </div>
+                    <h6 class="fw-bold">Special Tests</h6>
+                    <p class="text-muted small">Hormone, Infection tests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appointment Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold mb-3">Need Medical Consultation?</h2>
+                <p class="lead mb-2">Book your OPD appointment with our expert doctors</p>
+                <p class="mb-0"><i class="fas fa-phone me-2"></i>Call for Appointment: +880 1703 452323</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/Appointment/Create" class="btn btn-light btn-lg px-4 py-3">
+                    <i class="fas fa-calendar-plus me-2"></i>Book OPD Appointment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OPD Process -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">OPD Process</h2>
+            <p class="text-muted">Simple steps for your OPD consultation</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    1
+                </div>
+                <h5 class="fw-bold">Registration</h5>
+                <p class="text-muted small">Register at reception or online</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    2
+                </div>
+                <h5 class="fw-bold">Consultation</h5>
+                <p class="text-muted small">Meet doctor for examination</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    3
+                </div>
+                <h5 class="fw-bold">Diagnosis</h5>
+                <p class="text-muted small">Tests if needed (same-day)</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    4
+                </div>
+                <h5 class="fw-bold">Treatment</h5>
+                <p class="text-muted small">Medicine & follow-up plan</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section-o {
+        background: linear-gradient(135deg, rgba(26, 115, 232, 0.1) 0%, rgba(0, 191, 174, 0.1) 100%);
+        padding: 80px 0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(26, 115, 232, 0.05);
+    }
+
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+        }
+
+    .icon-container {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .step-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .table th {
+        font-weight: 600;
+        background-color: #1a73e8;
+        color: white;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrolltomain = document.getElementById('opd');
+            if (scrolltomain) {
+                scrolltomain.classList.add('scroll-target');
+                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+}
