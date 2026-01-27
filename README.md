@@ -1,50 +1,80 @@
-+# SunriseClinic
-+
-+SunriseClinic is an ASP.NET Core MVC application for managing a clinic or diagnostic center workflow. It provides role-based access for administrators, doctors, nurses, and patients, along with appointment scheduling and related operational pages.
-+
-+## Features
-+
-+- Authentication and role-based dashboards (admin, doctor, nurse, patient).
-+- Appointment creation and management.
-+- Department and doctor listings.
-+- Complaint tracking and patient-facing pages.
-+- XML sitemap endpoint.
-+
-+## Tech Stack
-+
-+- ASP.NET Core MVC (.NET 8)
-+- Entity Framework Core (SQL Server provider)
-+- Cookie authentication + server-side sessions
-+
-+## Getting Started
-+
-+### Prerequisites
-+
-+- .NET SDK 8.0+
-+- SQL Server (local or remote instance)
-+
-+### Setup
-+
-+1. Restore dependencies:
-+   ```bash
-+   dotnet restore SunriseClinic/SunriseClinic.csproj
-+   ```
-+2. Configure the database connection string in `SunriseClinic/appsettings.json` (or use user secrets / environment variables for production).
-+3. Run the application:
-+   ```bash
-+   dotnet run --project SunriseClinic/SunriseClinic.csproj
-+   ```
-+4. Open the app at `https://localhost:5001` or the URL shown in the console output.
-+
-+## Configuration Notes
-+
-+- `ConnectionStrings:DefaultConnection` controls the SQL Server connection.
-+- `EmailSettings` are used for SMTP; do not commit real credentials in production.
-+
-+## Project Structure
-+
-+- `Controllers/` — MVC controllers for authentication, appointments, departments, and role dashboards.
-+- `Data/` — EF Core `DbContext`.
-+- `Models/` — Entity models.
-+- `Views/` — Razor UI views.
-+- `wwwroot/` — Static assets and uploads.
+# 🏥 Sunrise Clinic & Diagnostic Center
+**Professional Hospital & Diagnostic Management System**  
+Built with **ASP.NET Core MVC (.NET 8)**
+
+---
+
+## 📌 Overview
+Sunrise Clinic & Diagnostic Center is a full-featured hospital management system designed for real-world clinics and diagnostic centers.  
+The system provides secure role-based dashboards for Admin, Doctor, Nurse, and Patient.
+
+Suitable for:
+- Clinics & diagnostic centers
+- Small to mid-size hospitals
+- Client projects (Upwork / Fiverr / Agency)
+
+---
+
+## ✨ Key Features
+
+### 🔐 Authentication & Roles
+- Secure login system
+- Role-based authorization
+- Separate dashboards for Admin, Doctor, Nurse, and Patient
+
+### 🧑‍💼 Admin Panel
+- Manage doctors, nurses, and patients
+- Control user accounts
+- Monitor appointments
+
+### 👨‍⚕️ Doctor Panel
+- Daily appointment list
+- Assigned patient access
+- Schedule management
+
+### 👩‍⚕️ Nurse Panel
+- Patient records
+- Diagnostic report upload
+- Prescription upload
+
+### 🧑 Patient Panel
+- Appointment booking
+- Appointment status tracking
+- Complaint submission
+
+### 🌐 Public Website
+- Hospital & department information
+- Doctor listing
+- Contact & complaint forms
+- XML Sitemap support
+
+---
+
+## 🖼️ Screenshots
+Upload screenshots to /wwwroot/screenshots/ and replace the links.
+
+---
+
+## 🧾 Environment Variables
+
+| Variable | Description |
+|--------|-------------|
+| ConnectionStrings__DefaultConnection | SQL Server connection |
+| EmailSettings__SmtpServer | SMTP server |
+| EmailSettings__Port | SMTP port |
+| EmailSettings__SenderEmail | Sender email |
+| EmailSettings__SenderPassword | App password |
+| ASPNETCORE_ENVIRONMENT | Environment |
+
+---
+
+## 🧰 Technology Stack
+- ASP.NET Core MVC (.NET 8)
+- SQL Server
+- Entity Framework Core
+- Razor Views, Bootstrap
+
+---
+
+## 👨‍💻 Author
+**MD Nadim Mostaq Eman**
