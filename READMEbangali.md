@@ -4,25 +4,47 @@ ASP.NET Core MVC (.NET 8)
 
 ---
 
-## 📌 পরিচিতি
-Sunrise Clinic & Diagnostic Center একটি আধুনিক হাসপাতাল ও ডায়াগনস্টিক ম্যানেজমেন্ট সিস্টেম।
+## 📌 প্রজেক্ট পরিচিতি
+Sunrise Clinic & Diagnostic Center একটি আধুনিক হাসপাতাল ও ডায়াগনস্টিক ম্যানেজমেন্ট সিস্টেম,
+যাতে Admin, Doctor, Nurse ও Patient এর জন্য আলাদা ড্যাশবোর্ড রয়েছে।
 
 ---
 
-## ✨ ফিচারসমূহ
-- নিরাপদ লগইন সিস্টেম
-- Admin, Doctor, Nurse, Patient প্যানেল
+## ✨ প্রধান ফিচারসমূহ
+- রোল বেইজড লগইন সিস্টেম
 - অ্যাপয়েন্টমেন্ট ম্যানেজমেন্ট
 - রিপোর্ট ও প্রেসক্রিপশন আপলোড
-- পাবলিক ওয়েবসাইট
+- রোগীর অভিযোগ ব্যবস্থাপনা
+- পাবলিক হাসপাতাল ওয়েবসাইট
+
+---
+
+## 🖼️ প্রজেক্ট স্ক্রিনশট
+
+> `wwwroot/screenshots/` ফোল্ডারে নিচের নাম অনুযায়ী স্ক্রিনশট আপলোড করুন
+
+### লগইন পেজ
+![Login](wwwroot/screenshots/01-login-page.png)
+
+### অ্যাডমিন ড্যাশবোর্ড
+![Admin Dashboard](wwwroot/screenshots/02-admin-dashboard.png)
+
+### ডাক্তার ড্যাশবোর্ড
+![Doctor Dashboard](wwwroot/screenshots/04-doctor-dashboard.png)
+
+### নার্স ড্যাশবোর্ড
+![Nurse Dashboard](wwwroot/screenshots/06-nurse-dashboard.png)
+
+### রোগী ড্যাশবোর্ড
+![Patient Dashboard](wwwroot/screenshots/08-patient-dashboard.png)
 
 ---
 
 ## 🛠 ব্যবহৃত টেকনোলজি
 - ASP.NET Core MVC (.NET 8)
-- SQL Server
+- Microsoft SQL Server
 - Entity Framework Core
-- Bootstrap
+- Bootstrap UI
 
 ---
 
