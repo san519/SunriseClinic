@@ -355,7 +355,7 @@ namespace SunriseClinic.Controllers
             return View();
         }
 
-        // POST: /Account/Login (CORRECTED VERSION)
+        // POST: /Account/Login (UPDATED - CLEAN VERSION)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -366,9 +366,9 @@ namespace SunriseClinic.Controllers
                 {
                     using (var connection = new SqlConnection(_connectionString))
                     {
-                        connection.Open();
+                        await connection.OpenAsync();
 
-                        // Extract UserId from Display ID if it's a Patient/Doctor/Admin/Nurse ID
+                        // Extract UserId from Display ID
                         int? extractedUserId = null;
                         string input = model.EmailOrUsername.Trim();
 
@@ -381,7 +381,6 @@ namespace SunriseClinic.Controllers
 
                             if (input.StartsWith("P") && int.TryParse(numbers, out int patientDisplayId))
                             {
-                                // P100001 format থেকে UserId বের করবো
                                 extractedUserId = patientDisplayId - 99000;
                                 if (extractedUserId <= 0) extractedUserId = null;
                             }
@@ -401,22 +400,14 @@ namespace SunriseClinic.Controllers
                             }
                         }
 
-                        // FIXED QUERY - Use VIEW for Display ID calculation
+                        // Query to get user
                         string query = @"
-                    SELECT u.UserId, u.Email, u.PasswordHash, u.FullName, u.UserType, u.Username,
-                           u.ProfilePicture, -- ✅ প্রোফাইল পিকচার যোগ করুন
-                           CASE 
-                               WHEN u.UserType = 'Patient' THEN 'P' + CAST((u.UserId + 99000) AS VARCHAR(10))
-                               WHEN u.UserType = 'Doctor' THEN 'D' + CAST((u.UserId + 9000) AS VARCHAR(10))
-                               WHEN u.UserType = 'Nurse' THEN 'N' + CAST((u.UserId + 9000) AS VARCHAR(10))
-                               WHEN u.UserType = 'Admin' THEN 'A' + CAST(u.UserId AS VARCHAR(10))
-                               ELSE CAST(u.UserId AS VARCHAR(20))
-                           END as DisplayId
-                    FROM Users u
-                    WHERE (u.Email = @EmailOrUsername 
-                           OR u.Username = @EmailOrUsername)";
+            SELECT u.UserId, u.Email, u.PasswordHash, u.FullName, u.UserType, u.Username,
+                   ISNULL(u.ProfilePicture, 'default.webp') as ProfilePicture
+            FROM Users u
+            WHERE (u.Email = @EmailOrUsername 
+                   OR u.Username = @EmailOrUsername)";
 
-                        // Add condition for Display ID if extractedUserId is found
                         if (extractedUserId.HasValue)
                         {
                             query += " OR u.UserId = @ExtractedUserId";
@@ -432,55 +423,26 @@ namespace SunriseClinic.Controllers
                             cmd.Parameters.AddWithValue("@ExtractedUserId", extractedUserId.Value);
                         }
 
-                        using (var reader = cmd.ExecuteReader())
+                        using (var reader = await cmd.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            if (await reader.ReadAsync())
                             {
                                 var userId = reader.GetInt32(0);
                                 var email = reader.GetString(1);
-                                var storedHash = reader["PasswordHash"].ToString();
+                                var storedHash = reader.GetString(2);
                                 var fullName = reader.GetString(3);
                                 var userType = reader.GetString(4);
-                                var displayId = reader["DisplayId"].ToString();
+                                var profilePicture = reader.GetString(6);
 
-                                // ✅ প্রোফাইল পিকচার পড়ুন
-                                var profilePicture = reader["ProfilePicture"]?.ToString() ?? "default.jpg";
+                                // Calculate Display ID
+                                string displayId = GenerateDisplayId(userId, userType);
 
+                                // Verify password
                                 var inputHash = HashPassword(model.Password);
 
                                 if (storedHash == inputHash)
                                 {
-                                    // Store in session
-                                    HttpContext.Session.SetString("UserId", userId.ToString());
-                                    HttpContext.Session.SetString("DisplayId", displayId);
-                                    HttpContext.Session.SetString("UserEmail", email);
-                                    HttpContext.Session.SetString("UserName", fullName);
-                                    HttpContext.Session.SetString("UserType", userType);
-                                    HttpContext.Session.SetString("ProfilePicture", profilePicture); // ✅ প্রোফাইল পিকচার সেশন সেট করুন
-
-                                    // ✅ Remember Me এর ভিত্তিতে Session Timeout সেট করুন
-                                    if (model.RememberMe)
-                                    {
-                                        // Remember Me checked হলে 30 দিন
-                                        HttpContext.Session.SetString("LoginTime", DateTime.Now.ToString());
-                                        HttpContext.Session.SetString("RememberMe", "true");
-                                        HttpContext.Session.SetString("LastActivity", DateTime.Now.ToString());
-
-                                        // Session 30 দিনের জন্য
-                                        HttpContext.Session.SetInt32("RememberMeDays", 30);
-                                    }
-                                    else
-                                    {
-                                        // Remember Me না checked হলে 24 ঘণ্টা
-                                        HttpContext.Session.SetString("LoginTime", DateTime.Now.ToString());
-                                        HttpContext.Session.Remove("RememberMe");
-                                        HttpContext.Session.SetString("LastActivity", DateTime.Now.ToString());
-
-                                        // Session 24 ঘণ্টার জন্য
-                                        HttpContext.Session.SetInt32("RememberMeDays", 1);
-                                    }
-
-                                    // Create authentication cookie with PROPER settings
+                                    // ✅ STEP 1: Create Claims
                                     var claims = new List<Claim>
                             {
                                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
@@ -488,78 +450,87 @@ namespace SunriseClinic.Controllers
                                 new Claim(ClaimTypes.Name, fullName),
                                 new Claim(ClaimTypes.Role, userType),
                                 new Claim("DisplayId", displayId),
-                                new Claim("RememberMe", model.RememberMe ? "true" : "false"),
-                                new Claim("ProfilePicture", profilePicture)
+                                new Claim("ProfilePicture", profilePicture),
+                                new Claim("UserType", userType)
                             };
+
+                                    // ✅ STEP 2: Add RememberMe claim
+                                    if (model.RememberMe)
+                                    {
+                                        claims.Add(new Claim("RememberMe", "true"));
+                                    }
+                                    else
+                                    {
+                                        claims.Add(new Claim("RememberMe", "false"));
+                                    }
 
                                     var identity = new ClaimsIdentity(claims,
                                         CookieAuthenticationDefaults.AuthenticationScheme);
                                     var principal = new ClaimsPrincipal(identity);
 
-                                    // ✅ Remember Me এর ভিত্তিতে Cookie Expiry সেট করুন
+                                    // ✅ STEP 3: Set Authentication Properties
                                     var authProperties = new AuthenticationProperties
                                     {
-                                        IsPersistent = model.RememberMe, // ✅ Remember Me checkbox এর মান
-                                        ExpiresUtc = model.RememberMe ?
-                                            DateTimeOffset.UtcNow.AddDays(30) : // ✅ 30 দিন Remember Me হলে
-                                            DateTimeOffset.UtcNow.AddHours(24),  // ✅ 24 ঘণ্টা (default)
-                                        AllowRefresh = true,
+                                        IsPersistent = true,
                                         IssuedUtc = DateTimeOffset.UtcNow
                                     };
 
-                                    // ✅ Cookie options সেট করুন
-                                    authProperties.Parameters.Add("CookieOptions", new CookieOptions
+                                    // ✅ STEP 4: Set Cookie Expiry based on Remember Me
+                                    if (model.RememberMe)
                                     {
-                                        HttpOnly = true,
-                                        Secure = true,
-                                        SameSite = SameSiteMode.Lax,
-                                        MaxAge = model.RememberMe ?
-                                            TimeSpan.FromDays(30) :
-                                            TimeSpan.FromHours(24),
-                                        IsEssential = true
-                                    });
+                                        // Remember Me = 30 দিন
+                                        authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
+                                        authProperties.AllowRefresh = true;
 
+                                        // Database-এ 30 দিনের expiry set করুন
+                                        await SetRememberMeExpiry(userId, 30);
+                                    }
+                                    else
+                                    {
+                                        // No Remember Me = 24 ঘণ্টা
+                                        authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24);
+                                        authProperties.AllowRefresh = false;
+
+                                        // Database-এ 24 ঘণ্টার expiry set করুন
+                                        await SetRememberMeExpiry(userId, 1);
+                                    }
+
+                                    // ✅ STEP 5: Sign In (Create Cookie)
                                     await HttpContext.SignInAsync(
                                         CookieAuthenticationDefaults.AuthenticationScheme,
                                         principal,
                                         authProperties);
 
-                                    // ✅ লগইন সফল হলে ডাটাবেসে লগ আপডেট করুন
-                                    UpdateLastLogin(userId);
+                                    // ✅ STEP 6: Update Database Logs
+                                    await UpdateLastLogin(userId);
+                                    await UpdateActivity(userId);
 
-                                    // Redirect based on user type
+                                    // Database-এ RememberMe flag সেট করুন
+                                    await UpdateRememberMe(userId, model.RememberMe);
+
+                                    // ✅ STEP 7: OPTIONAL - For backward compatibility, set minimal session data
+                                    // (পুরানো কোডের সাথে কম্প্যাটিবিলিটির জন্য)
+                                    HttpContext.Session.SetString("UserId", userId.ToString());
+                                    HttpContext.Session.SetString("UserType", userType);
+                                    HttpContext.Session.SetString("UserName", fullName);
+                                    HttpContext.Session.SetString("ProfilePicture", profilePicture);
+                                    HttpContext.Session.SetString("DisplayId", displayId);
+                                    HttpContext.Session.SetString("UserEmail", email);
+
+                                    // ✅ STEP 8: Redirect based on user type
                                     return RedirectToDashboard(userType);
                                 }
                                 else
                                 {
-                                    // Specific error messages
-                                    if (input.StartsWith("P") || input.StartsWith("A") ||
-                                        input.StartsWith("D") || input.StartsWith("N"))
-                                    {
-                                        ModelState.AddModelError("Password", $"Incorrect password for {model.EmailOrUsername}");
-                                    }
-                                    else
-                                    {
-                                        ModelState.AddModelError("Password", "Incorrect password");
-                                    }
+                                    // Password incorrect
+                                    ModelState.AddModelError("Password", "Incorrect password");
                                 }
                             }
                             else
                             {
                                 // User not found
-                                if (input.Contains("@"))
-                                {
-                                    ModelState.AddModelError("EmailOrUsername", "Email address not found");
-                                }
-                                else if (input.StartsWith("P") || input.StartsWith("A") ||
-                                         input.StartsWith("D") || input.StartsWith("N"))
-                                {
-                                    ModelState.AddModelError("EmailOrUsername", $"No account found with ID: {model.EmailOrUsername}");
-                                }
-                                else
-                                {
-                                    ModelState.AddModelError("EmailOrUsername", "Username not found");
-                                }
+                                ModelState.AddModelError("EmailOrUsername",
+                                    input.Contains("@") ? "Email address not found" : "User not found");
                             }
                         }
                     }
@@ -572,6 +543,36 @@ namespace SunriseClinic.Controllers
             }
 
             return View(model);
+        }
+
+        // ✅ NEW METHOD: Set Remember Me expiry in database
+        private async Task SetRememberMeExpiry(int userId, int days)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query;
+                    if (days == 30)
+                    {
+                        query = "UPDATE Users SET RememberMeExpiry = DATEADD(DAY, 30, GETDATE()) WHERE UserId = @UserId";
+                    }
+                    else
+                    {
+                        query = "UPDATE Users SET RememberMeExpiry = DATEADD(HOUR, 24, GETDATE()) WHERE UserId = @UserId";
+                    }
+
+                    var cmd = new SqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SetRememberMeExpiry error: {ex.Message}");
+            }
         }
 
         // =============================================
@@ -896,30 +897,21 @@ namespace SunriseClinic.Controllers
         // =============================================
 
         // Remember Me ডাটাবেসে সেভ করার method
-        private void UpdateRememberMe(int userId, bool rememberMe)
+        private async Task UpdateRememberMe(int userId, bool rememberMe)
         {
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     var cmd = new SqlCommand(
-                        "UPDATE Users SET RememberMe = @RememberMe, RememberMeExpiry = @Expiry WHERE UserId = @UserId",
+                        "UPDATE Users SET RememberMe = @RememberMe, LastActivity = GETDATE() WHERE UserId = @UserId",
                         connection);
 
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     cmd.Parameters.AddWithValue("@RememberMe", rememberMe);
 
-                    if (rememberMe)
-                    {
-                        cmd.Parameters.AddWithValue("@Expiry", DateTime.Now.AddDays(30));
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Expiry", DateTime.Now.AddHours(24));
-                    }
-
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
@@ -928,61 +920,18 @@ namespace SunriseClinic.Controllers
             }
         }
 
-        // Session expiry চেক করার method
-        private void CheckAndExtendSession()
-        {
-            var userId = HttpContext.Session.GetString("UserId");
-            var rememberMe = HttpContext.Session.GetString("RememberMe");
-
-            if (!string.IsNullOrEmpty(userId) && rememberMe == "true")
-            {
-                // Remember Me enabled হলে session renew করুন
-                var loginTimeStr = HttpContext.Session.GetString("LoginTime");
-
-                if (DateTime.TryParse(loginTimeStr, out DateTime loginTime))
-                {
-                    // 30 দিন পর expire হবে
-                    var expiryTime = loginTime.AddDays(30);
-
-                    if (DateTime.Now < expiryTime)
-                    {
-                        // Session renew করুন
-                        HttpContext.Session.SetString("LastActivity", DateTime.Now.ToString());
-
-                        // Cookie renew করার জন্য
-                        var authProperties = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
-                            AllowRefresh = true
-                        };
-
-                        // Current user পুনরুদ্ধার করুন
-                        var user = HttpContext.User;
-                        if (user.Identity.IsAuthenticated)
-                        {
-                            HttpContext.SignInAsync(
-                                CookieAuthenticationDefaults.AuthenticationScheme,
-                                user,
-                                authProperties).Wait();
-                        }
-                    }
-                }
-            }
-        }
-
-        private void UpdateLastLogin(int userId)
+        private async Task UpdateLastLogin(int userId)
         {
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     var cmd = new SqlCommand(
                         "UPDATE Users SET LastLogin = GETDATE() WHERE UserId = @UserId",
                         connection);
                     cmd.Parameters.AddWithValue("@UserId", userId);
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
@@ -991,18 +940,18 @@ namespace SunriseClinic.Controllers
             }
         }
 
-        private void UpdateActivity(int userId)
+        private async Task UpdateActivity(int userId)
         {
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     var cmd = new SqlCommand(
                         "UPDATE Users SET LastActivity = GETDATE() WHERE UserId = @UserId",
                         connection);
                     cmd.Parameters.AddWithValue("@UserId", userId);
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
@@ -1044,31 +993,47 @@ namespace SunriseClinic.Controllers
             };
         }
 
-        private void AutoLoginPatient(int userId, string email, string fullName, string displayId)
+        private async Task AutoLoginPatient(int userId, string email, string fullName, string displayId)
         {
-            HttpContext.Session.SetString("UserId", userId.ToString());
-            HttpContext.Session.SetString("DisplayId", displayId);
-            HttpContext.Session.SetString("UserEmail", email);
-            HttpContext.Session.SetString("UserName", fullName);
-            HttpContext.Session.SetString("UserType", "Patient");
-
+            // ✅ Claims তৈরি করুন
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Name, fullName),
-                new Claim(ClaimTypes.Role, "Patient")
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.Name, fullName),
+        new Claim(ClaimTypes.Role, "Patient"),
+        new Claim("DisplayId", displayId),
+        new Claim("RememberMe", "false"),
+        new Claim("ProfilePicture", "default.webp"),
+        new Claim("UserType", "Patient")
+    };
 
-            var identity = new ClaimsIdentity(claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                principal, new AuthenticationProperties
-                {
-                    ExpiresUtc = DateTime.UtcNow.AddDays(7)
-                }).Wait();
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                AllowRefresh = false,
+                IssuedUtc = DateTimeOffset.UtcNow,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24) // Registration = 24h
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                authProperties);
+
+            // Database-এ RememberMe সেট করুন
+            await UpdateRememberMe(userId, false);
+            await SetRememberMeExpiry(userId, 1);
+
+            // Session-এ minimal data রাখুন
+            HttpContext.Session.SetString("UserId", userId.ToString());
+            HttpContext.Session.SetString("UserType", "Patient");
+            HttpContext.Session.SetString("UserName", fullName);
+            HttpContext.Session.SetString("DisplayId", displayId);
+            HttpContext.Session.SetString("UserEmail", email);
         }
 
         private IActionResult RedirectToDashboard(string userType)
@@ -1133,36 +1098,21 @@ namespace SunriseClinic.Controllers
         {
             try
             {
-                // ✅ 1. Clear all session data
+                // Clear session data
                 HttpContext.Session.Clear();
 
-                // ✅ 2. Sign out from authentication (CORRECT WAY for .NET 8.0)
+                // Sign out from authentication
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-                // ✅ 3. Clear authentication cookie manually
-                foreach (var cookie in Request.Cookies.Keys)
-                {
-                    if (cookie.Contains("Auth") || cookie.Contains("Session") || cookie.Contains(".AspNetCore."))
-                    {
-                        Response.Cookies.Delete(cookie);
-                    }
-                }
-
-                // ✅ 4. Add a security header
-                Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-                Response.Headers["Pragma"] = "no-cache";
-                Response.Headers["Expires"] = "0";
+                // Clear authentication cookie
+                Response.Cookies.Delete(".AspNetCore.Cookies");
 
                 TempData["SuccessMessage"] = "You have been logged out successfully.";
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
-                // Log error
                 Console.WriteLine($"Logout error: {ex.Message}");
-
-                // Still clear session and redirect
-                HttpContext.Session.Clear();
                 return RedirectToAction("Index", "Home");
             }
         }

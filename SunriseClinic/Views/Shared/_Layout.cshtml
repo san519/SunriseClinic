@@ -374,7 +374,7 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="/" class="footer-link" aria-label="Home page">Home</a></li>
                         <li class="mb-2"><a href="/Home/About" class="footer-link" aria-label="About Sunrise Clinic">About Us</a></li>
-                        <li class="mb-2"><a href="/Doctors" class="footer-link" aria-label="Our Medical Doctors">Our Doctors</a></li>
+                        <li class="mb-2"><a href="/Account/Register" class="footer-link" aria-label="Our Medical Doctors">Create Account</a></li>
                         <li class="mb-2"><a href="/Home/Privacy" class="footer-link" aria-label="Privacy Policy">Privacy Policy</a></li>
                         <li><a href="/Home/Contact" class="footer-link" aria-label="Contact Sunrise Clinic">Contact Us</a></li>
                     </ul>
@@ -585,5 +585,239 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    @{
+        var userType = Context.Session.GetString("UserType");
+    }
+
+    @if (userType != "Admin")
+    {
+        <!-- Mobile Bottom Navigation Menu -->
+        <nav class="mobile-bottom-nav" id="mobileBottomNav">
+            <ul class="mobile-nav-items">
+
+                @if (userType == "Patient")
+                {
+                    <!-- Patient Mobile Menu -->
+                    <li class="mobile-nav-item">
+                        <a href="/Patient/Dashboard" class="mobile-nav-link" title="Dashboard">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="mobile-nav-label">Dashboard</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Patient/Profile" class="mobile-nav-link" title="My Profile">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="mobile-nav-label">Profile</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Appointment/Create" class="mobile-nav-link" title="Book Appointment">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div class="mobile-nav-label">Book</div>
+                            <span class="mobile-nav-badge" id="mobileAppointmentBadge" style="display: none;"></span>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Appointment/MyAppointments" class="mobile-nav-link" title="My Appointments">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="mobile-nav-label">Appointments</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item mobile-nav-more">
+                        <a href="#" class="mobile-nav-link" id="mobileMoreBtn" title="More Options">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                            <div class="mobile-nav-label">More</div>
+                        </a>
+
+                        <!-- Dropdown More Menu -->
+                        <div class="mobile-more-menu" id="mobileMoreMenu">
+                            <a href="/Patient/MedicalHistory" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-file-medical"></i>
+                                </div>
+                                <div class="mobile-more-label">Medical History</div>
+                            </a>
+
+                            <a href="/Patient/Prescriptions" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-prescription"></i>
+                                </div>
+                                <div class="mobile-more-label">Prescriptions</div>
+                            </a>
+
+                            <a href="/Patient/TestReports" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="mobile-more-label">Test Reports</div>
+                                <span class="mobile-nav-badge" id="mobileReportBadge" style="display: none; margin-left: auto;"></span>
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+
+                            <a href="/Account/Logout" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="mobile-more-label">Logout</div>
+                            </a>
+                        </div>
+                    </li>
+                }
+                else if (userType == "Doctor")
+                {
+                    <!-- Doctor Mobile Menu -->
+                    <li class="mobile-nav-item">
+                        <a href="/Doctor/Dashboard" class="mobile-nav-link" title="Dashboard">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="mobile-nav-label">Dashboard</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Doctor/Profile" class="mobile-nav-link" title="My Profile">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="mobile-nav-label">Profile</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Doctor/MyAppointments" class="mobile-nav-link" title="Today's Appointments">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="mobile-nav-label">Appointments</div>
+                            <span class="mobile-nav-badge" id="mobileAppointmentBadge" style="display: none;"></span>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Doctor/MyPatients" class="mobile-nav-link" title="My Patients">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-user-injured"></i>
+                            </div>
+                            <div class="mobile-nav-label">Patients</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item mobile-nav-more">
+                        <a href="#" class="mobile-nav-link" id="mobileMoreBtn" title="More Options">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                            <div class="mobile-nav-label">More</div>
+                        </a>
+
+                        <div class="mobile-more-menu" id="mobileMoreMenu">
+                            <a href="/Doctor/MyPosts" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="mobile-more-label">My Posts</div>
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+
+                            <a href="/Account/Logout" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="mobile-more-label">Logout</div>
+                            </a>
+                        </div>
+                    </li>
+                }
+                else if (userType == "Nurse")
+                {
+                    <!-- Nurse Mobile Menu -->
+                    <li class="mobile-nav-item">
+                        <a href="/Nurse/Dashboard" class="mobile-nav-link" title="Dashboard">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="mobile-nav-label">Dashboard</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Nurse/Profile" class="mobile-nav-link" title="My Profile">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div class="mobile-nav-label">Profile</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/Nurse/Patients" class="mobile-nav-link" title="Manage Patients">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-user-injured"></i>
+                            </div>
+                            <div class="mobile-nav-label">Patients</div>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item">
+                        <a href="/AppointmentManagement/Index" class="mobile-nav-link" title="Appointment Management">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="mobile-nav-label">Appointments</div>
+                            <span class="mobile-nav-badge" id="mobileAppointmentBadge" style="display: none;"></span>
+                        </a>
+                    </li>
+
+                    <li class="mobile-nav-item mobile-nav-more">
+                        <a href="#" class="mobile-nav-link" id="mobileMoreBtn" title="More Options">
+                            <div class="mobile-nav-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                            <div class="mobile-nav-label">More</div>
+                        </a>
+
+                        <div class="mobile-more-menu" id="mobileMoreMenu">
+                            <a href="/Nurse/MyPosts" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="mobile-more-label">My Posts</div>
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+
+                            <a href="/Account/Logout" class="mobile-more-item">
+                                <div class="mobile-more-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="mobile-more-label">Logout</div>
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+    <!-- Add user type data attribute for JavaScript -->
+    <div id="userTypeData" data-user-type="@userType" style="display: none;"></div>
+
 </body>
 </html>

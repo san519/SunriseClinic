@@ -72,5 +72,8 @@ namespace SunriseClinic.Models
 
         [Display(Name = "Experience (Years)")]
         public int ExperienceYears { get; set; }
+
+        [Display(Name = "Department")]
+        public string Department { get; set; }
     }
 }

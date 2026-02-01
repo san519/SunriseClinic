@@ -67,6 +67,13 @@ namespace SunriseClinic.Controllers
             return View();
         }
 
+        public IActionResult SeoCaseStudy()
+        {
+            ViewData["Title"] = "SEO Case Study (Bing-Focused) - MD Nadim Mostaq Eman";
+            ViewData["Description"] = "Bing-focused SEO case study for MakeIn10.com: ranking without backlinks, indexing strategy, and international traffic insights with screenshots.";
+            return View();
+        }
+
         [Route("/Home/DatabaseError")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult DatabaseError()

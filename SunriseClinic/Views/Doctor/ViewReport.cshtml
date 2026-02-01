@@ -1,98 +1,233 @@
-﻿@model SunriseClinic.Models.TestReport
+﻿@{
+    ViewData["Title"] = "View Test Report";
+    var report = Model as dynamic;
+}
+
+@if (report == null)
+{
+    <div class="container py-5">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-file-circle-xmark text-danger fa-5x"></i>
+                </div>
+                <h3 class="fw-bold mb-3">Report Not Found</h3>
+                <p class="text-muted mb-4">The report could not be found or has been deleted.</p>
+                <a href="/Doctor/Dashboard" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    return;
+}
 
 @{
-    ViewData["Title"] = "View Test Report";
+    var fileName = (string)(report.ReportFile ?? "");
+    var fileExt = System.IO.Path.GetExtension(fileName)?.ToLower();
+    var isPdf = fileExt == ".pdf";
+    var isImage = fileExt == ".jpg" || fileExt == ".jpeg" || fileExt == ".png";
+    var fileUrl = !string.IsNullOrEmpty(fileName) ? $"/uploads/reports/{fileName}" : "";
 }
 
 <div id="viewReport">
-    @await Html.PartialAsync("_MobileDashboardMenu")
 
-    <div class="container-fluid py-3">
+    <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-lg-3">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
                 @await Html.PartialAsync("_DoctorSidebar")
             </div>
 
+            <!-- Main Content -->
             <div class="col-lg-9">
-                <!-- Page Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Header -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
                     <div>
-                        <h3 class="mb-1">
-                            <i class="fas fa-file-medical me-2 text-danger"></i>Test Report
-                        </h3>
-                        <p class="text-muted mb-0">View test report details</p>
+                        <nav aria-label="breadcrumb" class="mb-2">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/Doctor/Dashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="/Doctor/PatientDetails/@report.PatientId">Patient</a></li>
+                                <li class="breadcrumb-item active">Report</li>
+                            </ol>
+                        </nav>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-danger bg-opacity-10 p-3 rounded-3">
+                                <i class="fas fa-file-medical text-danger fa-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">Test Report Details</h4>
+                                <p class="text-muted mb-0">ID: #@report.ReportId</p>
+                            </div>
+                        </div>
                     </div>
-                    <a href="/Doctor/PatientDetails/@Model.PatientId" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Patient
-                    </a>
+                    <div>
+                        <a href="/Doctor/PatientDetails/@report.PatientId" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Patient
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Report Details -->
+                <!-- Report Info -->
                 <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Report Name</label>
-                                <p class="form-control-plaintext">@Model.ReportName</p>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <!-- Report Name -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-2">
+                                        <i class="fas fa-file-signature text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Report Name</small>
+                                        <div class="fw-semibold">@report.ReportName</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Report Date</label>
-                                <p class="form-control-plaintext">@Model.ReportDate.ToString("dd-MMM-yyyy")</p>
+
+                            <!-- Patient Info -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                                    <div class="bg-success bg-opacity-10 p-2 rounded-2">
+                                        <i class="fas fa-user-injured text-success"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Patient</small>
+                                        <div class="fw-semibold">@report.PatientName</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                                    <div class="bg-warning bg-opacity-10 p-2 rounded-2">
+                                        <i class="fas fa-calendar text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Report Date</small>
+                                        <div class="fw-semibold">
+                                            @report.ReportDate.ToString("dd MMM yyyy")
+                                            <small class="text-muted d-block">@report.ReportDate.ToString("hh:mm tt")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File Info -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                                    <div class="@(isPdf ? "bg-danger" : isImage ? "bg-success" : "bg-secondary") bg-opacity-10 p-2 rounded-2">
+                                        <i class="fas @(isPdf ? "fa-file-pdf text-danger" : isImage ? "fa-image text-success" : "fa-file text-secondary")"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">File Type</small>
+                                        <div class="fw-semibold">
+                                            @fileExt?.Replace(".", "").ToUpper()
+                                            <span class="badge @(isPdf ? "bg-danger" : isImage ? "bg-success" : "bg-secondary") ms-2">
+                                                @(isPdf ? "PDF" : isImage ? "Image" : "File")
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Patient Name</label>
-                                <p class="form-control-plaintext">@Model.PatientName</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">File Status</label>
-                                <p class="form-control-plaintext">
-                                    @if (!string.IsNullOrEmpty(Model.ReportFile))
-                                    {
-                                        <span class="badge bg-success">Available</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">Not Available</span>
-                                    }
-                                </p>
-                            </div>
-                        </div>
-                        @if (!string.IsNullOrEmpty(Model.Notes))
+
+                        @if (!string.IsNullOrEmpty(report.Notes))
                         {
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Notes</label>
-                                <div class="bg-light p-3 rounded">
-                                    @Model.Notes
+                            <div class="mt-4 pt-3 border-top">
+                                <h6 class="fw-semibold mb-3">
+                                    <i class="fas fa-notes-medical text-muted me-2"></i>Notes
+                                </h6>
+                                <div class="bg-light p-3 rounded-3">
+                                    @report.Notes
                                 </div>
                             </div>
                         }
                     </div>
                 </div>
 
-                <!-- File Preview -->
+                <!-- Preview Section -->
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-0 py-3">
                         <h5 class="mb-0">
-                            <i class="fas fa-file-pdf me-2 text-danger"></i>Report File
+                            <i class="fas fa-eye me-2 text-info"></i>Report Preview
                         </h5>
                     </div>
-                    <div class="card-body p-4 text-center">
-                        @if (!string.IsNullOrEmpty(Model.ReportFile))
+                    <div class="card-body p-4">
+                        @if (!string.IsNullOrEmpty(fileName))
                         {
-                            <div class="mb-4">
-                                <i class="fas fa-file-pdf fa-5x text-danger mb-3"></i>
-                                <h5 class="text-muted mb-3">PDF Report Available</h5>
-                                <a href="/Patient/DownloadReport/@Model.ReportId" class="btn btn-danger btn-lg">
-                                    <i class="fas fa-download me-2"></i>Download Report
-                                </a>
-                            </div>
+                            if (isPdf)
+                            {
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-file-pdf text-danger fa-4x mb-3"></i>
+                                        <h5 class="mb-2">PDF Document</h5>
+                                        <p class="text-muted mb-4">View the report PDF below</p>
+                                    </div>
+
+                                    <div class="border rounded-3 overflow-hidden mb-4">
+                                        <iframe src="@fileUrl"
+                                                class="w-100"
+                                                height="500"
+                                                style="border: none;">
+                                        </iframe>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                        <a href="@fileUrl"
+                                           target="_blank" class="btn btn-danger">
+                                            <i class="fas fa-external-link-alt me-2"></i>Open PDF
+                                        </a>
+                                        <a href="/Doctor/DownloadReport/@report.ReportId"
+                                           class="btn btn-outline-danger">
+                                            <i class="fas fa-download me-2"></i>Download
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            else if (isImage)
+                            {
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <img src="@fileUrl"
+                                             alt="Report"
+                                             class="img-fluid rounded-3 shadow-sm mb-3 report-image"
+                                             style="max-height: 500px; cursor: pointer;"
+                                             onclick="zoomImage(this)"
+                                             id="reportImg">
+                                        <div class="mt-2">
+                                            <small class="text-muted">Click image to zoom</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                        <button class="btn btn-primary" onclick="zoomImage(document.getElementById('reportImg'))">
+                                            <i class="fas fa-search-plus me-2"></i>Zoom In
+                                        </button>
+                                        <a href="/Doctor/DownloadReport/@report.ReportId"
+                                           class="btn btn-outline-primary">
+                                            <i class="fas fa-download me-2"></i>Download
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                                    <h5 class="text-muted mb-3">File Available</h5>
+                                    <a href="/Doctor/DownloadReport/@report.ReportId"
+                                       class="btn btn-secondary">
+                                        <i class="fas fa-download me-2"></i>Download File
+                                    </a>
+                                </div>
+                            }
                         }
                         else
                         {
-                            <div class="text-center py-5">
-                                <i class="fas fa-file-excel fa-5x text-muted mb-4"></i>
+                            <div class="text-center py-4">
+                                <i class="fas fa-file-circle-xmark fa-4x text-muted mb-3"></i>
                                 <h5 class="text-muted mb-3">Report File Not Available</h5>
                                 <p class="text-muted">The report file has not been uploaded yet.</p>
                             </div>
@@ -104,13 +239,39 @@
     </div>
 </div>
 
+<!-- Zoom Modal -->
+<div class="modal fade" id="zoomModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img src="" alt="Report" class="img-fluid" id="zoomedImage">
+            </div>
+            <div class="modal-footer">
+                <a href="/Doctor/DownloadReport/@report.ReportId" class="btn btn-primary">
+                    <i class="fas fa-download me-2"></i>Download
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
+        function zoomImage(img) {
+            const zoomModal = new bootstrap.Modal(document.getElementById('zoomModal'));
+            document.getElementById('zoomedImage').src = img.src;
+            zoomModal.show();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            const scrolltomain = document.getElementById('viewReport');
-            if (scrolltomain) {
-                scrolltomain.classList.add('scroll-target');
-                scrolltomain.scrollIntoView({ behavior: 'smooth' });
+            const target = document.getElementById('viewReport');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
             }
         });
     </script>

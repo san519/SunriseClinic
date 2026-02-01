@@ -14,6 +14,15 @@
     --gold-accent: #FFD700;
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+
 body {
     font-family: 'Montserrat', sans-serif;
     color: var(--dark-text);
@@ -709,7 +718,7 @@ footer {
 
     .vertical-floating-buttons {
         right: 1px;
-        bottom: 30px;
+        bottom: 40px;
         gap: 80px;
     }
 
@@ -765,8 +774,8 @@ footer {
 
     .vertical-floating-buttons {
         right: 1px;
-        bottom: 40px;
-        gap: 150px;
+        bottom: 65px;
+        gap: 130px;
     }
 
     .whatsapp-float {
@@ -831,190 +840,6 @@ footer {
 /* MOBILE DASHBOARD MENU STYLES */
 /* ============================================= */
 
-/* Mobile Menu Toggle Button */
-.mobile-dashboard-toggle {
-    position: static;
-    top: 80px;
-    left: 15px;
-    z-index: 1055;
-    display: none;
-}
-
-    .mobile-dashboard-toggle button {
-        background: white;
-        border: groove;
-        border-radius: 1px;
-        padding: 10px 20px;
-        color: black;
-        font-weight: 600;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-        .mobile-dashboard-toggle button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
-        }
-
-/* Mobile Sidebar Overlay */
-.mobile-dashboard-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1089;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-    .mobile-dashboard-overlay.active {
-        display: block;
-        opacity: 1;
-    }
-
-/* Mobile Sidebar */
-.mobile-dashboard-sidebar {
-    position: fixed;
-    top: 0;
-    left: -280px;
-    width: 280px;
-    height: 100vh;
-    background: white;
-    z-index: 1090;
-    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15);
-    transition: left 0.3s ease;
-    overflow-y: auto;
-    padding-top: 20px;
-}
-
-    .mobile-dashboard-sidebar.open {
-        left: 0;
-    }
-
-.mobile-sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    position: relative;
-}
-
-.mobile-sidebar-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.5rem;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-    .mobile-sidebar-close:hover {
-        background: #f5f5f5;
-        color: #333;
-    }
-
-.mobile-profile-info {
-    padding: 10px 0;
-}
-
-    .mobile-profile-info img {
-        border: 3px solid #e9ecef;
-    }
-
-.mobile-sidebar-content {
-    padding: 20px;
-}
-
-.mobile-sidebar-link {
-    color: #333;
-    transition: all 0.3s ease;
-    margin-bottom: 5px;
-    border-radius: 8px;
-}
-
-    .mobile-sidebar-link:hover,
-    .mobile-sidebar-link.active {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: white;
-    }
-
-    .mobile-sidebar-link i {
-        width: 24px;
-        text-align: center;
-    }
-
-/* Responsive Styles */
-@media (max-width: 992px) {
-    .mobile-dashboard-toggle {
-        display: block;
-    }
-
-    /* Hide desktop sidebar on mobile */
-    .col-lg-3:has(.card) {
-        display: none;
-    }
-
-    /* Make main content full width on mobile */
-    .col-lg-9 {
-        width: 100%;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-}
-
-@media (max-width: 768px) {
-    .mobile-dashboard-sidebar {
-        width: 70%;
-        left: -70%;
-    }
-
-    .mobile-dashboard-toggle {
-        top: 70px;
-    }
-
-        .mobile-dashboard-toggle button {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-}
-
-@media (max-width: 480px) {
-    .mobile-dashboard-sidebar {
-        width: 85%;
-        left: -85%;
-    }
-
-    .mobile-dashboard-toggle {
-        top: 60px;
-        left: 10px;
-    }
-
-        .mobile-dashboard-toggle button {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-    .mobile-sidebar-header {
-        padding: 15px;
-    }
-
-    .mobile-sidebar-content {
-        padding: 15px;
-    }
-}
 
 /* site.css এ যোগ করুন */
 .custom-alert {
@@ -2536,3 +2361,464 @@ footer {
         gap: 10px;
     }
 }
+
+
+/* ============================================= */
+/* MOBILE BOTTOM NAVIGATION MENU (Patient/Nurse/Doctor) */
+/* ============================================= */
+
+/* Main mobile bottom nav container */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1050;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 8px 0 12px;
+    display: none; /* Default hidden, will show via JS */
+}
+
+    .mobile-bottom-nav.show {
+        transform: translateY(0);
+    }
+
+    .mobile-bottom-nav.hide {
+        transform: translateY(100%);
+    }
+
+/* Menu items container */
+.mobile-nav-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0 10px;
+}
+
+/* Individual menu item */
+.mobile-nav-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+/* Menu link */
+.mobile-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 5px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    position: relative;
+    color: #64748b;
+}
+
+/* Menu icon */
+.mobile-nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+/* Menu label */
+.mobile-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+/* Active state */
+.mobile-nav-link.active {
+    color: #1a73e8;
+    background: rgba(26, 115, 232, 0.08);
+}
+
+    .mobile-nav-link.active .mobile-nav-icon {
+        color: #1a73e8;
+        transform: scale(1.1);
+    }
+
+    .mobile-nav-link.active .mobile-nav-label {
+        color: #1a73e8;
+        font-weight: 700;
+    }
+
+/* Hover effect */
+.mobile-nav-link:hover {
+    color: #1a73e8;
+    background: rgba(26, 115, 232, 0.05);
+}
+
+    .mobile-nav-link:hover .mobile-nav-icon {
+        transform: translateY(-2px);
+    }
+
+/* Active indicator dot */
+.mobile-nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #1a73e8;
+    border-radius: 50%;
+    animation: pulseDot 2s infinite;
+}
+
+/* Badge for notifications/counts */
+.mobile-nav-badge {
+    position: absolute;
+    top: -2px;
+    right: 10px;
+    background: #ff4757;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    animation: pulseBadge 2s infinite;
+}
+
+/* More menu dropdown */
+.mobile-nav-more {
+    position: relative;
+}
+
+.mobile-more-menu {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1100;
+    border: 1px solid #e9ecef;
+}
+
+    .mobile-more-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+.mobile-more-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+    .mobile-more-item:hover {
+        background: rgba(26, 115, 232, 0.08);
+        color: #1a73e8;
+    }
+
+.mobile-more-icon {
+    width: 20px;
+    margin-right: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.mobile-more-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Animation for hide/show on scroll */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+@keyframes pulseDot {
+    0%, 100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: translateX(-50%) scale(1.2);
+    }
+}
+
+@keyframes pulseBadge {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Hide PC sidebar on mobile */
+@media (max-width: 991.98px) {
+    /* Hide the desktop sidebar completely */
+    .col-lg-3 .card.border-0.shadow-sm {
+        display: none !important;
+    }
+
+    /* Hide mobile dashboard menu */
+    .mobile-dashboard-toggle,
+    .mobile-dashboard-overlay,
+    .mobile-dashboard-sidebar {
+        display: none !important;
+    }
+
+    /* Show bottom nav only on mobile */
+    .mobile-bottom-nav {
+        display: block;
+    }
+
+    /* Adjust main content padding for bottom nav */
+    .col-lg-9 {
+        padding-bottom: 70px !important;
+    }
+
+    /* Emergency banner adjustment */
+    .emergency-banner {
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    /* Adjust brand header margin */
+    .brand-header {
+        margin-top: 50px;
+    }
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 767.98px) {
+    .mobile-nav-label {
+        font-size: 9px;
+    }
+
+    .mobile-nav-icon {
+        font-size: 16px;
+        width: 22px;
+        height: 22px;
+    }
+
+    .mobile-bottom-nav {
+        padding: 6px 0 10px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .mobile-nav-label {
+        font-size: 8px;
+    }
+
+    .mobile-nav-icon {
+        font-size: 15px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .mobile-nav-link {
+        padding: 6px 3px;
+    }
+}
+
+/* iPhone X and newer notch support */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .mobile-bottom-nav {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+}
+
+/* ============================================= */
+/* ENHANCED MOBILE NAVBAR DROPDOWN FIX */
+/* ============================================= */
+
+/* Ensure navbar has higher z-index than bottom nav */
+.navbar {
+    z-index: 1060 !important;
+    position: fixed !important;
+    top: 40px !important; /* Emergency banner height */
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Make sure dropdown menus have even higher z-index */
+.dropdown-menu {
+    z-index: 1080 !important;
+    position: absolute !important;
+    animation: dropdownSlideDown 0.3s ease !important;
+}
+
+/* Mobile bottom nav z-index */
+.mobile-bottom-nav {
+    z-index: 1050 !important;
+}
+
+/* Ensure navbar dropdowns are above bottom nav on mobile */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        position: relative !important;
+        z-index: 1070 !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    /* Fix for navbar dropdowns opening downwards */
+    .dropdown-menu {
+        position: fixed !important;
+        top: auto !important;
+        left: 15px !important;
+        right: 15px !important;
+        bottom: 70px !important; /* Above bottom nav */
+        width: calc(100% - 30px) !important;
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+        animation: dropdownSlideUp 0.3s ease !important;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15) !important;
+        border-radius: 16px 16px 0 0 !important;
+    }
+
+    /* User dropdown specific fix */
+    #userDropdownContainer .dropdown-menu {
+        bottom: 70px !important;
+        transform-origin: bottom center !important;
+    }
+
+    /* Services dropdown specific fix */
+    #servicesDropdownContainer .dropdown-menu {
+        bottom: 70px !important;
+        transform-origin: bottom center !important;
+    }
+
+    /* Adjust dropdown arrow position */
+    .dropdown-toggle::after {
+        display: inline-block !important;
+    }
+
+    /* Prevent dropdown from opening upwards on mobile */
+    .dropdown-menu.show {
+        transform: translateY(0) !important;
+    }
+}
+
+/* Animation for mobile dropdowns */
+@keyframes dropdownSlideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes dropdownSlideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Enhanced dropdown styling for mobile */
+.dropdown-menu {
+    border: none !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 16px !important;
+    margin-top: 5px !important;
+}
+
+.dropdown-item {
+    padding: 12px 20px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: all 0.2s ease !important;
+    font-weight: 500 !important;
+}
+
+    .dropdown-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background: rgba(26, 115, 232, 0.08) !important;
+        color: #1a73e8 !important;
+        transform: translateX(5px) !important;
+    }
+
+/* Fix for Bootstrap dropdown positioning */
+.dropdown {
+    position: relative !important;
+}
+
+/* Adjust for emergency banner */
+@media (max-width: 768px) {
+    .navbar {
+        top: 35px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        top: 35px !important;
+    }
+
+    .dropdown-menu {
+        bottom: 70px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+    }
+}
+

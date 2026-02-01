@@ -1,7 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "Doctors Profile";
     var nurse = ViewBag.Nurse as dynamic;
-    var profilePicture = ViewBag.ProfilePicture as string ?? "default.jpg";
+    var profilePicture = ViewBag.ProfilePicture as string ?? "default.webp";
     var userName = ViewBag.UserName ?? Context.Session.GetString("UserName");
     var displayId = ViewBag.DisplayId ?? Context.Session.GetString("DisplayId");
     var nurseSidebarStats = ViewBag.NurseSidebarStats as dynamic;
@@ -15,7 +15,6 @@
     var isActive = nurse?.IsActive == true ? "Active" : "Inactive";
 }
 
-@await Html.PartialAsync("_MobileDashboardMenu")
 
 <div class="container-fluid p-0 pt-2" id="nurseProfile">
     <div class="row">
@@ -648,7 +647,7 @@
                 .then(data => {
                     if (data.success) {
                         const img = document.getElementById('profileImage');
-                        img.src = '@Url.Content("~/uploads/profile-pictures/default.jpg")' + '?t=' + new Date().getTime();
+                        img.src = '@Url.Content("~/uploads/profile-pictures/default.webp")' + '?t=' + new Date().getTime();
                         showAlert('success', 'Profile picture removed');
                     }
                 });

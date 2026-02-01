@@ -20,13 +20,9 @@ namespace SunriseClinic.Controllers
         // Check if nurse is logged in
         private bool IsNurseLoggedIn()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            var userType = HttpContext.Session.GetString("UserType");
-            return !string.IsNullOrEmpty(userId) && userType == "Nurse";
+            // ✅ শুধু Cookie-based auth চেক করুন
+            return User?.Identity?.IsAuthenticated == true && User.IsInRole("Nurse");
         }
-
-
-        // NurseController.cs - এই methods গুলো যোগ করুন
 
         // GET: /Nurse/Patients (Search with pagination)
         public IActionResult Patients(string search = "", int page = 1, int pageSize = 10)
@@ -213,7 +209,7 @@ namespace SunriseClinic.Controllers
             // ✅ সেশনেও প্রোফাইল পিকচার সেভ করুন
             SessionExtensions.SetString(HttpContext.Session, "ProfilePicture", nurse.ProfilePicture);
 
-            ViewBag.ProfilePicture = nurse.ProfilePicture ?? "default.jpg";
+            ViewBag.ProfilePicture = nurse.ProfilePicture ?? "default.webp";
             ViewBag.Nurse = nurse;
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
             ViewBag.DisplayId = HttpContext.Session.GetString("DisplayId");
@@ -432,14 +428,14 @@ namespace SunriseClinic.Controllers
                 {
                     connection.Open();
                     var cmd = new SqlCommand(
-                        "UPDATE Users SET ProfilePicture = 'default.jpg' WHERE UserId = @UserId",
+                        "UPDATE Users SET ProfilePicture = 'default.webp' WHERE UserId = @UserId",
                         connection);
                     cmd.Parameters.AddWithValue("@UserId", nurseId);
                     cmd.ExecuteNonQuery();
                 }
 
                 // ✅ Update session - সঠিক ভাবে
-                SessionExtensions.SetString(HttpContext.Session, "ProfilePicture", "default.jpg");
+                SessionExtensions.SetString(HttpContext.Session, "ProfilePicture", "default.wepb");
 
                 return Ok(new
                 {
@@ -878,7 +874,7 @@ namespace SunriseClinic.Controllers
                     ISNULL(u.Address, '') as Address,
                     ISNULL(u.Gender, '') as Gender, 
                     u.DateOfBirth, 
-                    ISNULL(u.ProfilePicture, 'default.jpg') as ProfilePicture,
+                    ISNULL(u.ProfilePicture, 'default.webp') as ProfilePicture,
                     u.CreatedAt,
                     ISNULL(n.Department, '') as Department, 
                     ISNULL(n.ShiftTime, '') as ShiftTime,  
@@ -1163,14 +1159,14 @@ namespace SunriseClinic.Controllers
         }
 
         private dynamic GetPatientDetails(int patientId)
-{
-    try
-    {
-        using (var connection = new SqlConnection(_connectionString))
         {
-            connection.Open();
-            
-            var patientQuery = @"
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var patientQuery = @"
                 SELECT 
                     u.UserId, 
                     ISNULL(u.Username, '') as Username,
@@ -1180,7 +1176,7 @@ namespace SunriseClinic.Controllers
                     ISNULL(u.Gender, '') as Gender, 
                     ISNULL(u.PhoneNumber, '') as PhoneNumber, 
                     ISNULL(u.Address, '') as Address, 
-                    ISNULL(u.ProfilePicture, 'default.jpg') as ProfilePicture, 
+                    ISNULL(u.ProfilePicture, 'default.webp') as ProfilePicture, 
                     u.CreatedAt,
                     ISNULL(u.UserType, 'Patient') as UserType,
                     ISNULL(p.BloodGroup, 'Not set') as BloodGroup, 
@@ -1196,87 +1192,115 @@ namespace SunriseClinic.Controllers
                 AND u.UserType = 'Patient' 
                 AND u.IsActive = 1";
 
-            using (var patientCmd = new SqlCommand(patientQuery, connection))
-            {
-                patientCmd.Parameters.AddWithValue("@PatientId", patientId);
+                    using (var patientCmd = new SqlCommand(patientQuery, connection))
+                    {
+                        patientCmd.Parameters.AddWithValue("@PatientId", patientId);
 
-                using (var reader = patientCmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        // ✅ ALL columns পড়ার আগে NULL check করুন
-                        int userId = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
-                        string username = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                        string email = reader.IsDBNull(2) ? "" : reader.GetString(2);
-                        string fullName = reader.IsDBNull(3) ? "" : reader.GetString(3);
-                        DateTime? dateOfBirth = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4);
-                        string gender = reader.IsDBNull(5) ? "" : reader.GetString(5);
-                        string phoneNumber = reader.IsDBNull(6) ? "" : reader.GetString(6);
-                        string address = reader.IsDBNull(7) ? "" : reader.GetString(7);
-                        string profilePicture = reader.IsDBNull(8) ? "default.jpg" : reader.GetString(8);
-                        DateTime createdAt = reader.IsDBNull(9) ? DateTime.Now : reader.GetDateTime(9);
-                        string userType = reader.IsDBNull(10) ? "Patient" : reader.GetString(10);
-                        string bloodGroup = reader.IsDBNull(11) ? "Not set" : reader.GetString(11);
-                        
-                        // Height, Weight এর জন্য বিশেষ treatment (decimal nullable)
-                        decimal? height = null;
-                        decimal? weight = null;
-                        
-                        if (!reader.IsDBNull(12))
+                        using (var reader = patientCmd.ExecuteReader())
                         {
-                            try { height = reader.GetDecimal(12); }
-                            catch { height = null; }
+                            if (reader.Read())
+                            {
+                                // ✅ ALL columns পড়ার আগে NULL check করুন
+                                int userId = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                                string username = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                                string email = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                                string fullName = reader.IsDBNull(3) ? "" : reader.GetString(3);
+                                DateTime? dateOfBirth = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4);
+                                string gender = reader.IsDBNull(5) ? "" : reader.GetString(5);
+                                string phoneNumber = reader.IsDBNull(6) ? "" : reader.GetString(6);
+                                string address = reader.IsDBNull(7) ? "" : reader.GetString(7);
+                                string profilePicture = reader.IsDBNull(8) ? "default.webp" : reader.GetString(8);
+                                DateTime createdAt = reader.IsDBNull(9) ? DateTime.Now : reader.GetDateTime(9);
+                                string userType = reader.IsDBNull(10) ? "Patient" : reader.GetString(10);
+                                string bloodGroup = reader.IsDBNull(11) ? "Not set" : reader.GetString(11);
+
+                                // Height, Weight এর জন্য বিশেষ treatment (decimal nullable)
+                                decimal? height = null;
+                                decimal? weight = null;
+
+                                if (!reader.IsDBNull(12))
+                                {
+                                    try { height = reader.GetDecimal(12); }
+                                    catch { height = null; }
+                                }
+
+                                if (!reader.IsDBNull(13))
+                                {
+                                    try { weight = reader.GetDecimal(13); }
+                                    catch { weight = null; }
+                                }
+
+                                string emergencyContact = reader.IsDBNull(14) ? "" : reader.GetString(14);
+                                string insuranceInfo = reader.IsDBNull(15) ? "" : reader.GetString(15);
+                                string occupation = reader.IsDBNull(16) ? "" : reader.GetString(16);
+                                string maritalStatus = reader.IsDBNull(17) ? "" : reader.GetString(17);
+
+                                // ✅ BMI calculation
+                                string bmi = "N/A";
+                                if (height.HasValue && weight.HasValue && height.Value > 0)
+                                {
+                                    var heightInM = height.Value / 100;
+                                    bmi = Math.Round(weight.Value / (heightInM * heightInM), 2).ToString();
+                                }
+
+                                // ✅ Age calculation
+                                string age = "N/A";
+                                if (dateOfBirth.HasValue)
+                                {
+                                    age = CalculateAge(dateOfBirth.Value).ToString();
+                                }
+
+                                return new
+                                {
+                                    UserId = userId,
+                                    Username = username,
+                                    Email = email,
+                                    FullName = fullName,
+                                    DateOfBirth = dateOfBirth,
+                                    Gender = gender,
+                                    PhoneNumber = phoneNumber,
+                                    Address = address,
+                                    ProfilePicture = profilePicture,
+                                    CreatedAt = createdAt,
+                                    BloodGroup = bloodGroup,
+                                    Height = height?.ToString("0.0") ?? "Not set",
+                                    Weight = weight?.ToString("0.0") ?? "Not set",
+                                    EmergencyContact = emergencyContact,
+                                    InsuranceInfo = insuranceInfo,
+                                    Occupation = occupation,
+                                    MaritalStatus = maritalStatus,
+                                    DisplayId = GenerateDisplayId(userId, userType),
+                                    BMI = bmi,
+                                    Age = age,
+                                    HeightValue = height,
+                                    WeightValue = weight
+                                };
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Patient not found with ID: {patientId}");
+                                return null;
+                            }
                         }
-                        
-                        if (!reader.IsDBNull(13))
-                        {
-                            try { weight = reader.GetDecimal(13); }
-                            catch { weight = null; }
-                        }
-                        
-                        string emergencyContact = reader.IsDBNull(14) ? "" : reader.GetString(14);
-                        string insuranceInfo = reader.IsDBNull(15) ? "" : reader.GetString(15);
-                        string occupation = reader.IsDBNull(16) ? "" : reader.GetString(16);
-                        string maritalStatus = reader.IsDBNull(17) ? "" : reader.GetString(17);
-                        
-                        return new
-                        {
-                            UserId = userId,
-                            Username = username,
-                            Email = email,
-                            FullName = fullName,
-                            DateOfBirth = dateOfBirth,
-                            Gender = gender,
-                            PhoneNumber = phoneNumber,
-                            Address = address,
-                            ProfilePicture = profilePicture,
-                            CreatedAt = createdAt,
-                            BloodGroup = bloodGroup,
-                            Height = height?.ToString() ?? "",
-                            Weight = weight?.ToString() ?? "",
-                            EmergencyContact = emergencyContact,
-                            InsuranceInfo = insuranceInfo,
-                            Occupation = occupation,
-                            MaritalStatus = maritalStatus,
-                            DisplayId = GenerateDisplayId(userId, userType)
-                        };
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Patient not found with ID: {patientId}");
-                        return null;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ ERROR in GetPatientDetails: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                return null;
+            }
         }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ ERROR in GetPatientDetails: {ex.Message}");
-        Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-        return null;
-    }
-}
+
+        // ✅ Age calculation helper method
+        private int CalculateAge(DateTime birthDate)
+        {
+            var today = DateTime.Today;
+            var age = today.Year - birthDate.Year;
+            if (birthDate.Date > today.AddYears(-age)) age--;
+            return age;
+        }
 
         // এই মেথডটি NurseController ক্লাসের ভিতরে যোগ করুন
         private string GenerateDisplayId(int userId, string userType)

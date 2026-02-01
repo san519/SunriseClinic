@@ -25,7 +25,7 @@ namespace SunriseClinic.Models
         public string AvailableTime { get; set; }
 
         [Display(Name = "Profile Picture")]
-        public string ProfilePicture { get; set; } = "doctor-default.jpg";
+        public string ProfilePicture { get; set; } = "default.jpg";
 
         [Display(Name = "Experience Years")]
         public int ExperienceYears { get; set; }

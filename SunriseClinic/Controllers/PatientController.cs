@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using SunriseClinic.Models;
 using System.Data;
+using System.Security.Claims;
 
 namespace SunriseClinic.Controllers
 {
@@ -19,10 +20,24 @@ namespace SunriseClinic.Controllers
         // Check if user is logged in and is a patient
         private bool IsPatientLoggedIn()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            var userType = HttpContext.Session.GetString("UserType");
-            return !string.IsNullOrEmpty(userId) && userType == "Patient";
+            // ✅ শুধু Cookie-based auth চেক করুন
+            return User?.Identity?.IsAuthenticated == true && User.IsInRole("Patient");
         }
+
+        // Get patient ID from claims
+        private int? GetLoggedPatientId()
+        {
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                var claimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(claimId) && int.TryParse(claimId, out var id))
+                {
+                    return id;
+                }
+            }
+            return null;
+        }
+
 
         // GET: /Patient/Dashboard
         public IActionResult Dashboard()
@@ -47,6 +62,12 @@ namespace SunriseClinic.Controllers
             // Get patient details
             var patient = GetPatientDetails(userId);
             ViewBag.Patient = patient;
+
+            // ✅ Session-এ Profile Picture সেট করুন
+            if (patient != null && !string.IsNullOrEmpty(patient.ProfilePicture))
+            {
+                HttpContext.Session.Set("ProfilePicture", System.Text.Encoding.UTF8.GetBytes(patient.ProfilePicture));
+            }
 
             ViewBag.PatientProfilePicture = GetPatientProfilePicture(userId);
 
@@ -169,6 +190,12 @@ namespace SunriseClinic.Controllers
                 return RedirectToAction("Login", "Account");
 
             var patient = GetPatientDetails(userId);
+
+            // ✅ Session-এ Profile Picture সেট করুন
+            if (patient != null && !string.IsNullOrEmpty(patient.ProfilePicture))
+            {
+                HttpContext.Session.Set("ProfilePicture", System.Text.Encoding.UTF8.GetBytes(patient.ProfilePicture));
+            }
 
             // Pass patient data to view
             ViewBag.Patient = patient;
@@ -360,7 +387,7 @@ namespace SunriseClinic.Controllers
                 Gender = GetPropertyValue(patient, "Gender") ?? "",
                 PhoneNumber = GetPropertyValue(patient, "PhoneNumber") ?? "",
                 Address = GetPropertyValue(patient, "Address") ?? "",
-                ProfilePicture = GetPropertyValue(patient, "ProfilePicture") ?? "default.png",
+                ProfilePicture = GetPropertyValue(patient, "ProfilePicture") ?? "default.webp",
                 BloodGroup = GetPropertyValue(patient, "BloodGroup") ?? "Not set",
                 Height = GetPropertyValue<decimal?>(patient, "Height"),
                 Weight = GetPropertyValue<decimal?>(patient, "Weight"),
@@ -519,10 +546,47 @@ namespace SunriseClinic.Controllers
                     cmd.ExecuteNonQuery();
                 }
 
+                // ✅ Session-এ আপডেট করুন
+                HttpContext.Session.Set("ProfilePicture", System.Text.Encoding.UTF8.GetBytes(uniqueFileName));
+
                 return Json(new { success = true, fileName = uniqueFileName });
             }
 
             return Json(new { success = false, message = "No file uploaded" });
+        }
+
+        // POST: /Patient/RemoveProfilePicture
+        [HttpPost]
+        public IActionResult RemoveProfilePicture()
+        {
+            if (!IsPatientLoggedIn())
+                return Json(new { success = false, message = "Not logged in" });
+
+            var userIdString = HttpContext.Session.GetString("UserId");
+            if (!int.TryParse(userIdString, out int userId))
+                return Json(new { success = false, message = "Invalid session" });
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var cmd = new SqlCommand(
+                        "UPDATE Users SET ProfilePicture = 'default.webp', UpdatedAt = GETDATE() WHERE UserId = @UserId",
+                        connection);
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // ✅ Session-এ আপডেট করুন
+                HttpContext.Session.Set("ProfilePicture", System.Text.Encoding.UTF8.GetBytes("default.webp"));
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         // GET: /Patient/DownloadReport
@@ -553,7 +617,7 @@ namespace SunriseClinic.Controllers
                     if (System.IO.File.Exists(filePath))
                     {
                         var fileBytes = System.IO.File.ReadAllBytes(filePath);
-                        return File(fileBytes, "application/pdf", fileName);
+                        return File(fileBytes, "application/octet-stream", fileName);
                     }
                 }
             }
@@ -585,42 +649,13 @@ namespace SunriseClinic.Controllers
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
                     var result = cmd.ExecuteScalar();
-                    return result?.ToString() ?? "default.jpg";
+                    return result?.ToString() ?? "default.webp";
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error getting profile picture: {ex.Message}");
-                return "default.jpg";
-            }
-        }
-
-        // POST: /Patient/RemoveProfilePicture
-        [HttpPost]
-        public IActionResult RemoveProfilePicture()
-        {
-            if (!IsPatientLoggedIn())
-                return Json(new { success = false, message = "Not logged in" });
-
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-
-            try
-            {
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    var cmd = new SqlCommand(
-                        "UPDATE Users SET ProfilePicture = 'default.jpg', UpdatedAt = GETDATE() WHERE UserId = @UserId",
-                        connection);
-                    cmd.Parameters.AddWithValue("@UserId", userId);
-                    cmd.ExecuteNonQuery();
-                }
-
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
+                return "default.webp";
             }
         }
 
@@ -652,20 +687,19 @@ namespace SunriseClinic.Controllers
             }
         }
 
-        // Update GetPatientDetails method to include new fields
         private dynamic GetPatientDetails(int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var cmd = new SqlCommand(@"
-                    SELECT u.UserId, u.Email, u.FullName, u.DateOfBirth, u.Gender, u.PhoneNumber, 
-                           u.Address, u.ProfilePicture, u.CreatedAt, u.Username,
-                           p.BloodGroup, p.Height, p.Weight, p.EmergencyContact, 
-                           p.InsuranceInfo, p.Occupation, p.MaritalStatus
-                    FROM Users u
-                    LEFT JOIN Patients p ON u.UserId = p.PatientId
-                    WHERE u.UserId = @UserId", connection);
+            SELECT u.UserId, u.Email, u.FullName, u.DateOfBirth, u.Gender, u.PhoneNumber, 
+                   u.Address, u.ProfilePicture, u.CreatedAt, u.Username,
+                   p.BloodGroup, p.Height, p.Weight, p.EmergencyContact, 
+                   p.InsuranceInfo, p.Occupation, p.MaritalStatus
+            FROM Users u
+            LEFT JOIN Patients p ON u.UserId = p.PatientId
+            WHERE u.UserId = @UserId", connection);
                 cmd.Parameters.AddWithValue("@UserId", userId);
 
                 using (var reader = cmd.ExecuteReader())
@@ -681,7 +715,7 @@ namespace SunriseClinic.Controllers
                             Gender = reader.IsDBNull(4) ? "" : reader.GetString(4),
                             PhoneNumber = reader.IsDBNull(5) ? "" : reader.GetString(5),
                             Address = reader.IsDBNull(6) ? "" : reader.GetString(6),
-                            ProfilePicture = reader.IsDBNull(7) ? "default.png" : reader.GetString(7),
+                            ProfilePicture = reader.IsDBNull(7) ? "default.webp" : reader.GetString(7), // ✅ default.webp
                             CreatedAt = reader.GetDateTime(8),
                             Username = reader.GetString(9),
                             BloodGroup = reader.IsDBNull(10) ? "Not set" : reader.GetString(10),
@@ -895,6 +929,7 @@ namespace SunriseClinic.Controllers
             {
                 int totalAppointments = 0;
                 int totalReports = 0;
+                int totalPrescriptions = 0;
                 string? profilePicture = null;
                 DateTime? memberSince = null;
 
@@ -918,6 +953,14 @@ namespace SunriseClinic.Controllers
                     reportCmd.Parameters.AddWithValue("@PatientId", userId);
                     totalReports = (int)reportCmd.ExecuteScalar();
 
+                    // Get total prescriptions count
+                    var prescriptionCmd = new SqlCommand(@"
+                SELECT COUNT(*) 
+                FROM Prescriptions 
+                WHERE PatientId = @PatientId", connection);
+                    prescriptionCmd.Parameters.AddWithValue("@PatientId", userId);
+                    totalPrescriptions = (int)prescriptionCmd.ExecuteScalar();
+
                     // Get profile picture and member since
                     var userCmd = new SqlCommand(@"
                 SELECT ProfilePicture, CreatedAt 
@@ -929,7 +972,7 @@ namespace SunriseClinic.Controllers
                     {
                         if (reader.Read())
                         {
-                            profilePicture = reader["ProfilePicture"]?.ToString() ?? "default.jpg";
+                            profilePicture = reader["ProfilePicture"]?.ToString() ?? "default.webp";
                             memberSince = reader.GetDateTime(reader.GetOrdinal("CreatedAt"));
                         }
                     }
@@ -940,6 +983,7 @@ namespace SunriseClinic.Controllers
                     success = true,
                     totalAppointments = totalAppointments,
                     totalReports = totalReports,
+                    totalPrescriptions = totalPrescriptions,
                     profilePicture = profilePicture,
                     memberSince = memberSince?.ToString("MMM yyyy") ?? DateTime.Now.ToString("MMM yyyy")
                 });

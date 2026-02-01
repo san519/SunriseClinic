@@ -24,9 +24,8 @@ namespace SunriseClinic.Controllers
         // Check if user is logged in as Admin
         private bool IsAdminLoggedIn()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            var userType = HttpContext.Session.GetString("UserType");
-            return !string.IsNullOrEmpty(userId) && userType == "Admin";
+            // ✅ শুধু Cookie-based auth চেক করুন
+            return User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
         }
 
         // GET: /Admin/Dashboard
@@ -93,7 +92,7 @@ namespace SunriseClinic.Controllers
             return View();
         }
 
-        // POST: /Admin/CreateDoctor (COMPLETELY NEW VERSION)
+        // POST: /Admin/CreateDoctor (FIXED VERSION)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateDoctor(DoctorRegistrationModel model)
@@ -171,11 +170,12 @@ namespace SunriseClinic.Controllers
                     Console.WriteLine($"✅ User created with ID: {userId}");
                 }
 
-                // 4. Insert into Doctors table
+                // 4. Insert into Doctors table (FIXED VERSION)
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
 
+                    // ✅ Department যোগ করা হয়েছে
                     string doctorSql = @"
                 INSERT INTO Doctors (
                     DoctorId, 
@@ -185,7 +185,8 @@ namespace SunriseClinic.Controllers
                     ConsultationFee, 
                     AvailableDays, 
                     AvailableTime,
-                    ExperienceYears
+                    ExperienceYears,
+                    Department  -- ✅ এই লাইন যোগ করুন
                 )
                 VALUES (
                     @DoctorId, 
@@ -195,7 +196,8 @@ namespace SunriseClinic.Controllers
                     @ConsultationFee, 
                     @AvailableDays, 
                     @AvailableTime,
-                    @ExperienceYears
+                    @ExperienceYears,
+                    @Department  -- ✅ এই লাইন যোগ করুন
                 )";
 
                     var doctorCmd = new SqlCommand(doctorSql, connection);
@@ -209,8 +211,28 @@ namespace SunriseClinic.Controllers
                     doctorCmd.Parameters.AddWithValue("@AvailableTime", model.AvailableTime);
                     doctorCmd.Parameters.AddWithValue("@ExperienceYears", model.ExperienceYears);
 
+                    // ✅ Department parameter যোগ করুন
+                    if (!string.IsNullOrEmpty(model.Department))
+                    {
+                        doctorCmd.Parameters.AddWithValue("@Department", model.Department);
+                        Console.WriteLine($"Department: {model.Department}");
+                    }
+                    else
+                    {
+                        // যদি Department না দেয়া থাকে, তাহলে Specialization থেকে তৈরি করুন
+                        doctorCmd.Parameters.AddWithValue("@Department", $"{model.Specialization} Department");
+                        Console.WriteLine($"Default Department: {model.Specialization} Department");
+                    }
+
                     int rows = doctorCmd.ExecuteNonQuery();
                     Console.WriteLine($"✅ Doctor record created. Rows affected: {rows}");
+
+                    // ✅ Debug জন্য SQL query প্রিন্ট করুন
+                    Console.WriteLine($"SQL Query: {doctorCmd.CommandText}");
+                    foreach (SqlParameter param in doctorCmd.Parameters)
+                    {
+                        Console.WriteLine($"  {param.ParameterName} = {param.Value}");
+                    }
                 }
 
                 // 5. Generate Display ID
@@ -226,6 +248,7 @@ namespace SunriseClinic.Controllers
                 <p><strong>Name:</strong> {model.FullName}</p>
                 <p><strong>Email:</strong> {model.Email}</p>
                 <p><strong>Specialization:</strong> {model.Specialization}</p>
+                <p><strong>Department:</strong> {model.Department}</p> <!-- ✅ Department দেখানো হয়েছে -->
                 <p><strong>Qualification:</strong> {model.Qualification}</p>
                 <p><strong>Consultation Fee:</strong> ৳{model.ConsultationFee}</p>
             </div>";
@@ -816,9 +839,6 @@ namespace SunriseClinic.Controllers
         }
 
 
-        // POST: /Admin/DeleteUser/{id}
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult DeleteUser(int id)
         {
             if (!IsAdminLoggedIn())
@@ -830,94 +850,136 @@ namespace SunriseClinic.Controllers
                 {
                     connection.Open();
 
-                    // First check user type
-                    var checkCmd = new SqlCommand(
-                        "SELECT UserType FROM Users WHERE UserId = @UserId",
-                        connection);
-                    checkCmd.Parameters.AddWithValue("@UserId", id);
+                    // user info
+                    var infoCmd = new SqlCommand(@"
+                SELECT FullName, UserType, IsActive
+                FROM Users
+                WHERE UserId = @UserId", connection);
 
-                    var userType = checkCmd.ExecuteScalar()?.ToString();
+                    infoCmd.Parameters.AddWithValue("@UserId", id);
 
-                    // Get user details before deleting (for success message)
-                    string displayId = "";
                     string fullName = "";
+                    string userType = "";
+                    bool isActive = true;
 
-                    var userDetailsCmd = new SqlCommand(
-                        "SELECT FullName, UserType FROM Users WHERE UserId = @UserId",
-                        connection);
-                    userDetailsCmd.Parameters.AddWithValue("@UserId", id);
-
-                    using (var reader = userDetailsCmd.ExecuteReader())
+                    using (var r = infoCmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (!r.Read())
                         {
-                            fullName = reader.GetString(0);
-                            userType = reader.GetString(1);
-                            displayId = CalculateDisplayId(id, userType);
+                            TempData["DeleteError"] = "❌ User not found.";
+                            return RedirectToAction("Dashboard");
                         }
+
+                        fullName = r["FullName"]?.ToString() ?? "";
+                        userType = r["UserType"]?.ToString() ?? "";
+                        isActive = r["IsActive"] != DBNull.Value && (bool)r["IsActive"];
                     }
 
-                    if (userType == "Doctor")
-                    {
-                        // Delete from Doctors table
-                        var deleteDoctorCmd = new SqlCommand(
-                            "DELETE FROM Doctors WHERE DoctorId = @UserId",
-                            connection);
-                        deleteDoctorCmd.Parameters.AddWithValue("@UserId", id);
-                        deleteDoctorCmd.ExecuteNonQuery();
-                    }
-                    else if (userType == "Nurse")
-                    {
-                        // Delete from Nurses table
-                        var deleteNurseCmd = new SqlCommand(
-                            "DELETE FROM Nurses WHERE NurseId = @UserId",
-                            connection);
-                        deleteNurseCmd.Parameters.AddWithValue("@UserId", id);
-                        deleteNurseCmd.ExecuteNonQuery();
-                    }
-                    else if (userType == "Patient")
-                    {
-                        // Delete from Patients table
-                        var deletePatientCmd = new SqlCommand(
-                            "DELETE FROM Patients WHERE PatientId = @UserId",
-                            connection);
-                        deletePatientCmd.Parameters.AddWithValue("@UserId", id);
-                        deletePatientCmd.ExecuteNonQuery();
-                    }
+                    // Soft delete = inactive
+                    var deactivateCmd = new SqlCommand(@"
+                UPDATE Users
+                SET IsActive = 0, UpdatedAt = GETDATE()
+                WHERE UserId = @UserId", connection);
 
-                    // Delete from Users table
-                    var deleteUserCmd = new SqlCommand(
-                        "DELETE FROM Users WHERE UserId = @UserId",
-                        connection);
-                    deleteUserCmd.Parameters.AddWithValue("@UserId", id);
-                    deleteUserCmd.ExecuteNonQuery();
+                    deactivateCmd.Parameters.AddWithValue("@UserId", id);
+                    deactivateCmd.ExecuteNonQuery();
 
-                    // ✅ সঠিক TempData ব্যবহার করুন
-                    TempData["DeleteSuccess"] = $"✅ {userType} '{fullName}' (ID: {displayId}) deleted successfully!";
+                    var displayId = CalculateDisplayId(id, userType);
+                    TempData["SuccessMessage"] = $"✅ {userType} '{fullName}' (ID: {displayId}) set to INACTIVE successfully!";
 
-                    // Nurse delete করলে Nurse list এ redirect করুন
-                    if (userType == "Nurse")
-                    {
-                        return RedirectToAction("ManageNurses");
-                    }
-                    else if (userType == "Doctor")
-                    {
-                        return RedirectToAction("ManageDoctors");
-                    }
-                    else
-                    {
-                        return RedirectToAction("ManagePatients");
-                    }
+                    if (userType == "Doctor") return RedirectToAction("ManageDoctors");
+                    if (userType == "Nurse") return RedirectToAction("ManageNurses");
+                    if (userType == "Patient") return RedirectToAction("ManagePatients");
+
+                    return RedirectToAction("Dashboard");
                 }
             }
             catch (Exception ex)
             {
-                TempData["DeleteError"] = $"❌ Failed to delete user: {ex.Message}";
-                Console.WriteLine($"Delete user error: {ex.Message}");
-
-                return RedirectToAction("ManageNurses");
+                TempData["DeleteError"] = $"❌ Failed: {ex.Message}";
+                return RedirectToAction("Dashboard");
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ToggleUserActive(int id, bool makeActive, string userType)
+        {
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login", "Account");
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var cmd = new SqlCommand(@"
+                UPDATE Users
+                SET IsActive = @IsActive
+                WHERE UserId = @UserId", connection);
+
+                    cmd.Parameters.AddWithValue("@IsActive", makeActive ? 1 : 0);
+                    cmd.Parameters.AddWithValue("@UserId", id);
+                    cmd.ExecuteNonQuery();
+                }
+
+                TempData["SuccessMessage"] = makeActive
+                    ? "✅ User activated!"
+                    : "✅ User deactivated!";
+
+                if (userType == "Doctor") return RedirectToAction("ManageDoctors");
+                if (userType == "Nurse") return RedirectToAction("ManageNurses");
+                if (userType == "Patient") return RedirectToAction("ManagePatients");
+                return RedirectToAction("Dashboard");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"❌ Toggle failed: {ex.Message}";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SetUserActive(int id, int active, string userType)
+        {
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login", "Account");
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    var cmd = new SqlCommand(@"
+                UPDATE Users
+                SET IsActive = @Active
+                WHERE UserId = @UserId", connection);
+
+                    cmd.Parameters.AddWithValue("@Active", active);   // 1 or 0
+                    cmd.Parameters.AddWithValue("@UserId", id);
+
+                    var rows = cmd.ExecuteNonQuery();
+                    if (rows == 0)
+                        TempData["ErrorMessage"] = "❌ User not found or not updated.";
+                    else
+                        TempData["SuccessMessage"] = active == 1 ? "✅ User activated!" : "✅ User deactivated!";
+                }
+
+                if (userType == "Doctor") return RedirectToAction("ManageDoctors");
+                if (userType == "Nurse") return RedirectToAction("ManageNurses");
+                if (userType == "Patient") return RedirectToAction("ManagePatients");
+                return RedirectToAction("Dashboard");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"❌ Failed: {ex.Message}";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
 
         // GET: /Admin/EditDoctor/{id}
         public IActionResult EditDoctor(int id)
@@ -927,39 +989,68 @@ namespace SunriseClinic.Controllers
 
             try
             {
-                var doctor = GetDoctorById(id);
-                if (doctor == null)
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    TempData["ErrorMessage"] = "Doctor not found";
-                    return RedirectToAction("ManageDoctors");
+                    connection.Open();
+
+                    var cmd = new SqlCommand(@"
+                SELECT 
+                    u.UserId,
+                    u.FullName,
+                    u.Email,
+                    u.DateOfBirth,
+                    u.Gender,
+                    u.PhoneNumber,
+                    u.Address,
+                    d.Specialization,
+                    d.Qualification,
+                    d.LicenseNumber,
+                    d.ConsultationFee,
+                    d.AvailableDays,
+                    d.AvailableTime,
+                    d.ExperienceYears,
+                    d.Department  -- ✅ Department যোগ করুন
+                FROM Users u
+                INNER JOIN Doctors d ON u.UserId = d.DoctorId
+                WHERE u.UserId = @UserId AND u.UserType = 'Doctor'",
+                        connection);
+
+                    cmd.Parameters.AddWithValue("@UserId", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var model = new DoctorEditModel
+                            {
+                                UserId = reader.GetInt32(0),
+                                FullName = reader.GetString(1),
+                                Email = reader.GetString(2),
+                                DateOfBirth = reader.GetDateTime(3),
+                                Gender = reader.GetString(4),
+                                PhoneNumber = reader.GetString(5),
+                                Address = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                                Specialization = reader.GetString(7),
+                                Qualification = reader.GetString(8),
+                                LicenseNumber = reader.GetString(9),
+                                ConsultationFee = reader.GetDecimal(10),
+                                AvailableDays = reader.GetString(11),
+                                AvailableTime = reader.GetString(12),
+                                ExperienceYears = reader.IsDBNull(13) ? 0 : reader.GetInt32(13),
+                                Department = reader.IsDBNull(14) ? "" : reader.GetString(14)  // ✅ Department লোড করুন
+                            };
+
+                            ViewBag.DisplayId = "D" + (model.UserId + 9000);
+                            return View(model);
+                        }
+                    }
                 }
 
-                // DoctorEditModel তৈরি করুন
-                var model = new DoctorEditModel
-                {
-                    UserId = doctor.UserId,
-                    Email = doctor.Email,
-                    FullName = doctor.FullName,
-                    DateOfBirth = doctor.DateOfBirth,
-                    Gender = doctor.Gender,
-                    PhoneNumber = doctor.PhoneNumber,
-                    Address = doctor.Address ?? "",
-                    Specialization = doctor.Specialization,
-                    Qualification = doctor.Qualification,
-                    LicenseNumber = doctor.LicenseNumber,
-                    ConsultationFee = doctor.ConsultationFee,
-                    AvailableDays = doctor.AvailableDays,
-                    AvailableTime = doctor.AvailableTime,
-                    Department = "", // Add if needed
-                    ExperienceYears = 0 // Add if needed
-                };
-
-                ViewBag.DisplayId = doctor.DisplayId;
-                return View(model);
+                TempData["ErrorMessage"] = "Doctor not found";
+                return RedirectToAction("ManageDoctors");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"EditDoctor GET error: {ex.Message}");
                 TempData["ErrorMessage"] = $"Error loading doctor: {ex.Message}";
                 return RedirectToAction("ManageDoctors");
             }
@@ -973,104 +1064,139 @@ namespace SunriseClinic.Controllers
             if (!IsAdminLoggedIn())
                 return RedirectToAction("Login", "Account");
 
-            ViewBag.DisplayId = CalculateDisplayId(model.UserId, "Doctor");
+            Console.WriteLine("=== EDIT DOCTOR START ===");
+            Console.WriteLine($"UserId: {model.UserId}");
+            Console.WriteLine($"Department: {model.Department}");
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    using (var connection = new SqlConnection(_connectionString))
-                    {
-                        connection.Open();
-
-                        // Check if email exists for other users
-                        var checkEmailCmd = new SqlCommand(
-                            "SELECT COUNT(*) FROM Users WHERE Email = @Email AND UserId != @UserId",
-                            connection);
-                        checkEmailCmd.Parameters.AddWithValue("@Email", model.Email);
-                        checkEmailCmd.Parameters.AddWithValue("@UserId", model.UserId);
-
-                        if ((int)checkEmailCmd.ExecuteScalar() > 0)
-                        {
-                            ModelState.AddModelError("Email", "Email already exists for another user");
-                            return View(model);
-                        }
-
-                        // Update Users table
-                        var updateUserCmd = new SqlCommand(@"
-                    UPDATE Users 
-                    SET 
-                        FullName = @FullName,
-                        Email = @Email,
-                        DateOfBirth = @DateOfBirth,
-                        Gender = @Gender,
-                        PhoneNumber = @PhoneNumber,
-                        Address = @Address,
-                        UpdatedAt = GETDATE()
-                    WHERE UserId = @UserId",
-                            connection);
-
-                        updateUserCmd.Parameters.AddWithValue("@FullName", model.FullName);
-                        updateUserCmd.Parameters.AddWithValue("@Email", model.Email);
-                        updateUserCmd.Parameters.AddWithValue("@DateOfBirth", model.DateOfBirth);
-                        updateUserCmd.Parameters.AddWithValue("@Gender", model.Gender);
-                        updateUserCmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
-                        updateUserCmd.Parameters.AddWithValue("@Address",
-                            string.IsNullOrEmpty(model.Address) ? (object)DBNull.Value : model.Address);
-                        updateUserCmd.Parameters.AddWithValue("@UserId", model.UserId);
-
-                        int userRows = updateUserCmd.ExecuteNonQuery();
-
-                        // Update Doctors table
-                        var updateDoctorCmd = new SqlCommand(@"
-                    UPDATE Doctors 
-                    SET 
-                        Specialization = @Specialization,
-                        Qualification = @Qualification,
-                        LicenseNumber = @LicenseNumber,
-                        ConsultationFee = @ConsultationFee,
-                        AvailableDays = @AvailableDays,
-                        AvailableTime = @AvailableTime
-                    WHERE DoctorId = @DoctorId",
-                            connection);
-
-                        updateDoctorCmd.Parameters.AddWithValue("@Specialization", model.Specialization);
-                        updateDoctorCmd.Parameters.AddWithValue("@Qualification", model.Qualification);
-                        updateDoctorCmd.Parameters.AddWithValue("@LicenseNumber", model.LicenseNumber);
-                        updateDoctorCmd.Parameters.AddWithValue("@ConsultationFee", model.ConsultationFee);
-                        updateDoctorCmd.Parameters.AddWithValue("@AvailableDays", model.AvailableDays);
-                        updateDoctorCmd.Parameters.AddWithValue("@AvailableTime", model.AvailableTime);
-                        updateDoctorCmd.Parameters.AddWithValue("@DoctorId", model.UserId);
-
-                        int doctorRows = updateDoctorCmd.ExecuteNonQuery();
-
-                        if (userRows > 0 || doctorRows > 0)
-                        {
-                            TempData["SuccessMessage"] = $"✅ Doctor updated successfully!<br>" +
-                                                       $"<strong>Name:</strong> {model.FullName}<br>" +
-                                                       $"<strong>Specialization:</strong> {model.Specialization}";
-                            return RedirectToAction("ManageDoctors");
-                        }
-                        else
-                        {
-                            TempData["ErrorMessage"] = "No changes were made.";
-                            return View(model);
-                        }
-                    }
-                }
-                catch (SqlException sqlEx)
-                {
-                    Console.WriteLine($"SQL Error: {sqlEx.Message}");
-                    TempData["ErrorMessage"] = $"Database error: {sqlEx.Message}";
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    TempData["ErrorMessage"] = $"Error updating doctor: {ex.Message}";
-                }
+                Console.WriteLine("Model validation failed");
+                return View(model);
             }
 
-            return View(model);
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    // 1. Update Users table
+                    string userSql = @"
+                UPDATE Users 
+                SET 
+                    FullName = @FullName,
+                    Email = @Email,
+                    DateOfBirth = @DateOfBirth,
+                    Gender = @Gender,
+                    PhoneNumber = @PhoneNumber,
+                    Address = @Address,
+                    UpdatedAt = GETDATE()
+                WHERE UserId = @UserId";
+
+                    var userCmd = new SqlCommand(userSql, connection);
+
+                    userCmd.Parameters.AddWithValue("@UserId", model.UserId);
+                    userCmd.Parameters.AddWithValue("@FullName", model.FullName);
+                    userCmd.Parameters.AddWithValue("@Email", model.Email);
+                    userCmd.Parameters.AddWithValue("@DateOfBirth", model.DateOfBirth);
+                    userCmd.Parameters.AddWithValue("@Gender", model.Gender);
+                    userCmd.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
+
+                    if (string.IsNullOrEmpty(model.Address))
+                        userCmd.Parameters.AddWithValue("@Address", DBNull.Value);
+                    else
+                        userCmd.Parameters.AddWithValue("@Address", model.Address);
+
+                    int userRows = userCmd.ExecuteNonQuery();
+                    Console.WriteLine($"✅ User updated. Rows affected: {userRows}");
+
+                    // 2. Update Doctors table (FIXED VERSION)
+                    string doctorSql = @"
+                UPDATE Doctors 
+                SET 
+                    Specialization = @Specialization,
+                    Qualification = @Qualification,
+                    LicenseNumber = @LicenseNumber,
+                    ConsultationFee = @ConsultationFee,
+                    AvailableDays = @AvailableDays,
+                    AvailableTime = @AvailableTime,
+                    ExperienceYears = @ExperienceYears,
+                    Department = @Department  -- ✅ Department update যোগ করুন
+                WHERE DoctorId = @DoctorId";
+
+                    var doctorCmd = new SqlCommand(doctorSql, connection);
+
+                    doctorCmd.Parameters.AddWithValue("@DoctorId", model.UserId);
+                    doctorCmd.Parameters.AddWithValue("@Specialization", model.Specialization);
+                    doctorCmd.Parameters.AddWithValue("@Qualification", model.Qualification);
+                    doctorCmd.Parameters.AddWithValue("@LicenseNumber", model.LicenseNumber);
+                    doctorCmd.Parameters.AddWithValue("@ConsultationFee", model.ConsultationFee);
+                    doctorCmd.Parameters.AddWithValue("@AvailableDays", model.AvailableDays);
+                    doctorCmd.Parameters.AddWithValue("@AvailableTime", model.AvailableTime);
+                    doctorCmd.Parameters.AddWithValue("@ExperienceYears", model.ExperienceYears);
+
+                    // ✅ Department parameter যোগ করুন
+                    if (!string.IsNullOrEmpty(model.Department))
+                    {
+                        doctorCmd.Parameters.AddWithValue("@Department", model.Department);
+                        Console.WriteLine($"Department value: {model.Department}");
+                    }
+                    else
+                    {
+                        // Default department যদি না দেয়া থাকে
+                        doctorCmd.Parameters.AddWithValue("@Department", $"{model.Specialization} Department");
+                        Console.WriteLine($"Default Department: {model.Specialization} Department");
+                    }
+
+                    int doctorRows = doctorCmd.ExecuteNonQuery();
+                    Console.WriteLine($"✅ Doctor updated. Rows affected: {doctorRows}");
+
+                    // Debug information
+                    Console.WriteLine("=== SQL DEBUG ===");
+                    Console.WriteLine($"Doctor SQL: {doctorSql}");
+                    foreach (SqlParameter param in doctorCmd.Parameters)
+                    {
+                        Console.WriteLine($"  {param.ParameterName} = {param.Value}");
+                    }
+                }
+
+                TempData["SuccessMessage"] = $@"
+            <div class='alert alert-success'>
+                <h4><i class='fas fa-check-circle'></i> Doctor Updated Successfully!</h4>
+                <p><strong>{model.FullName}</strong>'s information has been updated.</p>
+                <p><strong>Department:</strong> {model.Department}</p>
+            </div>";
+
+                return RedirectToAction("ManageDoctors");
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine($"SQL Error: {sqlEx.Message}");
+                Console.WriteLine($"Error Number: {sqlEx.Number}");
+
+                if (sqlEx.Number == 2627) // Primary key violation
+                {
+                    ModelState.AddModelError("Email", "Email already exists");
+                }
+                else if (sqlEx.Number == 2601) // Unique constraint
+                {
+                    ModelState.AddModelError("LicenseNumber", "License number already exists");
+                }
+                else
+                {
+                    ModelState.AddModelError("", $"Database error: {sqlEx.Message}");
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                ModelState.AddModelError("", $"Error updating doctor: {ex.Message}");
+                return View(model);
+            }
         }
 
         // GET: /Admin/EditNurse/{id} - WITH DATE VALIDATION
@@ -1471,13 +1597,13 @@ namespace SunriseClinic.Controllers
                 connection.Open();
 
                 var cmd = new SqlCommand(@"
-                    SELECT u.UserId, u.Email, u.FullName, u.PhoneNumber, u.CreatedAt,
-                           d.Specialization, d.Qualification, d.LicenseNumber, d.ConsultationFee
-                    FROM Users u
-                    INNER JOIN Doctors d ON u.UserId = d.DoctorId
-                    WHERE u.UserType = 'Doctor' AND u.IsActive = 1
-                    ORDER BY u.FullName",
-                    connection);
+            SELECT u.UserId, u.Email, u.FullName, u.PhoneNumber, u.CreatedAt,
+                   u.IsActive,
+                   d.Specialization, d.Qualification, d.LicenseNumber, d.ConsultationFee
+            FROM Users u
+            INNER JOIN Doctors d ON u.UserId = d.DoctorId
+            WHERE u.UserType = 'Doctor'
+            ORDER BY u.FullName", connection);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -1491,10 +1617,11 @@ namespace SunriseClinic.Controllers
                             FullName = reader.GetString(2),
                             PhoneNumber = reader.GetString(3),
                             CreatedAt = reader.GetDateTime(4),
-                            Specialization = reader.GetString(5),
-                            Qualification = reader.GetString(6),
-                            LicenseNumber = reader.GetString(7),
-                            ConsultationFee = reader.GetDecimal(8)
+                            IsActive = reader.GetBoolean(5),
+                            Specialization = reader.GetString(6),
+                            Qualification = reader.GetString(7),
+                            LicenseNumber = reader.GetString(8),
+                            ConsultationFee = reader.GetDecimal(9)
                         });
                     }
                 }
@@ -1502,6 +1629,8 @@ namespace SunriseClinic.Controllers
 
             return doctors;
         }
+
+
 
         private List<dynamic> GetAllNurses()
         {

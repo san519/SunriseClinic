@@ -1,4 +1,5 @@
-﻿using System;
+﻿// DoctorProfileViewModel.cs
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SunriseClinic.Models
@@ -11,7 +12,6 @@ namespace SunriseClinic.Models
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
 
@@ -22,13 +22,13 @@ namespace SunriseClinic.Models
         [Display(Name = "Gender")]
         public string Gender { get; set; }
 
-        [Phone(ErrorMessage = "Invalid phone number")]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Address")]
         public string Address { get; set; }
 
+        [Display(Name = "Profile Picture")]
         public string ProfilePicture { get; set; }
 
         [Required(ErrorMessage = "Specialization is required")]
@@ -44,7 +44,6 @@ namespace SunriseClinic.Models
         public string LicenseNumber { get; set; }
 
         [Required(ErrorMessage = "Consultation fee is required")]
-        [Range(0, 100000, ErrorMessage = "Invalid fee amount")]
         [Display(Name = "Consultation Fee")]
         public decimal ConsultationFee { get; set; }
 
@@ -57,7 +56,6 @@ namespace SunriseClinic.Models
         public string AvailableTime { get; set; }
 
         [Display(Name = "Experience Years")]
-        [Range(0, 50, ErrorMessage = "Experience must be between 0 and 50 years")]
         public int ExperienceYears { get; set; }
 
         [Display(Name = "Department")]

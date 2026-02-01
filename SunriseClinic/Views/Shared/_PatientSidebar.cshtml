@@ -11,7 +11,7 @@
     // ✅ FIXED: First check ViewBag.Patient, then ViewBag.PatientProfilePicture
     var profilePicture = ViewBag.Patient?.ProfilePicture as string ??
                          ViewBag.PatientProfilePicture as string ??
-                         "default.jpg";
+                         "default.webp";
 }
 
 <div class="card border-0 shadow-sm">

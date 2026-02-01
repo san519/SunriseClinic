@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SunriseClinic.Data;
+using SunriseClinic.Filters;
+using SunriseClinic.Services;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,36 +36,70 @@ builder.Services.AddDbContext<SunriseDbContext>(options =>
     }));
 
 // Authentication
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", options =>
+// Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromDays(30); // Maximum expiry
 
-        // Cookie events
+        // Cookie events for Remember Me logic
         options.Events = new CookieAuthenticationEvents
         {
             OnValidatePrincipal = async context =>
             {
-                // Remember Me চেক করার logic
                 var rememberMeClaim = context.Principal?.FindFirst("RememberMe");
                 if (rememberMeClaim != null && rememberMeClaim.Value == "true")
                 {
-                    // 30 দিনের জন্য renew করুন
+                    // Remember Me = 30 দিন
+                    context.Properties.IsPersistent = true;
                     context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30);
                     context.ShouldRenew = true;
+
+                    // প্রতিদিন login করলে renew হবে
+                    context.Properties.IssuedUtc = DateTimeOffset.UtcNow;
                 }
                 else
                 {
-                    // 24 ঘণ্টার জন্য renew করুন
+                    // No Remember Me = 24 ঘণ্টা
+                    context.Properties.IsPersistent = false;
                     context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24);
-                    context.ShouldRenew = true;
+                    context.ShouldRenew = false;
+                }
+            },
+
+            OnSigningIn = async context =>
+            {
+                // Login time ট্র্যাক রাখা
+                var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    // LoginTime claim যোগ করুন
+                    claimsIdentity.AddClaim(new Claim("LoginTime", DateTime.UtcNow.ToString("o")));
                 }
             }
         };
+
+        options.Cookie.Name = "SunriseClinic.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.MaxAge = TimeSpan.FromDays(30); // Maximum cookie age
     });
+
+// Add services
+builder.Services.AddScoped<SessionRestoreFilter>();
+
+// Add as global filter
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<SessionRestoreFilter>();
+});
+// Background Service
+builder.Services.AddHostedService<AutoLogoutService>();
+
 
 builder.Services.AddHttpContextAccessor();
 
@@ -105,9 +142,9 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
 
 // ==================== ROUTES ====================
 app.MapControllerRoute(
@@ -124,6 +161,12 @@ app.MapControllerRoute(
     name: "patient",
     pattern: "Patient/{action=Dashboard}/{id?}",
     defaults: new { controller = "Patient" });
+
+// ✅ DOCTOR ROUTE যোগ করুন
+app.MapControllerRoute(
+    name: "doctor",
+    pattern: "Doctor/{action=Dashboard}/{id?}",
+    defaults: new { controller = "Doctor" });
 
 app.MapControllerRoute(
     name: "appointment",
@@ -151,6 +194,11 @@ app.MapControllerRoute(
     defaults: new { controller = "Home", action = "Developer" });
 
 app.MapControllerRoute(
+    name: "SeoCaseStudy",
+    pattern: "DevelopedBy/SeoCaseStudy",
+    defaults: new { controller = "Home", action = "SeoCaseStudy" });
+
+app.MapControllerRoute(
     name: "sitemap",
     pattern: "sitemap.xml",
     defaults: new { controller = "Sitemap", action = "Index" });
@@ -158,6 +206,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+// ================================================
 // ================================================
 
 // Global error handling middleware

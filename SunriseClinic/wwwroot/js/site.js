@@ -299,112 +299,6 @@ function submitComplaint(event) {
         });
 }
 
-// ============== MOBILE DASHBOARD MENU FUNCTIONS ==============
-
-// Mobile dashboard menu toggle functionality
-function setupMobileDashboardMenu() {
-    const mobileToggle = document.getElementById('mobileDashboardToggle');
-    const mobileSidebar = document.getElementById('mobileDashboardSidebar');
-    const mobileOverlay = document.getElementById('mobileDashboardOverlay');
-    const mobileClose = document.getElementById('mobileSidebarClose');
-
-    if (!mobileToggle || !mobileSidebar) return;
-
-    // Open mobile sidebar
-    mobileToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Show sidebar
-        mobileSidebar.classList.add('open');
-
-        // Show overlay
-        if (mobileOverlay) {
-            mobileOverlay.style.display = 'block';
-            setTimeout(() => {
-                mobileOverlay.style.opacity = '1';
-            }, 10);
-        }
-
-        // Disable body scroll
-        document.body.style.overflow = 'hidden';
-    });
-
-    // Close mobile sidebar
-    if (mobileClose) {
-        mobileClose.addEventListener('click', closeMobileDashboardMenu);
-    }
-
-    // Close on overlay click
-    if (mobileOverlay) {
-        mobileOverlay.addEventListener('click', closeMobileDashboardMenu);
-    }
-
-    // Close on ESC key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && mobileSidebar.classList.contains('open')) {
-            closeMobileDashboardMenu();
-        }
-    });
-}
-
-function closeMobileDashboardMenu() {
-    const mobileSidebar = document.getElementById('mobileDashboardSidebar');
-    const mobileOverlay = document.getElementById('mobileDashboardOverlay');
-
-    if (mobileSidebar) {
-        mobileSidebar.classList.remove('open');
-    }
-
-    if (mobileOverlay) {
-        mobileOverlay.style.opacity = '0';
-        setTimeout(() => {
-            mobileOverlay.style.display = 'none';
-        }, 300);
-    }
-
-    // Enable body scroll
-    document.body.style.overflow = 'auto';
-}
-
-// Call this function when DOM is loaded
-document.addEventListener('DOMContentLoaded', function () {
-    setupMobileDashboardMenu();
-
-    // Load patient stats for mobile menu
-    loadMobilePatientStats();
-});
-
-// Load patient stats for mobile menu
-function loadMobilePatientStats() {
-    // Only load if we're on patient dashboard
-    if (!document.querySelector('#patientDashboard')) return;
-
-    fetch('/Patient/GetPatientStats')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Update mobile stats
-                const mobileAppointments = document.getElementById('mobileTotalAppointments');
-                const mobileReports = document.getElementById('mobileTotalReports');
-
-                if (mobileAppointments) {
-                    mobileAppointments.textContent = data.totalAppointments || 0;
-                }
-                if (mobileReports) {
-                    mobileReports.textContent = data.totalReports || 0;
-                }
-            }
-        })
-        .catch(error => {
-            console.log('Could not load patient stats:', error);
-        });
-}
 
 // site.js - 11 digit limit
 document.addEventListener('input', function (e) {
@@ -425,3 +319,290 @@ document.addEventListener('submit', function (e) {
         }
     });
 });
+
+
+// =============================================
+// MOBILE BOTTOM NAVIGATION FUNCTIONS
+// =============================================
+
+let lastScrollTop = 0;
+let navVisible = true;
+let scrollTimeout;
+
+// Initialize mobile bottom nav
+function initMobileBottomNav() {
+    // Only run on mobile and for specific user types
+    if (window.innerWidth > 991) return;
+
+    const userType = getCurrentUserType();
+    if (!['Patient', 'Doctor', 'Nurse'].includes(userType)) {
+        // Hide bottom nav for Admin and non-logged in users
+        const bottomNav = document.getElementById('mobileBottomNav');
+        if (bottomNav) {
+            bottomNav.style.display = 'none';
+        }
+        return;
+    }
+
+    // Show bottom nav
+    const bottomNav = document.getElementById('mobileBottomNav');
+    if (bottomNav) {
+        bottomNav.style.display = 'block';
+        bottomNav.classList.remove('hide');
+        bottomNav.classList.add('show');
+    }
+
+    // Set active menu item based on current page
+    setActiveMobileMenuItem();
+
+    // Setup scroll behavior
+    setupMobileNavScrollBehavior();
+
+    // Setup click handlers
+    setupMobileNavClickHandlers();
+
+    // Setup more menu
+    setupMobileMoreMenu();
+}
+
+// Get current user type from session
+function getCurrentUserType() {
+    try {
+        // Try to get from data attribute
+        const userTypeElement = document.querySelector('[data-user-type]');
+        if (userTypeElement) {
+            return userTypeElement.dataset.userType;
+        }
+
+        // Try to get from sessionStorage
+        const sessionUserType = sessionStorage.getItem('userType');
+        if (sessionUserType) {
+            return sessionUserType;
+        }
+
+        // Check URL path
+        const path = window.location.pathname;
+        if (path.includes('/Patient/')) return 'Patient';
+        if (path.includes('/Doctor/')) return 'Doctor';
+        if (path.includes('/Nurse/')) return 'Nurse';
+        if (path.includes('/Admin/')) return 'Admin';
+
+        return null;
+    } catch (error) {
+        console.log('Error getting user type:', error);
+        return null;
+    }
+}
+
+// Set active menu item based on current URL
+function setActiveMobileMenuItem() {
+    const currentPath = window.location.pathname.toLowerCase();
+    const menuItems = document.querySelectorAll('.mobile-nav-link');
+
+    menuItems.forEach(item => {
+        item.classList.remove('active');
+        const parentItem = item.closest('.mobile-nav-item');
+        if (parentItem) {
+            parentItem.classList.remove('active');
+        }
+
+        const href = item.getAttribute('href')?.toLowerCase();
+        if (href && currentPath.includes(href.replace('/patient/', '')
+            .replace('/doctor/', '')
+            .replace('/nurse/', ''))) {
+            item.classList.add('active');
+            if (parentItem) {
+                parentItem.classList.add('active');
+            }
+        }
+    });
+}
+
+// Setup scroll behavior to hide/show nav
+function setupMobileNavScrollBehavior() {
+    window.addEventListener('scroll', function () {
+        const bottomNav = document.getElementById('mobileBottomNav');
+        if (!bottomNav) return;
+
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollDelta = 10; // Minimum scroll delta to trigger
+
+        // Clear previous timeout
+        clearTimeout(scrollTimeout);
+
+        if (Math.abs(scrollTop - lastScrollTop) <= scrollDelta) {
+            return;
+        }
+
+        // Scrolling down - hide nav
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            if (navVisible) {
+                bottomNav.classList.remove('show');
+                bottomNav.classList.add('hide');
+                navVisible = false;
+            }
+        }
+        // Scrolling up - show nav
+        else {
+            if (!navVisible) {
+                bottomNav.classList.remove('hide');
+                bottomNav.classList.add('show');
+                navVisible = true;
+            }
+        }
+
+        lastScrollTop = scrollTop;
+
+        // Hide nav again after 3 seconds of inactivity
+        scrollTimeout = setTimeout(function () {
+            if (navVisible && scrollTop > 300) {
+                bottomNav.classList.remove('show');
+                bottomNav.classList.add('hide');
+                navVisible = false;
+            }
+        }, 3000);
+    });
+}
+
+// Setup click handlers for menu items
+function setupMobileNavClickHandlers() {
+    // Add smooth scroll to top when clicking active item
+    const menuItems = document.querySelectorAll('.mobile-nav-link');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            const currentPath = window.location.pathname;
+
+            // If clicking on current page link, scroll to top
+            if (href && currentPath.includes(href)) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+                // Add active class
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            }
+
+            // Hide more menu if open
+            const moreMenu = document.getElementById('mobileMoreMenu');
+            if (moreMenu) {
+                moreMenu.classList.remove('show');
+            }
+        });
+    });
+}
+
+// Setup more menu functionality
+function setupMobileMoreMenu() {
+    const moreBtn = document.getElementById('mobileMoreBtn');
+    const moreMenu = document.getElementById('mobileMoreMenu');
+
+    if (!moreBtn || !moreMenu) return;
+
+    // Toggle more menu
+    moreBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        moreMenu.classList.toggle('show');
+    });
+
+    // Close more menu when clicking outside
+    document.addEventListener('click', function (e) {
+        if (moreMenu.classList.contains('show') &&
+            !moreMenu.contains(e.target) &&
+            !moreBtn.contains(e.target)) {
+            moreMenu.classList.remove('show');
+        }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && moreMenu.classList.contains('show')) {
+            moreMenu.classList.remove('show');
+        }
+    });
+}
+
+// Update badge counts dynamically
+function updateMobileNavBadges(counts) {
+    if (!counts) return;
+
+    // Update appointment badge
+    if (counts.appointments && counts.appointments > 0) {
+        const appointmentBadge = document.getElementById('mobileAppointmentBadge');
+        if (appointmentBadge) {
+            appointmentBadge.textContent = counts.appointments;
+            appointmentBadge.style.display = 'flex';
+        }
+    }
+
+    // Update report badge
+    if (counts.reports && counts.reports > 0) {
+        const reportBadge = document.getElementById('mobileReportBadge');
+        if (reportBadge) {
+            reportBadge.textContent = counts.reports;
+            reportBadge.style.display = 'flex';
+        }
+    }
+}
+
+// Fetch and update badge counts
+function fetchMobileBadgeCounts() {
+    const userType = getCurrentUserType();
+
+    if (!userType) return;
+
+    let endpoint = '';
+    switch (userType) {
+        case 'Patient':
+            endpoint = '/Patient/GetBadgeCounts';
+            break;
+        case 'Doctor':
+            endpoint = '/Doctor/GetBadgeCounts';
+            break;
+        case 'Nurse':
+            endpoint = '/Nurse/GetBadgeCounts';
+            break;
+        default:
+            return;
+    }
+
+    fetch(endpoint)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response error');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                updateMobileNavBadges(data);
+            }
+        })
+        .catch(error => {
+            console.log('Could not fetch badge counts:', error);
+        });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize mobile bottom nav
+    initMobileBottomNav();
+
+    // Fetch badge counts after 1 second delay
+    setTimeout(fetchMobileBadgeCounts, 1000);
+
+    // Re-initialize on window resize
+    window.addEventListener('resize', function () {
+        initMobileBottomNav();
+    });
+});
+
+// Also initialize after page fully loads
+window.addEventListener('load', function () {
+    // Small delay to ensure everything is loaded
+    setTimeout(initMobileBottomNav, 500);
+});
+

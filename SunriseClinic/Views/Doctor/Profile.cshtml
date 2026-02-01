@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Doctor Profile";
+    var profilePicture = Model?.ProfilePicture ?? "default.webp";
 }
 
 <div id="doctorProfile">
-    @await Html.PartialAsync("_MobileDashboardMenu")
 
     <div class="container-fluid py-3">
         <div class="row">
@@ -14,20 +14,10 @@
             </div>
 
             <div class="col-lg-9">
-                <!-- Page Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h3 class="mb-1">
-                            <i class="fas fa-user-md me-2 text-primary"></i>Doctor Profile
-                        </h3>
-                        <p class="text-muted mb-0">Manage your professional information</p>
-                    </div>
-                </div>
-
                 <!-- Success/Error Messages -->
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="alert alert-success alert-dismissible fade show mb-4">
+                    <div class="alert alert-success alert-dismissible fade show mb-4" id="successAlert">
                         <i class="fas fa-check-circle me-2"></i>
                         @TempData["SuccessMessage"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -36,7 +26,7 @@
 
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="alert alert-danger alert-dismissible fade show mb-4">
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" id="errorAlert">
                         <i class="fas fa-exclamation-circle me-2"></i>
                         @TempData["ErrorMessage"]
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -47,26 +37,32 @@
                 <form asp-action="UpdateProfile" method="post" id="profileForm" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
 
-                    <!-- Profile Picture Section -->
+                    <!-- Hidden fields for required values -->
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Email" id="hiddenEmail" />
+                    <input type="hidden" asp-for="ProfilePicture" id="profilePictureField" />
+
+                    <!-- Profile Picture Section ঠিক করা ভার্সন -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-4">
                             <div class="row align-items-center">
                                 <div class="col-auto">
                                     <div class="position-relative d-inline-block">
                                         <!-- Profile Picture -->
-                                        <img src="@Url.Content($"~/uploads/profile-pictures/{Model.ProfilePicture}")"
+                                        <img src="@Url.Content($"~/uploads/profile-pictures/{profilePicture}?v={DateTime.Now.Ticks}")"
                                              class="rounded-circle profile-pic"
                                              width="150" height="150"
                                              alt="Profile Picture"
                                              id="profileImage"
-                                             style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;">
+                                             style="cursor: pointer; border: 3px solid #e9ecef; object-fit: cover;"
+                                             data-bs-toggle="modal" data-bs-target="#picOptionsModal">
 
                                         <!-- Hidden File Input -->
                                         <input type="file" id="profilePictureInput" style="display:none;"
                                                accept="image/*" onchange="uploadProfilePicture(this)">
                                     </div>
 
-                                    <!-- Popup Modal -->
+                                    <!-- Profile Picture Options Modal -->
                                     <div class="modal fade" id="picOptionsModal" tabindex="-1">
                                         <div class="modal-dialog modal-dialog-centered modal-sm">
                                             <div class="modal-content">
@@ -84,7 +80,7 @@
                                                                 onclick="changePicture()" data-bs-dismiss="modal">
                                                             <i class="fas fa-upload me-2 text-primary"></i>Change Picture
                                                         </button>
-                                                        @if (Model.ProfilePicture != "default.jpg")
+                                                        @if (profilePicture != "default.webp")
                                                         {
                                                             <button type="button" class="list-group-item list-group-item-action border-0 py-3 text-danger"
                                                                     onclick="removePicture()" data-bs-dismiss="modal">
@@ -115,37 +111,40 @@
                     <!-- Personal Information -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-light">
-                            <h5 class="mb-0">
-                                <i class="fas fa-user me-2 text-primary"></i>Personal Information
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                                </h5>
+                                <button type="button" class="btn btn-primary py-1 px-3 fs-6" onclick="toggleEditMode()" id="editBtn">
+                                    <i class="fas fa-edit me-1"></i>Edit Profile
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body p-4">
-                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
-                                    <input asp-for="FullName" class="form-control" required>
+                                    <label class="form-label fw-semibold">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control" id="FullName" disabled>
                                     <span asp-validation-for="FullName" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Email" class="form-label fw-semibold">Email Address *</label>
-                                    <input asp-for="Email" type="email" class="form-control" required>
-                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                    <label class="form-label fw-semibold">Email Address</label>
+                                    <input value="@Model.Email" class="form-control" disabled>
+                                    <small class="text-muted">Email cannot be changed</small>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Date of Birth</label>
-                                    <input asp-for="DateOfBirth" type="date" class="form-control">
+                                    <label class="form-label fw-semibold">Date of Birth</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control" id="DateOfBirth" disabled>
                                     <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Gender" class="form-label fw-semibold">Gender</label>
-                                    <select asp-for="Gender" class="form-control">
+                                    <label class="form-label fw-semibold">Gender</label>
+                                    <select asp-for="Gender" class="form-control" id="Gender" disabled>
                                         <option value="">Select Gender</option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
@@ -157,14 +156,14 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
-                                    <input asp-for="PhoneNumber" type="tel" class="form-control">
+                                    <label class="form-label fw-semibold">Phone Number</label>
+                                    <input asp-for="PhoneNumber" type="tel" class="form-control" id="PhoneNumber" disabled>
                                     <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Address" class="form-label fw-semibold">Address</label>
-                                    <input asp-for="Address" class="form-control">
+                                    <label class="form-label fw-semibold">Address</label>
+                                    <input asp-for="Address" class="form-control" id="Address" disabled>
                                     <span asp-validation-for="Address" class="text-danger small"></span>
                                 </div>
                             </div>
@@ -181,56 +180,56 @@
                         <div class="card-body p-4">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Specialization" class="form-label fw-semibold">Specialization *</label>
-                                    <input asp-for="Specialization" class="form-control" required>
+                                    <label class="form-label fw-semibold">Specialization *</label>
+                                    <input asp-for="Specialization" class="form-control" id="Specialization" disabled>
                                     <span asp-validation-for="Specialization" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Qualification" class="form-label fw-semibold">Qualification *</label>
-                                    <input asp-for="Qualification" class="form-control" required>
+                                    <label class="form-label fw-semibold">Qualification *</label>
+                                    <input asp-for="Qualification" class="form-control" id="Qualification" disabled>
                                     <span asp-validation-for="Qualification" class="text-danger small"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="LicenseNumber" class="form-label fw-semibold">License Number *</label>
-                                    <input asp-for="LicenseNumber" class="form-control" required>
+                                    <label class="form-label fw-semibold">License Number *</label>
+                                    <input asp-for="LicenseNumber" class="form-control" id="LicenseNumber" disabled>
                                     <span asp-validation-for="LicenseNumber" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="ConsultationFee" class="form-label fw-semibold">Consultation Fee *</label>
-                                    <input asp-for="ConsultationFee" type="number" step="0.01" class="form-control" required>
+                                    <label class="form-label fw-semibold">Consultation Fee *</label>
+                                    <input asp-for="ConsultationFee" type="number" step="0.01" class="form-control" id="ConsultationFee" disabled>
                                     <span asp-validation-for="ConsultationFee" class="text-danger small"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="AvailableDays" class="form-label fw-semibold">Available Days *</label>
-                                    <input asp-for="AvailableDays" class="form-control" placeholder="e.g., Mon-Fri, Sat-Sun" required>
+                                    <label class="form-label fw-semibold">Available Days *</label>
+                                    <input asp-for="AvailableDays" class="form-control" id="AvailableDays" disabled>
                                     <span asp-validation-for="AvailableDays" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="AvailableTime" class="form-label fw-semibold">Available Time *</label>
-                                    <input asp-for="AvailableTime" class="form-control" placeholder="e.g., 9:00 AM - 5:00 PM" required>
+                                    <label class="form-label fw-semibold">Available Time *</label>
+                                    <input asp-for="AvailableTime" class="form-control" id="AvailableTime" disabled>
                                     <span asp-validation-for="AvailableTime" class="text-danger small"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="ExperienceYears" class="form-label fw-semibold">Experience (Years)</label>
-                                    <input asp-for="ExperienceYears" type="number" class="form-control">
+                                    <label class="form-label fw-semibold">Experience (Years)</label>
+                                    <input asp-for="ExperienceYears" type="number" class="form-control" id="ExperienceYears" disabled>
                                     <span asp-validation-for="ExperienceYears" class="text-danger small"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="Department" class="form-label fw-semibold">Department</label>
-                                    <input asp-for="Department" class="form-control">
+                                    <label class="form-label fw-semibold">Department</label>
+                                    <input asp-for="Department" class="form-control" id="Department" disabled>
                                     <span asp-validation-for="Department" class="text-danger small"></span>
                                 </div>
                             </div>
@@ -238,13 +237,13 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="card border-0 shadow-sm mb-4">
+                    <div class="card border-0 shadow-sm mb-4" id="actionButtons" style="display: none;">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-end gap-2">
-                                <button type="reset" class="btn btn-secondary py-1 px-3 fs-6">
-                                    <i class="fas fa-times me-2"></i>Reset
+                                <button type="button" class="btn btn-secondary py-1 px-3 fs-6" onclick="cancelEdit()">
+                                    <i class="fas fa-times me-2"></i>Cancel
                                 </button>
-                                <button type="submit" class="btn btn-primary py-1 px-3 fs-6">
+                                <button type="submit" class="btn btn-success py-1 px-3 fs-6" id="saveBtn">
                                     <i class="fas fa-save me-2"></i>Save Changes
                                 </button>
                             </div>
@@ -258,12 +257,129 @@
 
 @section Scripts {
     <script>
-        // Profile picture functionality
-        document.getElementById('profileImage').addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('picOptionsModal'));
-            modal.show();
+        let isEditMode = false;
+        let originalValues = {};
+
+        // ✅ Initialize form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Profile page loaded");
+
+            // Set hidden email field
+            document.getElementById('hiddenEmail').value = "@Model.Email";
+
+            // Set Gender select value
+            const gender = "@Model.Gender";
+            if (gender) {
+                document.getElementById('Gender').value = gender;
+            }
+
+            // Set Date of Birth
+            const dob = "@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))";
+            if (dob && dob !== "") {
+                document.getElementById('DateOfBirth').value = dob;
+            }
+
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
         });
 
+        function toggleEditMode() {
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+            const formFields = [
+                'FullName', 'DateOfBirth', 'Gender', 'PhoneNumber', 'Address',
+                'Specialization', 'Qualification', 'LicenseNumber', 'ConsultationFee',
+                'AvailableDays', 'AvailableTime', 'ExperienceYears', 'Department'
+            ];
+
+            if (!isEditMode) {
+                // Enter edit mode
+                isEditMode = true;
+                editBtn.innerHTML = '<i class="fas fa-times me-2"></i>Cancel Edit';
+                editBtn.classList.remove('btn-primary');
+                editBtn.classList.add('btn-secondary');
+                actionButtons.style.display = 'block';
+
+                // Enable and store original values
+                formFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        originalValues[fieldId] = field.value;
+                        field.disabled = false;
+                        field.classList.add('border-primary');
+
+                        // Special handling for Department
+                        if (fieldId === 'Department' && field.value === "Not set") {
+                            field.value = "";
+                        }
+                    }
+                });
+
+                // Focus on first field
+                document.getElementById('FullName').focus();
+
+            } else {
+                // Cancel edit mode
+                cancelEdit();
+            }
+        }
+
+        function cancelEdit() {
+            isEditMode = false;
+            const editBtn = document.getElementById('editBtn');
+            const actionButtons = document.getElementById('actionButtons');
+            const formFields = [
+                'FullName', 'DateOfBirth', 'Gender', 'PhoneNumber', 'Address',
+                'Specialization', 'Qualification', 'LicenseNumber', 'ConsultationFee',
+                'AvailableDays', 'AvailableTime', 'ExperienceYears', 'Department'
+            ];
+
+            editBtn.innerHTML = '<i class="fas fa-edit me-1"></i>Edit Profile';
+            editBtn.classList.remove('btn-secondary');
+            editBtn.classList.add('btn-primary');
+            actionButtons.style.display = 'none';
+
+            // Restore original values and disable fields
+            formFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    if (originalValues[fieldId] !== undefined) {
+                        field.value = originalValues[fieldId];
+                    }
+                    field.disabled = true;
+                    field.classList.remove('border-primary');
+                }
+            });
+
+            originalValues = {};
+        }
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            console.log("Form submitting...");
+
+            // Set email in hidden field
+            document.getElementById('hiddenEmail').value = "@Model.Email";
+
+            // Show loading state
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) {
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+                saveBtn.disabled = true;
+            }
+
+            // Let form submit normally
+            return true;
+        });
+
+        // Profile picture functions
         function viewPicture() {
             const imgSrc = document.getElementById('profileImage').src;
             window.open(imgSrc, '_blank');
@@ -285,17 +401,47 @@
                 .then(data => {
                     if (data.success) {
                         const img = document.getElementById('profileImage');
-                        img.src = '@Url.Content("~/uploads/profile-pictures/default.jpg")' + '?t=' + new Date().getTime();
-                        showAlert('Profile picture removed', 'success');
+                        img.src = '/uploads/profile-pictures/default.webp?v=' + new Date().getTime();
+                        document.getElementById('profilePictureField').value = 'default.webp';
+                        showToast('Profile picture removed successfully!', 'success');
+
+                        // Close modal
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('picOptionsModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                    } else {
+                        showToast('Error: ' + data.message, 'error');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error removing picture', 'error');
                 });
             }
         }
 
         function uploadProfilePicture(input) {
             if (input.files && input.files[0]) {
+                // Check file size (max 5MB)
+                if (input.files[0].size > 5 * 1024 * 1024) {
+                    showToast('File size must be less than 5MB', 'error');
+                    return;
+                }
+
+                // Check file type
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(input.files[0].type)) {
+                    showToast('Only JPEG, PNG, JPG, GIF, and WebP images are allowed', 'error');
+                    return;
+                }
+
                 const formData = new FormData();
                 formData.append('profilePicture', input.files[0]);
+
+                // Show loading
+                const originalBtn = document.getElementById('profileImage');
+                originalBtn.style.opacity = '0.5';
 
                 fetch('/Doctor/UpdateProfilePicture', {
                     method: 'POST',
@@ -305,31 +451,70 @@
                 .then(data => {
                     if (data.success) {
                         const img = document.getElementById('profileImage');
-                        img.src = '@Url.Content("~/uploads/profile-pictures/")' + data.fileName + '?t=' + new Date().getTime();
-                        showAlert('Profile picture updated', 'success');
+                        img.src = '/uploads/profile-pictures/' + data.fileName + '?v=' + new Date().getTime();
+                        document.getElementById('profilePictureField').value = data.fileName;
+                        showToast('Profile picture updated successfully!', 'success');
+                    } else {
+                        showToast('Error: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error uploading picture', 'error');
+                })
+                .finally(() => {
+                    originalBtn.style.opacity = '1';
+                });
+            }
+        }
+
+        function removeProfilePicture() {
+            if (confirm('Are you sure you want to remove your profile picture?')) {
+                fetch('/Doctor/RemoveProfilePicture', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const img = document.getElementById('profileImage');
+                        img.src = '/uploads/profile-pictures/default.webp?t=' + new Date().getTime();
+                        document.getElementById('profilePictureField').value = 'default.webp';
+                        showToast('Profile picture removed!', 'success');
                     }
                 });
             }
         }
 
-        function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
-            alertDiv.style.zIndex = '1060';
-            alertDiv.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '1060';
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
             `;
-            document.body.appendChild(alertDiv);
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.remove();
-                }
-            }, 3000);
+
+            document.body.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+            });
         }
 
-        // Scroll to main on page load
+                                        // Scroll to Main on page load
         document.addEventListener('DOMContentLoaded', function() {
             const scrolltomain = document.getElementById('doctorProfile');
             if (scrolltomain) {
@@ -337,5 +522,6 @@
                 scrolltomain.scrollIntoView({ behavior: 'smooth' });
             }
         });
+
     </script>
 }

@@ -14,12 +14,6 @@
     var nurse = ViewBag.Nurse as dynamic;
 }
 
-<!-- Mobile Menu for Nurse -->
-@if (userType == "Nurse")
-{
-    @await Html.PartialAsync("_MobileDashboardMenu")
-}
-
 <div class="container-fluid p-0 pt-2">
     <div class="row">
         <!-- Sidebar for Nurse -->

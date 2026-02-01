@@ -53,58 +53,105 @@
                     </a>
                 </li>
                 <!-- User Dropdown (if authenticated) -->
-                @if (User.Identity?.IsAuthenticated == true)
+                @using System.Security.Claims
+                @inject IHttpContextAccessor HttpContextAccessor
+
+                @{
+                    // শুধু Claims থেকে user type নিন
+                    var userType = User.FindFirst(ClaimTypes.Role)?.Value;
+                    var userName = User.Identity?.Name;
+                    var profilePicture = User.FindFirst("ProfilePicture")?.Value ?? "default.webp";
+                }
+
+                @if (User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(userType))
                 {
-                    <li class="nav-item dropdown" id="userDropdownContainer" itemprop="name">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="userDropdown"
-                           role="button"
-                           data-bs-toggle="dropdown"
-                           data-bs-auto-close="outside"
-                           aria-expanded="false"
-                           aria-label="User Account Menu">
-                            <i class="fas fa-user-circle me-2"></i>@User.Identity.Name
+                    <li class="nav-item dropdown" id="userDropdownContainer">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="/uploads/profile-pictures/@profilePicture"
+                                 alt="@userName"
+                                 class="rounded-circle me-2"
+                                 style="width: 30px; height: 30px; object-fit: cover;">
+                            @userName
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            @if (Context.Session.GetString("UserType") == "Admin")
+                            @switch (userType)
                             {
-                                <li><a class="dropdown-item" href="/Admin/Dashboard" aria-label="Admin Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                case "Admin":
+                                    <li>
+                                        <a class="dropdown-item" href="/Admin/Dashboard">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    break;
+
+                                case "Doctor":
+                                    <li>
+                                        <a class="dropdown-item" href="/Doctor/Dashboard">
+                                            <i class="fas fa-stethoscope me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/Doctor/Profile">
+                                            <i class="fas fa-user-md me-2"></i>My Profile
+                                        </a>
+                                    </li>
+                                    break;
+
+                                case "Patient":
+                                    <li>
+                                        <a class="dropdown-item" href="/Patient/Dashboard">
+                                            <i class="fas fa-user-injured me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/Patient/Profile">
+                                            <i class="fas fa-user me-2"></i>My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/Appointment/MyAppointments">
+                                            <i class="fas fa-list me-2"></i>Book Appointment
+                                        </a>
+                                    </li>
+                                    break;
+
+                                case "Nurse":
+                                    <li>
+                                        <a class="dropdown-item" href="/Nurse/Dashboard">
+                                            <i class="fas fa-user-nurse me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/Nurse/Profile">
+                                            <i class="fas fa-user me-2"></i>My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/Nurse/Patients">
+                                            <i class="fas fa-users me-2"></i>Manage Patients
+                                        </a>
+                                    </li>
+                                    break;
                             }
-                            else if (Context.Session.GetString("UserType") == "Patient")
-                            {
-                                <li><a class="dropdown-item" href="/Patient/Dashboard" aria-label="Patient Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/Patient/Profile" aria-label="Edit Patient Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                            }
-                            else if (Context.Session.GetString("UserType") == "Nurse")
-                            {
-                                <li><a class="dropdown-item" href="/Nurse/Dashboard" aria-label="Nurse Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/Nurse/Profile" aria-label="Edit Nurse Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                            }
-                            else if (Context.Session.GetString("UserType") == "Doctor")
-                            {
-                                <li><a class="dropdown-item" href="/Doctor/Dashboard" aria-label="Doctor Dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/Doctor/Profile" aria-label="Edit Doctor Profile"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                            }
-                            <li><a class="dropdown-item" href="/Account/Logout" aria-label="Logout from Sunrise Clinic"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="/Account/Logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 }
                 else
                 {
                     <li class="nav-item">
-                        <a class="btn btn-outline-primary me-2" href="/Account/Login"
-                           aria-label="Login to Sunrise Clinic Patient Portal">
+                        <a class="btn btn-outline-primary me-2" href="/Account/Login">
                             <i class="fas fa-sign-in-alt me-2"></i>Login
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-accent" href="/Appointment/Create"
-                           aria-label="Book Medical Appointment at Sunrise Clinic">
+                    <li class="nav-item p-1">
+                        <a class="btn btn-accent" href="/Appointment/Create">
                             <i class="fas fa-calendar-check me-2"></i>Book Appointment
                         </a>
                     </li>

@@ -12,8 +12,6 @@
     var displayId = Context.Session.GetString("DisplayId");
 }
 <div id="patientDashboard">
-    @await Html.PartialAsync("_MobileDashboardMenu")
-
 
 <div class="container-fluid p-0 pt-2">
     <!-- Registration Success Message -->
@@ -231,8 +229,9 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-outline-success">
-                                                    <i class="fas fa-download me-1"></i>Download
+                                                <button class="btn btn-sm btn-outline-info">
+                                                        <a class="text-decoration-none" href="/Patient/DownloadReport/@report.ReportId">
+                                                    <i class="fas fa-download me-1"></i>Download</a>
                                                 </button>
                                             </td>
                                         </tr>

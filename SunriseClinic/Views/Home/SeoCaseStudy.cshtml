@@ -1,0 +1,1012 @@
+﻿@{
+    Layout = null;
+
+    var title = ViewData["Title"]?.ToString() ?? "SEO Case Study - MD Nadim Mostaq Eman";
+    var desc = ViewData["Description"]?.ToString() ?? "Detailed SEO case study for MakeIn10.com showing Bing ranking success without backlinks, international traffic performance, and SEO strategies.";
+    ViewData["Keywords"] = "SEO Case Study, Bing SEO, SEO without backlinks, MakeIn10.com, Baidu SEO, International SEO, Search Engine Optimization";
+    ViewData["Author"] = "MD Nadim Mostaq Eman";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title</title>
+    <meta name="description" content="@desc">
+    <meta name="keywords" content="@ViewData["Keywords"]">
+    <meta name="author" content="@ViewData["Author"]">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sunriseclinicbd.com/DevelopedBy/SeoCaseStudy">
+    <meta property="og:title" content="@title">
+    <meta property="og:description" content="@desc">
+    <meta property="og:image" content="https://sunriseclinicbd.com/img/Nadim/seo-case-study-og.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sunriseclinicbd.com/DevelopedBy/SeoCaseStudy">
+    <meta property="twitter:title" content="@title">
+    <meta property="twitter:description" content="@desc">
+    <meta property="twitter:image" content="https://sunriseclinicbd.com/img/Nadim/seo-case-study-og.webp">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sunriseclinicbd.com/DevelopedBy/SeoCaseStudy">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f1f5f9 100%);
+            color: #334155;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .hero-section-nn {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+            color: white;
+            padding: 60px 0 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .hero-section-nn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(90deg, #f59e0b, #3b82f6, #10b981);
+            }
+
+        .hero-title-nn {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle-nn {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-custom {
+            border: none;
+            border-radius: var(--radius);
+            box-shadow: var(--box-shadow);
+            background: white;
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+            .card-custom:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+            }
+
+        .card-header-custom {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 24px 30px;
+            border-radius: var(--radius) var(--radius) 0 0 !important;
+        }
+
+        .card-body-custom {
+            padding: 30px;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+            .section-title::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 70px;
+                height: 5px;
+                background: linear-gradient(90deg, var(--accent), var(--secondary));
+                border-radius: 3px;
+            }
+
+            .section-title.center::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+        .metric-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: var(--radius);
+            background: white;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+            .metric-card:hover {
+                transform: translateY(-8px);
+            }
+
+        .metric-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: white;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        .screenshot-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            background: white;
+            transition: var(--transition);
+            height: 100%;
+        }
+
+            .screenshot-container:hover {
+                border-color: var(--secondary);
+                box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+            }
+
+        .screenshot-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .screenshot-caption {
+            padding: 20px;
+            background: white;
+        }
+
+        .screenshot-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .strategy-card {
+            padding: 25px;
+            border-radius: 12px;
+            background: white;
+            border-left: 5px solid;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: var(--transition);
+        }
+
+            .strategy-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .strategy-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            margin: 5px;
+        }
+
+            .pill-badge.primary {
+                background: #eff6ff;
+                color: #1d4ed8;
+                border-color: #bfdbfe;
+            }
+
+            .pill-badge.success {
+                background: #f0fdf4;
+                color: #166534;
+                border-color: #bbf7d0;
+            }
+
+            .pill-badge.warning {
+                background: #fefce8;
+                color: #854d0e;
+                border-color: #fef08a;
+            }
+
+            .pill-badge.danger {
+                background: #fef2f2;
+                color: #991b1b;
+                border-color: #fecaca;
+            }
+
+        .country-flag {
+            width: 24px;
+            height: 16px;
+            border-radius: 3px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        .footer-section {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+            .footer-links a:hover {
+                color: white;
+            }
+
+        @@media (max-width: 768px) {
+            .hero-title
+
+        {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+        }
+
+        .card-body-custom {
+            padding: 20px;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .hero-section
+
+        {
+            padding: 40px 0 30px;
+        }
+
+        .hero-title {
+            font-size: 1.8rem;
+        }
+
+        .meta-badges {
+            justify-content: center;
+        }
+
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .metric-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-body {
+            padding: 2rem;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-section-nn">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title-nn">SEO Case Study: Bing Ranking Success Without Backlinks</h1>
+                    <p class="hero-subtitle-nn">
+                        Detailed analysis of MakeIn10.com's SEO performance — achieving organic Bing rankings,
+                        Google AdSense approval, and international traffic through pure SEO strategy.
+                    </p>
+
+                    <div class="meta-badges">
+                        <span class="meta-badge">
+                            <i class="bi bi-calendar-check"></i> Duration: 38+ Months
+                        </span>
+                        <span class="meta-badge">
+                            <i class="bi bi-search"></i> Focus: Bing SEO
+                        </span>
+                        <span class="meta-badge">
+                            <i class="bi bi-link-45deg"></i> Strategy: Zero Backlinks
+                        </span>
+                        <span class="meta-badge">
+                            <i class="bi bi-globe"></i> Traffic: 15+ Countries
+                        </span>
+                        <span class="meta-badge">
+                            <i class="bi bi-check-circle"></i> Status: AdSense Approved
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <div class="d-flex flex-column flex-sm-row flex-lg-column gap-3">
+                        <a href="https://www.makein10.com" target="_blank" class="btn btn-warning btn-lg fw-semibold">
+                            <i class="bi bi-box-arrow-up-right me-2"></i> Visit MakeIn10.com
+                        </a>
+                        <a href="/DevelopedBy" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-arrow-left me-2"></i> Back to Portfolio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Key Metrics -->
+        <section class="mb-5">
+            <h2 class="section-title mb-4">Key SEO Metrics & Achievements</h2>
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <h3 class="h5 mb-0"><i class="bi bi-search me-2"></i>Bing Ranking</h3>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value">50+</div>
+                            <div class="metric-label">Articles Ranked Organically</div>
+                            <p class="text-center small">Without any backlinks or paid promotions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="metric-card">
+                        <div class="metric-header bg-success">
+                            <h3 class="h5 mb-0"><i class="bi bi-google me-2"></i>AdSense</h3>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value text-success">Approved</div>
+                            <div class="metric-label">Google Monetization</div>
+                            <p class="text-center small">Successfully approved for AdSense revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="metric-card">
+                        <div class="metric-header bg-info">
+                            <h3 class="h5 mb-0"><i class="bi bi-globe me-2"></i>Countries</h3>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value text-info">15+</div>
+                            <div class="metric-label">Organic Traffic Sources</div>
+                            <p class="text-center small">International audience reach</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="metric-card">
+                        <div class="metric-header bg-warning">
+                            <h3 class="h5 mb-0"><i class="bi bi-shield-check me-2"></i>Backlinks</h3>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value text-warning">0</div>
+                            <div class="metric-label">Pure SEO Strategy</div>
+                            <p class="text-center small">Ranking achieved without backlinks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Highlight Section -->
+        <section class="mb-5">
+            <div class="highlight-box">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-lightning-charge-fill display-4 text-warning"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h3 class="h4 mb-2">Bing Ranking Achievement Without Backlinks</h3>
+                        <p class="mb-0">
+                            Successfully ranked <strong>www.makein10.com</strong> on Bing Search Engine through pure on-page SEO,
+                            technical optimization, and high-quality content. Zero backlinks were used - proving that
+                            with proper SEO strategy, organic ranking is achievable without link-building campaigns.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why This Matters for Bing SEO Role -->
+        <section class="mb-5 animate-fade-in">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h2 class="section-title mb-0">Why This Experience Fits Senior SEO Role (Bing + Google)</h2>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="strategy-card" style="border-left-color: #3b82f6;">
+                                <div class="strategy-icon text-primary">
+                                    <i class="bi bi-diagram-3"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Content Cluster & Indexing Operations</h3>
+                                <p class="mb-0">
+                                    Hands-on experience with crawlability, internal linking, topical clustering,
+                                    and index coverage improvement — fundamental skills transferable to Bing SEO.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="strategy-card" style="border-left-color: #10b981;">
+                                <div class="strategy-icon text-success">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                                <h3 class="h5 mb-3">SERP Growth Without Backlinks</h3>
+                                <p class="mb-0">
+                                    Proved ranking capability through content + technical strength alone —
+                                    essential for competitive SERPs in United States, China, United Kingdom, Canada.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="strategy-card" style="border-left-color: #f59e0b;">
+                                <div class="strategy-icon text-warning">
+                                    <i class="bi bi-binoculars"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Competitor & Keyword Strategy</h3>
+                                <p class="mb-0">
+                                    Expertise in keyword mapping, intent-based content planning, and
+                                    competitor analysis to dominate target queries in international markets.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="strategy-card" style="border-left-color: #8b5cf6;">
+                                <div class="strategy-icon text-info">
+                                    <i class="bi bi-globe-asia-australia"></i>
+                                </div>
+                                <h3 class="h5 mb-3">International Market Expertise</h3>
+                                <p class="mb-0">
+                                    Tracked and optimized for country-specific traffic patterns —
+                                    directly applicable to targeting Chinese, American, Singaporean,
+                                    and Thai markets effectively.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEO Implementation Details -->
+        <section class="mb-5 animate-fade-in">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h2 class="section-title mb-0">SEO Implementation Strategy</h2>
+                </div>
+                <div class="card-body-custom">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="h5 mb-3 text-primary"><i class="bi bi-gear me-2"></i>Technical SEO Implementation</h3>
+                            <ul class="mb-4">
+                                <li><strong>Site Structure:</strong> Optimized crawl paths and internal linking architecture</li>
+                                <li><strong>Page Speed:</strong> Improved loading times through optimization</li>
+                                <li><strong>Mobile Responsiveness:</strong> Ensured perfect mobile experience</li>
+                                <li><strong>XML Sitemaps:</strong> Created and submitted to search engines</li>
+                                <li><strong>Schema Markup:</strong> Implemented structured data for better rich results</li>
+                                <li><strong>HTTPS:</strong> Secured site with SSL certificate</li>
+                            </ul>
+
+                            <h3 class="h5 mb-3 text-success"><i class="bi bi-file-earmark-text me-2"></i>Content Strategy</h3>
+                            <ul>
+                                <li><strong>Topic Clusters:</strong> Built authority through interconnected content</li>
+                                <li><strong>Keyword Optimization:</strong> Strategic placement and density management</li>
+                                <li><strong>User Intent:</strong> Content aligned with search intent</li>
+                                <li><strong>Regular Updates:</strong> Fresh content to maintain relevance</li>
+                                <li><strong>Multimedia Integration:</strong> Images, videos for better engagement</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <h3 class="h5 mb-3 text-warning"><i class="bi bi-tools me-2"></i>Tools & Technologies Used</h3>
+                            <div class="mb-4">
+                                <span class="pill-badge primary"><i class="bi bi-search"></i> Bing Webmaster Tools</span>
+                                <span class="pill-badge primary"><i class="bi bi-google"></i> Google Analytics</span>
+                                <span class="pill-badge success"><i class="bi bi-speedometer2"></i> PageSpeed Insights</span>
+                                <span class="pill-badge success"><i class="bi bi-card-checklist"></i> SEO Crawlers</span>
+                                <span class="pill-badge warning"><i class="bi bi-tags"></i> Keyword Research Tools</span>
+                                <span class="pill-badge warning"><i class="bi bi-bar-chart"></i> SERP Tracking</span>
+                                <span class="pill-badge danger"><i class="bi bi-eye"></i> Microsoft Clarity</span>
+                                <span class="pill-badge danger"><i class="bi bi-link-45deg"></i> Internal Link Analysis</span>
+                            </div>
+
+                            <div class="p-4 rounded-3" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-left: 5px solid #0ea5e9;">
+                                <h4 class="h6 mb-2"><i class="bi bi-lightbulb me-1"></i> Key Insight for Bing SEO</h4>
+                                <p class="mb-0 small">
+                                    The technical foundation (indexing + clustering + site structure) is directly transferable
+                                    to Bing SEO. I can quickly adapt to Bing-specific requirements while leveraging proven
+                                    international SEO strategies.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshots Evidence -->
+        <section class="mb-5 animate-fade-in">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h2 class="section-title mb-0">Performance Evidence & Screenshots</h2>
+                </div>
+                <div class="card-body-custom">
+                    <p class="text-muted mb-4">
+                        Below are screenshots showing my SEO performance proof — Bing ranking, international traffic,
+                        and success with zero backlinks strategy.
+                    </p>
+
+                    <!-- Screenshot 1: Bing Performance -->
+                    <div class="row g-4 align-items-center mb-5">
+                        <div class="col-lg-5">
+                            <div class="screenshot-container">
+                                <img src="/img/Nadim/bing-clicks-impressions.webp" alt="Bing Webmaster Tools Clicks and Impressions" class="screenshot-img">
+                                <div class="screenshot-caption">
+                                    <div class="screenshot-title">Bing Search Performance Growth</div>
+                                    <p class="mb-0 small text-muted">
+                                        Bing Webmaster Tools showing consistent clicks and impressions growth over time,
+                                        demonstrating successful ranking for multiple keywords.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <h3 class="h4 mb-3"><i class="bi bi-search me-2 text-warning"></i> Bing Ranking Success</h3>
+                            <p class="mb-3">
+                                I used Bing Webmaster Tools to track search performance (clicks + impressions) and
+                                optimized pages accordingly. Created consistent visibility on Bing SERP
+                                <strong>without any backlinks</strong> — proving that quality content and technical SEO
+                                are sufficient for ranking.
+                            </p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="pill-badge warning"><i class="bi bi-check-circle"></i> Organic Clicks Growth</span>
+                                <span class="pill-badge warning"><i class="bi bi-check-circle"></i> Impressions Increase</span>
+                                <span class="pill-badge warning"><i class="bi bi-check-circle"></i> CTR Improvement</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Screenshot 2: International Traffic -->
+                    <div class="row g-4 align-items-center mb-5 flex-lg-row-reverse">
+                        <div class="col-lg-5">
+                            <div class="screenshot-container">
+                                <img src="/img/Nadim/ga-country-traffic.webp" alt="Google Analytics Country Traffic" class="screenshot-img">
+                                <div class="screenshot-caption">
+                                    <div class="screenshot-title">International Traffic Distribution</div>
+                                    <p class="mb-0 small text-muted">
+                                        Google Analytics showing organic traffic from 15+ countries including
+                                        United States, India, China, United Kingdom, Canada, Singapore and others.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <h3 class="h4 mb-3"><i class="bi bi-globe me-2 text-info"></i> International Traffic Acquisition</h3>
+                            <p class="mb-3">
+                                Analyzed country-wise traffic from Google Analytics and adjusted content strategy accordingly.
+                                Established foundation for international audience targeting (China, Malaysia, Singapore, Thailand).
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Sessions</th>
+                                            <th>Share</th>
+                                            <th>Engagement Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/us.png" class="country-flag me-2">United States</td>
+                                            <td>4,609</td>
+                                            <td>41.74%</td>
+                                            <td>50.08%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/in.png" class="country-flag me-2">India</td>
+                                            <td>1,988</td>
+                                            <td>18%</td>
+                                            <td>37.27%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/cn.png" class="country-flag me-2">China</td>
+                                            <td>1,252</td>
+                                            <td>11.34%</td>
+                                            <td>7.35%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/gb.png" class="country-flag me-2">United Kingdom</td>
+                                            <td>536</td>
+                                            <td>4.85%</td>
+                                            <td>55.78%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/ca.png" class="country-flag me-2">Canada</td>
+                                            <td>397</td>
+                                            <td>3.6%</td>
+                                            <td>65.24%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/sg.png" class="country-flag me-2">Singapore</td>
+                                            <td>255</td>
+                                            <td>2.31%</td>
+                                            <td>17.25%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="https://flagcdn.com/w20/bd.png" class="country-flag me-2">Bangladesh</td>
+                                            <td>250</td>
+                                            <td>2.26%</td>
+                                            <td>42.8%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Screenshot 3: No Backlinks Proof -->
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-5">
+                            <div class="screenshot-container">
+                                <img src="/img/Nadim/bing-no-backlinks.webp" alt="Bing Backlinks Report Showing Zero Backlinks" class="screenshot-img">
+                                <div class="screenshot-caption">
+                                    <div class="screenshot-title">Backlinks Analysis Report</div>
+                                    <p class="mb-0 small text-muted">
+                                        Bing Webmaster Tools backlinks report showing minimal to zero backlinks,
+                                        proving that ranking was achieved through on-page and technical SEO alone.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <h3 class="h4 mb-3"><i class="bi bi-link-45deg me-2 text-success"></i> Zero Backlink Strategy Success</h3>
+                            <p class="mb-3">
+                                This growth was achieved <strong>without backlinks</strong> — meaning through content quality + technical SEO strength.
+                                In competitive SERP, this is a strong signal that my SEO strategy is solid and scalable.
+                            </p>
+                            <div class="alert alert-success">
+                                <h5 class="alert-heading"><i class="bi bi-lightning-charge me-2"></i> Key Achievement</h5>
+                                <p class="mb-0">
+                                    Proved that with proper on-page optimization, technical SEO, and content strategy,
+                                    websites can rank on search engines without depending on backlink campaigns.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Baidu SEO Experience -->
+        <section class="mb-5">
+            <h2 class="section-title mb-4">Baidu SEO & International Market Experience</h2>
+            <div class="card-custom">
+                <div class="card-body-custom">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="h5 mb-3">Why I'm Qualified for Baidu SEO Specialist Position</h3>
+                            <p>
+                                Having studied in China (Chongqing University of Technology) and being fluent in
+                                understanding Chinese digital ecosystem, I possess unique insights into Baidu SEO
+                                requirements:
+                            </p>
+                            <ul>
+                                <li><strong>Baidu Algorithm Understanding:</strong> Familiar with Baidu's ranking factors different from Google</li>
+                                <li><strong>Chinese Market Knowledge:</strong> Understanding of Chinese user behavior and search patterns</li>
+                                <li><strong>Technical Adaptation:</strong> Experience optimizing for Chinese search engines' technical requirements</li>
+                                <li><strong>Content Localization:</strong> Ability to adapt content for Chinese audience effectively</li>
+                                <li><strong>Analytics Tools:</strong> Experience with Chinese analytics platforms</li>
+                                <li><strong>International SEO:</strong> Proven success with multi-country organic traffic generation</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4 text-center" style="background-color: #f0f8ff; border-radius: 8px;">
+                                <i class="bi bi-translate display-4 text-primary mb-3"></i>
+                                <h4 class="h5 mb-3">Multi-Lingual SEO</h4>
+                                <p class="small">
+                                    Experience with SEO for different language markets including
+                                    English, Bengali, and understanding of Chinese SEO requirements.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h4 class="h6 mb-3">Key Achievements Relevant to SEO Specialist Position:</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Proven Bing ranking success</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Google AdSense approval achieved</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>International traffic generation</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Zero-backlink ranking strategy</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Technical SEO implementation</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Analytics and performance tracking</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h3 class="h4 mb-3 text-white">MD Nadim Mostaq Eman</h3>
+                    <p class="text-light mb-3" style="opacity: 0.8;">
+                        Full Stack Web Developer & SEO Specialist with proven success in Bing ranking
+                        and international traffic acquisition through technical SEO strategies.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="/DevelopedBy" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-person-badge me-1"></i> Full Portfolio
+                        </a>
+                        <a href="mailto:nadim.emons@gmail.com" class="btn btn-warning btn-sm">
+                            <i class="bi bi-envelope me-1"></i> Contact for SEO Role
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h4 class="h5 mb-3 text-white">Quick Links</h4>
+                    <div class="footer-links d-flex flex-column gap-2">
+                        <a href="/DevelopedBy"><i class="bi bi-arrow-right me-1"></i> Portfolio Home</a>
+                        <a href="https://www.makein10.com" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i> MakeIn10.com</a>
+                        <a href="https://www.sunriseclinicbd.com" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i> Sunrise Clinic</a>
+                        <a href="mailto:nadim.emons@gmail.com"><i class="bi bi-envelope me-1"></i> Email Contact</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="h5 mb-3 text-white">SEO Skills</h4>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-secondary">Bing SEO</span>
+                        <span class="badge bg-secondary">Technical SEO</span>
+                        <span class="badge bg-secondary">Content Strategy</span>
+                        <span class="badge bg-secondary">Analytics</span>
+                        <span class="badge bg-secondary">International SEO</span>
+                        <span class="badge bg-secondary">Baidu Ready</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0 small" style="opacity: 0.7;">
+                        © @DateTime.Now.Year MD Nadim Mostaq Eman. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 small" style="opacity: 0.7;">
+                        Built with ASP.NET Core MVC 8.0 • C# • Bootstrap 5
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            animateElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.animation = 'fadeInUp 0.6s ease forwards';
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#' || href.startsWith('#!')) return;
+
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add print functionality
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'p') {
+                    e.preventDefault();
+                    window.print();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
