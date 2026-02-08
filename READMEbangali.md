@@ -13,19 +13,19 @@ Hospital Management System, যা বাস্তব ক্লিনিক ও 
 ## 🖼️ প্রজেক্ট প্রিভিউ
 
 ### লগইন পেজ
-![Login Page](wwwroot/screenshots/01-login-page.png)
+![Login Page](SunriseClinic/wwwroot/screenshots/01-login-page.png)
 
 ### অ্যাডমিন ড্যাশবোর্ড
-![Admin Dashboard](wwwroot/screenshots/02-admin-dashboard.png)
+![Admin Dashboard](SunriseClinic/wwwroot/screenshots/02-admin-dashboard.png)
 
 ### ডাক্তার ড্যাশবোর্ড
-![Doctor Dashboard](wwwroot/screenshots/04-doctor-dashboard.png)
+![Doctor Dashboard](SunriseClinic/wwwroot/screenshots/04-doctor-dashboard.png)
 
 ### নার্স ড্যাশবোর্ড
-![Nurse Dashboard](wwwroot/screenshots/06-nurse-dashboard.png)
+![Nurse Dashboard](SunriseClinic/wwwroot/screenshots/06-nurse-dashboard.png)
 
 ### রোগী ড্যাশবোর্ড
-![Patient Dashboard](wwwroot/screenshots/08-patient-dashboard.png)
+![Patient Dashboard](SunriseClinic/wwwroot/screenshots/08-patient-dashboard.png)
 
 ---
 
