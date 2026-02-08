@@ -19,19 +19,19 @@ The system provides secure role-based dashboards for:
 ## 🖼️ Application Preview
 
 ### Login Page
-![Login Page](wwwroot/screenshots/01-login-page.png)
+![Login Page](SunriseClinic/wwwroot/screenshots/01-login-page.png)
 
 ### Admin Dashboard
-![Admin Dashboard](wwwroot/screenshots/02-admin-dashboard.png)
+![Admin Dashboard](SunriseClinic/wwwroot/screenshots/02-admin-dashboard.png)
 
 ### Doctor Dashboard
-![Doctor Dashboard](wwwroot/screenshots/04-doctor-dashboard.png)
+![Doctor Dashboard](SunriseClinic/wwwroot/screenshots/04-doctor-dashboard.png)
 
 ### Nurse Dashboard
-![Nurse Dashboard](wwwroot/screenshots/06-nurse-dashboard.png)
+![Nurse Dashboard](SunriseClinic/wwwroot/screenshots/06-nurse-dashboard.png)
 
 ### Patient Dashboard
-![Patient Dashboard](wwwroot/screenshots/08-patient-dashboard.png)
+![Patient Dashboard](SunriseClinic/wwwroot/screenshots/08-patient-dashboard.png)
 
 ---
 
